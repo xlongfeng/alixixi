@@ -32,9 +32,9 @@
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="refreshTokenPushButton">
+       <widget class="QPushButton" name="authorizePushButton">
         <property name="text">
-         <string>Refresh Token</string>
+         <string>Authorize</string>
         </property>
        </widget>
       </item>

@@ -72,10 +72,46 @@ class CnAlibabaOpen(QObject):
         params = []
         for key in openApiParam.keys():
             params.append(key + openApiParam.get(key))
+        params = sorted(params)
         urlPath += "".join(params)
         return hmac.new(bytearray(self.appSignature, 'utf-8'),
                         bytearray(urlPath, 'utf-8'), 
                         digestmod=hashlib.sha1).hexdigest().upper()
+    
+    def openApiAuthorizeSignature(self, query):
+        urlPath = ''
+        items = query.queryItems()
+        params = []
+        for pair in items:
+            params.append(pair[0] + pair[1])
+        params = sorted(params)
+        return hmac.new(bytearray(self.appSignature, 'utf-8'),
+                        bytearray("".join(params), 'utf-8'), 
+                        digestmod=hashlib.sha1).hexdigest().upper()
+    
+    def openApiAuthorizeRequest(self):
+        url = QUrl('http://gw.open.1688.com/auth/authorize.htm')
+        query = QUrlQuery()
+        query.addQueryItem('client_id', self.appKey)
+        query.addQueryItem('site', 'china')
+        query.addQueryItem('redirect_uri', 'urn:ietf:wg:oauth:2.0:oob')
+        query.addQueryItem('_aop_signature', self.openApiAuthorizeSignature(query))
+        url.setQuery(query)
+        return url
+    
+    def tokenRequest(self, openApiParam = dict()):
+        url = QUrl('https://gw.open.1688.com/openapi/http/1/system.oauth2/getToken/' + self.appKey)
+        query = QUrlQuery()
+        query.addQueryItem('grant_type', 'authorization_code')
+        query.addQueryItem('need_refresh_token', 'true')
+        query.addQueryItem('client_id', self.appKey)
+        query.addQueryItem('client_secret', self.appSignature)
+        query.addQueryItem('redirect_uri', 'urn:ietf:wg:oauth:2.0:oob')
+        for key in openApiParam.keys():
+            query.addQueryItem(key, openApiParam.get(key))
+        url.setQuery(query)
+        self.request.setUrl(url)
+        self.accessManager.get(self.request)
     
     def openApiRequest(self, openApiName, openApiParam = dict()):   
         url = QUrl(

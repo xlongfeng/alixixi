@@ -39,15 +39,14 @@
 #############################################################################
 
 
-from PyQt5.QtCore import QDataStream, QSettings, QTimer
-from PyQt5.QtGui import QIntValidator
+from PyQt5.QtGui import QIntValidator, QDesktopServices
 from PyQt5.QtWidgets import (QApplication, QComboBox, QDialog, QMainWindow,
                              QGridLayout, QLabel, QLineEdit, QMessageBox,
                              QPushButton)
 
-from ui_refreshtokendialog import Ui_RefreshTokenDialog
+from ui_authorizedialog import Ui_AuthorizeDialog
 from ui_alixixi import Ui_Alixixi
-
+from settings import Settings
 from cnalibabaopen import CnAlibabaOpen
 
 class RefreshTokenDialog(QDialog):
@@ -79,20 +78,48 @@ class RefreshTokenDialog(QDialog):
             print(response.get('error') + ': ' + response.get('error_description'))
     
     def responseRefreshToken(self, response):
-        pass    
-
+        pass
+    
+class AuthorizeDialog(QDialog):
+    def __init__(self, parent=None):
+        super(AuthorizeDialog, self).__init__(parent)
+        self.ui = Ui_AuthorizeDialog()
+        self.ui.setupUi(self)
+        self.ui.continuePushButton.clicked.connect(self.requestToken)
+        self.cnAlibabaOpen = CnAlibabaOpen(self)
+        self.cnAlibabaOpen.openApiResponse.connect(self.responseToken)
+        
+    def requestToken(self):
+        if len(self.ui.authorizeCodeLineEdit.text()) > 0:
+            self.cnAlibabaOpen.tokenRequest({'code': self.ui.authorizeCodeLineEdit.text()})
+    
+    def responseToken(self, response):
+        if 'access_token' in response:
+            print(response.get('access_token'))
+            print(response.get('aliId'))
+            print(response.get('expires_in'))
+            print(response.get('memberId'))
+            print(response.get('refresh_token'))
+            print(response.get('refresh_token_timeout'))
+            print(response.get('resource_owner'))
+        else:
+            print(response.get('error') + ': ' + response.get('error_description'))
+        
 class Alixixi(QMainWindow):
     def __init__(self, parent=None):
         super(Alixixi, self).__init__(parent)
         self.ui = Ui_Alixixi()
         self.ui.setupUi(self)
         
-        self.refreshTokenDialg = RefreshTokenDialog(self)
-        
         self.cnAlibabaOpen = CnAlibabaOpen(self)
         self.cnAlibabaOpen.openApiResponse.connect(self.responseNewFortune)
         
-        self.ui.refreshTokenPushButton.clicked.connect(self.refreshTokenDialg.exec)
+        self.ui.authorizePushButton.clicked.connect(self.authorizeRequest)
+        
+    def authorizeRequest(self):
+        QDesktopServices.openUrl(self.cnAlibabaOpen.openApiAuthorizeRequest())
+        dialog = AuthorizeDialog(self)
+        dialog.exec()
 
     def requestNewFortune(self):
         self.cnAlibabaOpen.openApiRequest('member.get', {'memberId': 'b2b-256074649203e5d'})
