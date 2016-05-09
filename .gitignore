@@ -63,3 +63,6 @@ target/
 
 # Wing stuff:
 *.wpu
+
+# Qt
+ui_*.py
