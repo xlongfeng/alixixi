@@ -46,6 +46,7 @@ from PyQt5.QtWidgets import (QApplication, QComboBox, QDialog, QMainWindow,
                              QPushButton)
 
 from ui_authorizedialog import Ui_AuthorizeDialog
+from ui_orderlistgetdialog import Ui_OrderListGetDialog
 from ui_alixixi import Ui_Alixixi
 from settings import Settings
 from cnalibabaopen import CnAlibabaOpen
@@ -109,6 +110,70 @@ class AuthorizeDialog(QDialog):
         else:
             print(response.get('error') + ': ' + response.get('error_description'))
             self.reject()
+            
+class OrderListGetDialog(QDialog):
+    def __init__(self, createStartTime, createEndTime, parent=None):
+        super(OrderListGetDialog, self).__init__(parent)
+        self.ui = Ui_OrderListGetDialog()
+        self.ui.setupUi(self)
+        self.ui.progressBar.setRange(0, 0)
+        self.ui.progressBar.setValue(0)
+        
+        self.createStartTime = createStartTime
+        self.createEndTime = createEndTime
+        self.totalCount = 0
+        self.count = 0
+        self.page = 1
+        
+        cnAlibabaOpen.openApiResponse.connect(self.orderListGetReponse)
+        self.orderListGetRequest()
+        
+    def orderListGetRequest(self):
+        param = dict()
+        param['access_token'] = settings.access_token
+        param['createStartTime'] = self.createStartTime
+        param['createEndTime'] = self.createEndTime
+        param['buyerMemberId'] = settings.memberId
+        param['page'] = str(self.page)
+        param['pageSize'] = '10'
+        cnAlibabaOpen.openApiRequest('trade.order.list.get', param)
+        
+    def orderListPrint(self, modelList):
+        for orderModel in modelList:
+            print("-" * 10)
+            print(orderModel['status'])
+            print(orderModel['gmtGoodsSend'])
+            print(orderModel['toPost'])
+            print(orderModel['toArea'])
+            print(orderModel['sumProductPayment'])
+        
+    def orderListGetReponse(self, response):
+        if 'orderListResult' not in response:
+            pass
+        orderListResult = response['orderListResult']
+        self.page += 1
+        if self.totalCount == 0:
+            # first call
+            self.totalCount = orderListResult['totalCount']
+            if self.totalCount == 0:
+                self.reject()
+            else:
+                self.count += orderListResult['count']
+                self.orderListPrint(orderListResult['modelList'])
+                self.ui.progressBar.setRange(0, self.totalCount)
+                self.ui.progressBar.setValue(self.count)
+                # self.orderListGetRequest()
+                self.accept()
+        else:
+            self.accept()
+            self.count += orderListResult['count']
+            self.orderListPrint(orderListResult['modelList'])
+            self.ui.progressBar.setRange(0, self.totalCount)
+            self.ui.progressBar.setValue(self.count)
+            if (self.count < self.totalCount):
+                self.orderListGetRequest()
+            else:
+                self.accept()
         
 class Alixixi(QMainWindow):
     def __init__(self, parent=None):
@@ -163,17 +228,10 @@ class Alixixi(QMainWindow):
         self.ui.createEndTimeDateEdit.setDate(QDate.currentDate())
         
     def orderListGetRequest(self):
-        cnAlibabaOpen.openApiResponse.connect(self.orderListGetReponse)
-        param = dict()
-        param['access_token'] = settings.access_token
-        param['createStartTime'] = self.ui.createStartTimeDateEdit.date().toString('yyyyMMdd00000000+0800')
-        param['createEndTime'] = self.ui.createEndTimeDateEdit.date().toString('yyyyMMdd23595900+0800')
-        param['buyerMemberId'] = settings.memberId
-        cnAlibabaOpen.openApiRequest('trade.order.list.get', param)
-    
-    def orderListGetReponse(self):
-        print(response)
-        pass    
+        createStartTime = self.ui.createStartTimeDateEdit.date().toString('yyyyMMdd00000000+0800')
+        createEndTime = self.ui.createEndTimeDateEdit.date().toString('yyyyMMdd23595900+0800')        
+        dialog = OrderListGetDialog(createStartTime, createEndTime, self)
+        dialog.exec()
     
     def memberGetRequest(self):
         cnAlibabaOpen.openApiResponse.connect(self.memberGetResponse)

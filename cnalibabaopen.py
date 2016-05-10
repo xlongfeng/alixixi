@@ -50,11 +50,10 @@ class CnAlibabaOpen(QObject):
     openApiProtocol = "param2/"
     openApiNamespace = "cn.alibaba.open/"
     openApiVersion2 = {
-        'trade.order.detail.get',
         'trade.order.list.get'
     }
-    appKey = "6972191"
-    appSignature = "teidQsuKyUiv"
+    appKey = "4083300"
+    appSignature = "k7hhlL99gf"
     
     openApiResponse = pyqtSignal(dict)
     
@@ -104,27 +103,6 @@ class CnAlibabaOpen(QObject):
         self.request.setUrl(url)
         self.accessManager.get(self.request)
         
-    def openApiSignature(self, openApiName, openApiParam):
-        urlPath = self.openApiProtocol + self.openApiVersion(openApiName) + self.openApiNamespace + openApiName + '/' + self.appKey
-        params = []
-        for key in openApiParam.keys():
-            params.append(key + openApiParam.get(key))
-        params = sorted(params)
-        urlPath += "".join(params)
-        return hmac.new(bytearray(self.appSignature, 'utf-8'),
-                        bytearray(urlPath, 'utf-8'), 
-                        digestmod=hashlib.sha1).hexdigest().upper()
-    
-    def openApiRequest(self, openApiName, openApiParam = dict()):   
-        url = QUrl(
-            self.openApiBaseHttpUrl + self.openApiProtocol + self.openApiVersion(openApiName) + self.openApiNamespace + openApiName + '/' + self.appKey)
-        query = QUrlQuery()
-        for key in openApiParam.keys():
-            query.addQueryItem(key, openApiParam.get(key))
-        query.addQueryItem("_aop_signature", self.openApiSignature(openApiName, openApiParam))
-        url.setQuery(query)
-        self.request.setUrl(url)
-        self.accessManager.get(self.request)
         
     def accessTokenRequest(self, openApiParam = dict()):
         url = QUrl(
@@ -150,16 +128,38 @@ class CnAlibabaOpen(QObject):
         url.setQuery(query)
         self.request.setUrl(url)
         self.accessManager.get(self.request)
+        
+    def openApiSignature(self, openApiName, openApiParam):
+        urlPath = self.openApiProtocol + self.openApiVersion(openApiName) + self.openApiNamespace + openApiName + '/' + self.appKey
+        params = []
+        for key in openApiParam.keys():
+            params.append(key + openApiParam.get(key))
+        params = sorted(params)
+        urlPath += "".join(params)
+        return hmac.new(bytearray(self.appSignature, 'utf-8'),
+                        bytearray(urlPath, 'utf-8'), 
+                        digestmod=hashlib.sha1).hexdigest().upper()
+    
+    def openApiRequest(self, openApiName, openApiParam = dict()):   
+        url = QUrl(
+            self.openApiBaseHttpUrl + self.openApiProtocol + self.openApiVersion(openApiName) + self.openApiNamespace + openApiName + '/' + self.appKey)
+        query = QUrlQuery()
+        for key in openApiParam.keys():
+            query.addQueryItem(key, openApiParam.get(key))
+        query.addQueryItem("_aop_signature", self.openApiSignature(openApiName, openApiParam))
+        url.setQuery(query)
+        url = QUrl(url.toEncoded().toPercentEncoding(':/?&=%').data().decode('utf-8'))
+        self.request.setUrl(url)
+        self.accessManager.get(self.request)
 
     def finished(self, reply):
         response = reply.readAll()
         jsonDecode = json.loads(response.data().decode('utf-8'))
-        print(jsonDecode)
+        # print(jsonDecode)
         if 'exception' in jsonDecode:
             print(jsonDecode.get('exception'))
         else:
             self.openApiResponse.emit(jsonDecode)
-        self.openApiResponse.disconnect()
 
     def sslErrors(self, reply, errors):
-        self.openApiResponse.disconnect()
+        pass
