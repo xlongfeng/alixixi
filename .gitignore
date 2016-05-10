@@ -64,5 +64,8 @@ target/
 # Wing stuff:
 *.wpu
 
-# Qt
+# Qt stuff
 ui_*.py
+
+# Application
+*.ini

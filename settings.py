@@ -39,8 +39,85 @@
 #############################################################################
 
 
-from PyQt5.QtCore import QSettings
-
+from PyQt5.QtCore import QSettings, pyqtSignal, pyqtProperty
+    
 class Settings(QSettings):
     def __init__(self, parent=None):
-        super(Settings, self).__init__(parent)
+        super(Settings, self).__init__('config.ini', QSettings.IniFormat, parent)
+    
+    access_token_changed = pyqtSignal(str)
+    
+    @pyqtProperty(str)
+    def access_token(self):
+        return self.value('access_token', '')
+    
+    @access_token.setter
+    def access_token(self, value):
+        self.setValue('access_token', value)
+        self.access_token_changed.emit(value)
+        
+    aliId_changed = pyqtSignal(str)
+    
+    @pyqtProperty(str)
+    def aliId(self):
+        return self.value('aliId', '')
+    
+    @aliId.setter
+    def aliId(self, value):
+        self.setValue('aliId', value)
+        self.aliId_changed.emit(value)
+        
+    expires_in_changed = pyqtSignal(str)
+    
+    @pyqtProperty(str)
+    def expires_in(self):
+        return self.value('expires_in', '')
+    
+    @expires_in.setter
+    def expires_in(self, value):
+        self.setValue('expires_in', value)
+        self.expires_in_changed.emit(value)
+        
+    memberId_changed = pyqtSignal(str)
+    
+    @pyqtProperty(str)
+    def memberId(self):
+        return self.value('memberId', '')
+    
+    @memberId.setter
+    def memberId(self, value):
+        self.setValue('memberId', value)
+        self.memberId_changed.emit(value)
+        
+    refresh_token_changed = pyqtSignal(str)
+    
+    @pyqtProperty(str)
+    def refresh_token(self):
+        return self.value('refresh_token', '')
+    
+    @refresh_token.setter
+    def refresh_token(self, value):
+        self.setValue('refresh_token', value)
+        self.refresh_token_changed.emit(value)
+        
+    refresh_token_timeout_changed = pyqtSignal(str)
+    
+    @pyqtProperty(str)
+    def refresh_token_timeout(self):
+        return self.value('refresh_token_timeout', '')
+    
+    @refresh_token_timeout.setter
+    def refresh_token_timeout(self, value):
+        self.setValue('refresh_token_timeout', value)
+        self.refresh_token_timeout_changed.emit(value)
+        
+    resource_owner_changed = pyqtSignal(str)
+    
+    @pyqtProperty(str)
+    def resource_owner(self):
+        return self.value('resource_owner', '')
+    
+    @resource_owner.setter
+    def resource_owner(self, value):
+        self.setValue('resource_owner', value)
+        self.resource_owner_changed.emit(value)

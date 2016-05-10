@@ -48,27 +48,29 @@ class CnAlibabaOpen(QObject):
     openApiBaseHttpUrl = "http://gw.open.1688.com/openapi/"
     openApiBaseHttpsUrl = "https://gw.open.1688.com/openapi/"
     openApiProtocol = "param2/"
-    openApiVersion = "1/"
     openApiNamespace = "cn.alibaba.open/"
+    openApiVersion2 = {
+        'trade.order.detail.get',
+        'trade.order.list.get'
+    }
     appKey = "6972191"
     appSignature = "teidQsuKyUiv"
-    refreshToken = "74831383-be8c-473e-898b-e6a90cd1f7e6"
-    accessToken = "5ce190b5-b98f-433d-947f-06042783a16d"
     
     openApiResponse = pyqtSignal(dict)
     
     def __init__(self, parent=None):
         super(CnAlibabaOpen, self).__init__(parent)
 
-        self.networkSession = None
-
         self.request = QNetworkRequest()
         self.accessManager = QNetworkAccessManager(self)
         self.accessManager.finished.connect(self.finished)
         self.accessManager.sslErrors.connect(self.sslErrors)
+        
+    def openApiVersion(self, openApiName):
+        return '2/' if openApiName in self.openApiVersion2 else '1/'
             
     def openApiSignature(self, openApiName, openApiParam):
-        urlPath = self.openApiProtocol + self.openApiVersion + self.openApiNamespace + openApiName + '/' + self.appKey
+        urlPath = self.openApiProtocol + self.openApiVersion(openApiName) + self.openApiNamespace + openApiName + '/' + self.appKey
         params = []
         for key in openApiParam.keys():
             params.append(key + openApiParam.get(key))
@@ -115,7 +117,7 @@ class CnAlibabaOpen(QObject):
     
     def openApiRequest(self, openApiName, openApiParam = dict()):   
         url = QUrl(
-            self.openApiBaseHttpUrl + self.openApiProtocol + self.openApiVersion + self.openApiNamespace + openApiName + '/' + self.appKey)
+            self.openApiBaseHttpUrl + self.openApiProtocol + self.openApiVersion(openApiName) + self.openApiNamespace + openApiName + '/' + self.appKey)
         query = QUrlQuery()
         for key in openApiParam.keys():
             query.addQueryItem(key, openApiParam.get(key))
@@ -126,7 +128,7 @@ class CnAlibabaOpen(QObject):
         
     def accessTokenRequest(self, openApiParam = dict()):
         url = QUrl(
-            self.openApiBaseHttpsUrl + self.openApiProtocol + self.openApiVersion + 'system.oauth2/getToken/' + self.appKey)
+            self.openApiBaseHttpsUrl + self.openApiProtocol + self.openApiVersion(openApiName) + 'system.oauth2/getToken/' + self.appKey)
         query = QUrlQuery()
         query.addQueryItem('grant_type', 'refresh_token')
         query.addQueryItem('client_id', self.appKey)
@@ -139,7 +141,7 @@ class CnAlibabaOpen(QObject):
         
     def refreshTokenRequest(self, openApiParam = dict()):
         url = QUrl(
-            self.openApiBaseHttpsUrl + self.openApiProtocol + self.openApiVersion + 'system.oauth2/postponeToken/' + self.appKey)
+            self.openApiBaseHttpsUrl + self.openApiProtocol + self.openApiVersion(openApiName) + 'system.oauth2/postponeToken/' + self.appKey)
         query = QUrlQuery()
         query.addQueryItem('client_id', self.appKey)
         query.addQueryItem('client_secret', self.appSignature)
@@ -157,6 +159,7 @@ class CnAlibabaOpen(QObject):
             print(jsonDecode.get('exception'))
         else:
             self.openApiResponse.emit(jsonDecode)
+        self.openApiResponse.disconnect()
 
     def sslErrors(self, reply, errors):
-        pass
+        self.openApiResponse.disconnect()
