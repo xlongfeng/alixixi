@@ -69,17 +69,6 @@ class CnAlibabaOpen(QObject):
     def openApiVersion(self, openApiName):
         return '2/' if openApiName in self.openApiVersion2 else '1/'
             
-    def openApiSignature(self, openApiName, openApiParam):
-        urlPath = self.openApiProtocol + self.openApiVersion(openApiName) + self.openApiNamespace + openApiName + '/' + self.appKey
-        params = []
-        for key in openApiParam.keys():
-            params.append(key + openApiParam.get(key))
-        params = sorted(params)
-        urlPath += "".join(params)
-        return hmac.new(bytearray(self.appSignature, 'utf-8'),
-                        bytearray(urlPath, 'utf-8'), 
-                        digestmod=hashlib.sha1).hexdigest().upper()
-    
     def openApiAuthorizeSignature(self, query):
         urlPath = ''
         items = query.queryItems()
@@ -114,6 +103,17 @@ class CnAlibabaOpen(QObject):
         url.setQuery(query)
         self.request.setUrl(url)
         self.accessManager.get(self.request)
+        
+    def openApiSignature(self, openApiName, openApiParam):
+        urlPath = self.openApiProtocol + self.openApiVersion(openApiName) + self.openApiNamespace + openApiName + '/' + self.appKey
+        params = []
+        for key in openApiParam.keys():
+            params.append(key + openApiParam.get(key))
+        params = sorted(params)
+        urlPath += "".join(params)
+        return hmac.new(bytearray(self.appSignature, 'utf-8'),
+                        bytearray(urlPath, 'utf-8'), 
+                        digestmod=hashlib.sha1).hexdigest().upper()
     
     def openApiRequest(self, openApiName, openApiParam = dict()):   
         url = QUrl(

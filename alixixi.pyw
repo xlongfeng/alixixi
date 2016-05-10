@@ -39,6 +39,7 @@
 #############################################################################
 
 
+from PyQt5.QtCore import Qt, QDate
 from PyQt5.QtGui import QIntValidator, QDesktopServices
 from PyQt5.QtWidgets import (QApplication, QComboBox, QDialog, QMainWindow,
                              QGridLayout, QLabel, QLineEdit, QMessageBox,
@@ -120,18 +121,65 @@ class Alixixi(QMainWindow):
         settings.resource_owner_changed.connect(self.ui.loginIdLineEdit.setText)
         self.ui.loginIdLineEdit.setText(settings.resource_owner)
         
-        self.ui.getMemberPushButton.clicked.connect(self.getMemberRequest)
+        self.ui.createStartTimeDateEdit.setDate(QDate.currentDate())
+        self.ui.createEndTimeDateEdit.setDate(QDate.currentDate())
+        self.ui.todayPushButton.clicked.connect(self.todayRange)
+        self.ui.last2DaysPushButton.clicked.connect(self.last2DaysRange)
+        self.ui.last3DaysPushButton.clicked.connect(self.last3DaysRange)
+        self.ui.lastWeekPushButton.clicked.connect(self.lastWeekRange)
+        self.ui.last2WeeksPushButton.clicked.connect(self.last2WeeksRange)
+        self.ui.lastMonthPushButton.clicked.connect(self.lastMonthRange)
+        self.ui.orderListGetPushButton.clicked.connect(self.orderListGetRequest)
+        
+        self.ui.memberGetPushButton.clicked.connect(self.memberGetRequest)
         
     def authorizeRequest(self):
         QDesktopServices.openUrl(cnAlibabaOpen.openApiAuthorizeRequest())
         dialog = AuthorizeDialog(self)
         dialog.exec()
+        
+    def todayRange(self):
+        self.ui.createStartTimeDateEdit.setDate(QDate.currentDate())
+        self.ui.createEndTimeDateEdit.setDate(QDate.currentDate())
+        
+    def last2DaysRange(self):
+        self.ui.createStartTimeDateEdit.setDate(QDate.currentDate().addDays(-1))
+        self.ui.createEndTimeDateEdit.setDate(QDate.currentDate())
 
-    def getMemberRequest(self):
-        cnAlibabaOpen.openApiResponse.connect(self.getMemberResponse)
-        cnAlibabaOpen.openApiRequest('member.get', {'memberId': 'b2b-256074649203e5d'})
+    def last3DaysRange(self):
+        self.ui.createStartTimeDateEdit.setDate(QDate.currentDate().addDays(-2))
+        self.ui.createEndTimeDateEdit.setDate(QDate.currentDate())
+        
+    def lastWeekRange(self):
+        self.ui.createStartTimeDateEdit.setDate(QDate.currentDate().addDays(-6))
+        self.ui.createEndTimeDateEdit.setDate(QDate.currentDate())
+        
+    def last2WeeksRange(self):
+        self.ui.createStartTimeDateEdit.setDate(QDate.currentDate().addDays(-13))
+        self.ui.createEndTimeDateEdit.setDate(QDate.currentDate())
+        
+    def lastMonthRange(self):
+        self.ui.createStartTimeDateEdit.setDate(QDate.currentDate().addDays(-30))
+        self.ui.createEndTimeDateEdit.setDate(QDate.currentDate())
+        
+    def orderListGetRequest(self):
+        cnAlibabaOpen.openApiResponse.connect(self.orderListGetReponse)
+        param = dict()
+        param['access_token'] = settings.access_token
+        param['createStartTime'] = self.ui.createStartTimeDateEdit.date().toString('yyyyMMdd00000000+0800')
+        param['createEndTime'] = self.ui.createEndTimeDateEdit.date().toString('yyyyMMdd23595900+0800')
+        param['buyerMemberId'] = settings.memberId
+        cnAlibabaOpen.openApiRequest('trade.order.list.get', param)
+    
+    def orderListGetReponse(self):
+        print(response)
+        pass    
+    
+    def memberGetRequest(self):
+        cnAlibabaOpen.openApiResponse.connect(self.memberGetResponse)
+        cnAlibabaOpen.openApiRequest('member.get', {'memberId': settings.memberId})
 
-    def getMemberResponse(self, response):
+    def memberGetResponse(self, response):
         print(response)
 
 if __name__ == '__main__':

@@ -14,7 +14,7 @@
    <string>Alixixi</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <layout class="QVBoxLayout" name="verticalLayout">
+   <layout class="QVBoxLayout" name="verticalLayout_2">
     <item>
      <layout class="QHBoxLayout" name="horizontalLayout">
       <item>
@@ -41,7 +41,106 @@
      </layout>
     </item>
     <item>
-     <widget class="QPushButton" name="getMemberPushButton">
+     <widget class="QGroupBox" name="groupBox">
+      <property name="title">
+       <string>Order Query</string>
+      </property>
+      <layout class="QVBoxLayout" name="verticalLayout">
+       <item>
+        <layout class="QFormLayout" name="formLayout">
+         <item row="0" column="0">
+          <widget class="QLabel" name="label_2">
+           <property name="text">
+            <string>Date Range</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="1">
+          <layout class="QHBoxLayout" name="horizontalLayout_2">
+           <item>
+            <widget class="QDateEdit" name="createStartTimeDateEdit"/>
+           </item>
+           <item>
+            <widget class="QLabel" name="label_3">
+             <property name="maximumSize">
+              <size>
+               <width>32</width>
+               <height>16777215</height>
+              </size>
+             </property>
+             <property name="text">
+              <string>to</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignCenter</set>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QDateEdit" name="createEndTimeDateEdit"/>
+           </item>
+          </layout>
+         </item>
+         <item row="1" column="1">
+          <layout class="QGridLayout" name="gridLayout">
+           <item row="0" column="0">
+            <widget class="QPushButton" name="todayPushButton">
+             <property name="text">
+              <string>Today</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QPushButton" name="last2DaysPushButton">
+             <property name="text">
+              <string>The last 2 days</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="2">
+            <widget class="QPushButton" name="last3DaysPushButton">
+             <property name="text">
+              <string>The last 3 days</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QPushButton" name="lastWeekPushButton">
+             <property name="text">
+              <string>The last week</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="QPushButton" name="last2WeeksPushButton">
+             <property name="text">
+              <string>The last 2 weeks</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="2">
+            <widget class="QPushButton" name="lastMonthPushButton">
+             <property name="text">
+              <string>The last month</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <widget class="QPushButton" name="orderListGetPushButton">
+         <property name="text">
+          <string>Reqeust Order List</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </item>
+    <item>
+     <widget class="QPushButton" name="memberGetPushButton">
       <property name="text">
        <string>Request Member Information</string>
       </property>
@@ -55,7 +154,7 @@
       <property name="sizeHint" stdset="0">
        <size>
         <width>20</width>
-        <height>183</height>
+        <height>29</height>
        </size>
       </property>
      </spacer>
