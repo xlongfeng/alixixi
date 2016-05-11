@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
+    <width>405</width>
     <height>300</height>
    </rect>
   </property>
@@ -79,6 +79,13 @@
            <item>
             <widget class="QDateEdit" name="createEndTimeDateEdit"/>
            </item>
+           <item>
+            <widget class="QPushButton" name="orderListGetPushButton">
+             <property name="text">
+              <string>Query List</string>
+             </property>
+            </widget>
+           </item>
           </layout>
          </item>
          <item row="1" column="1">
@@ -130,9 +137,9 @@
         </layout>
        </item>
        <item>
-        <widget class="QPushButton" name="orderListGetPushButton">
+        <widget class="QPushButton" name="orderListReviewPushButton">
          <property name="text">
-          <string>Reqeust Order List</string>
+          <string>Review List</string>
          </property>
         </widget>
        </item>
@@ -154,7 +161,7 @@
       <property name="sizeHint" stdset="0">
        <size>
         <width>20</width>
-        <height>29</height>
+        <height>0</height>
        </size>
       </property>
      </spacer>
@@ -166,7 +173,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>400</width>
+     <width>405</width>
      <height>18</height>
     </rect>
    </property>
