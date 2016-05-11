@@ -51,8 +51,9 @@ from ui_orderlistgetdialog import Ui_OrderListGetDialog
 from ui_alixixi import Ui_Alixixi
 from settings import Settings
 from cnalibabaopen import CnAlibabaOpen
+from orderlist import OrderListGetDialog, OrderListReviewDialog
 
-_translate =QCoreApplication.translate
+_translate = QCoreApplication.translate
 settings = None
 cnalibabaopen = None
 
@@ -112,146 +113,7 @@ class AuthorizeDialog(QDialog):
         else:
             print(response.get('error') + ': ' + response.get('error_description'))
             self.reject()
-            
-class OrderListGetDialog(QDialog):
-    def __init__(self, createStartTime, createEndTime, parent=None):
-        super(OrderListGetDialog, self).__init__(parent)
-        self.ui = Ui_OrderListGetDialog()
-        self.ui.setupUi(self)
-        self.ui.progressBar.setRange(0, 100)
-        self.ui.progressBar.setValue(0)
-        
-        self.retranslate()
-        
-        cnAlibabaOpen.openApiResponse.connect(self.orderListGetReponse)
-        cnAlibabaOpen.openApiResponse.connect(self.orderDetailGetResponse)
-        
-        # prepare to get order list
-        self.orderList = dict()
-        self.orderDetailIdList = []        
-        self.createStartTime = createStartTime
-        self.createEndTime = createEndTime
-        self.totalCount = 0
-        self.count = 0
-        self.page = 1
-        self.orderModelId = ''
-        self.orderListGetRequest()
-        
-    def retranslate(self):
-        _translate('OrderListReview', 'CANCEL')
-        _translate('OrderListReview', 'SUCCESS')
-        _translate('OrderListReview', 'WAIT_BUYER_PAY')
-        _translate('OrderListReview', 'WAIT_SELLER_SEND')
-        _translate('OrderListReview', 'WAIT_BUYER_RECEIVE')
-        _translate('OrderListReview', 'WAIT_SELLER_ACT')
-        _translate('OrderListReview', 'WAIT_BUYER_CONFIRM_ACTION')
-        _translate('OrderListReview', 'WAIT_SELLER_PUSH')
-        _translate('OrderListReview', 'WAIT_LOGISTICS_TAKE_IN')
-        _translate('OrderListReview', 'WAIT_BUYER_SIGN')
-        _translate('OrderListReview', 'SIGN_IN_SUCCESS')
-        _translate('OrderListReview', 'SIGN_IN_FAILED')
-        
-    def orderDetailGetNext(self):
-        if len(self.orderDetailIdList) > 0:
-            # get next order detial
-            self.count += 1
-            self.ui.progressBar.setValue(self.count)
-            self.orderModelId = self.orderDetailIdList.pop()
-            self.orderDetailGetRequest()
-        elif self.count < self.totalCount:
-            # get next order list
-            self.page += 1
-            self.orderListGetRequest()
-        else:
-            # task done
-            print(self.orderList)
-            with open('orderlist.json', 'w', encoding='utf-8') as f:
-                f.write(str(self.orderList))
-            QMessageBox.information(self, _translate('OrderListGetDialog', 'Order List Get'), _translate('OrderListGetDialog', 'Query order list complete'))
-            self.accept()
-        
-    def orderDetailGetRequest(self):
-        param = dict()
-        param['access_token'] = settings.access_token
-        param['id'] = str(self.orderModelId)
-        param['needOrderEntries'] = 'false'
-        param['needInvoiceInfo'] = 'false'
-        cnAlibabaOpen.openApiRequest('trade.order.detail.get', param)
-        
-    def orderListGetRequest(self):
-        param = dict()
-        param['access_token'] = settings.access_token
-        param['createStartTime'] = self.createStartTime
-        param['createEndTime'] = self.createEndTime
-        param['buyerMemberId'] = settings.memberId
-        param['page'] = str(self.page)
-        param['pageSize'] = '10'
-        cnAlibabaOpen.openApiRequest('trade.order.list.get', param)
-        
-    def orderListAppend(self, modelList):
-        self.orderDetailIdList = []
-        for orderModel in modelList:
-            id = orderModel['id']
-            self.orderDetailIdList.append(id)
-            self.orderList[id] = dict()
-            self.orderList[id]['status'] = orderModel['status']
-            self.orderList[id]['sumProductPayment'] = orderModel['sumProductPayment']
-            self.orderList[id]['carriage'] = orderModel['carriage']
-            self.orderList[id]['sumPayment'] = orderModel['sumPayment']
-            self.orderList[id]['orderEntries'] = []
-            for orderEntryModel in orderModel['orderEntries']:
-                orderEntry = dict()
-                orderEntry['productName'] = orderEntryModel['productName']
-                specInfo = []
-                for specItems in orderEntryModel['specInfoModel']['specItems']:
-                    specInfo.append({specItems['specName']: specItems['specValue']})
-                orderEntry['specInfo'] = specInfo
-                orderEntry['price'] = orderEntryModel['price']
-                orderEntry['quantity'] = orderEntryModel['quantity']
-                orderEntry['promotionsFee'] = orderEntryModel['promotionsFee']
-                orderEntry['productName'] = orderEntryModel['productName']
-                self.orderList[id]['orderEntries'].append(orderEntry)
-                
-        # prepare to get order detail
-        self.orderDetailGetNext()
-        
-    def orderListGetReponse(self, response):
-        if 'orderListResult' not in response:
-            return
-        orderListResult = response['orderListResult']
-        if self.totalCount == 0:
-            # first call
-            self.totalCount = orderListResult['totalCount']
-            if self.totalCount == 0:
-                self.reject()
-                return
-            else:
-                self.ui.progressBar.setRange(0, self.totalCount)
-        self.orderListAppend(orderListResult['modelList'])
-                
-    def orderDetailGetResponse(self, response):
-        if 'orderModel' not in response:
-            return
-        orderModel = response['orderModel']
-        
-        id = orderModel['id']
-        self.orderList[id]['toFullName'] = orderModel['toFullName']
-        self.orderList[id]['toMobile'] = orderModel['toMobile']
-        self.orderList[id]['buyerPhone'] = orderModel['buyerPhone']
-        self.orderList[id]['toArea'] = orderModel['toArea']
-        if 'logisticsOrderList' in orderModel:
-            logisticsOrderList = []
-            for logisticsOrderModel in orderModel['logisticsOrderList']:
-                logisticsOrderList.append({
-                    'logisticsOrderNo': logisticsOrderModel['logisticsOrderNo'],
-                    'companyName': logisticsOrderModel['logisticsCompany']['companyName'],
-                    'logisticsBillNo': logisticsOrderModel['logisticsBillNo'],
-                    'gmtLogisticsCompanySend': logisticsOrderModel['gmtLogisticsCompanySend']
-                })
-            self.orderList[id]['logisticsOrderList'] = logisticsOrderList
-        
-        self.orderDetailGetNext()
-        
+    
 class Alixixi(QMainWindow):
     def __init__(self, parent=None):
         super(Alixixi, self).__init__(parent)
@@ -263,8 +125,7 @@ class Alixixi(QMainWindow):
         settings.resource_owner_changed.connect(self.ui.loginIdLineEdit.setText)
         self.ui.loginIdLineEdit.setText(settings.resource_owner)
         
-        self.ui.createStartTimeDateEdit.setDate(QDate.currentDate())
-        self.ui.createEndTimeDateEdit.setDate(QDate.currentDate())
+        self.todayRange()
         self.ui.todayPushButton.clicked.connect(self.todayRange)
         self.ui.last2DaysPushButton.clicked.connect(self.last2DaysRange)
         self.ui.last3DaysPushButton.clicked.connect(self.last3DaysRange)
@@ -310,10 +171,12 @@ class Alixixi(QMainWindow):
         createStartTime = self.ui.createStartTimeDateEdit.date().toString('yyyyMMdd00000000+0800')
         createEndTime = self.ui.createEndTimeDateEdit.date().toString('yyyyMMdd23595900+0800')
         dialog = OrderListGetDialog(createStartTime, createEndTime, self)
-        dialog.exec()
+        if dialog.exec() == QDialog.Accepted:
+            self.orderListReview()
         
     def orderListReview(self):
-        pass
+        dialog = OrderListReviewDialog(self)
+        dialog.exec()
     
     def memberGetRequest(self):
         cnAlibabaOpen.openApiResponse.connect(self.memberGetResponse)

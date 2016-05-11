@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS>
-<TS version="2.1" language="zh_CN">
+<!DOCTYPE TS><TS version="2.0" language="zh_CN" sourcelanguage="">
 <context>
     <name>Alixixi</name>
     <message>
@@ -100,12 +99,12 @@
 <context>
     <name>OrderListGetDialog</name>
     <message>
-        <location filename="alixixi.pyw" line="171"/>
+        <location filename="orderlist.py" line="97"/>
         <source>Order List Get</source>
         <translation>查询订单列表</translation>
     </message>
     <message>
-        <location filename="alixixi.pyw" line="171"/>
+        <location filename="orderlist.py" line="97"/>
         <source>Query order list complete</source>
         <translation>查询订单列表完成</translation>
     </message>
@@ -113,64 +112,102 @@
 <context>
     <name>OrderListReview</name>
     <message>
-        <location filename="alixixi.pyw" line="142"/>
+        <location filename="orderlist.py" line="207"/>
         <source>CANCEL</source>
         <translation>交易关闭</translation>
     </message>
     <message>
-        <location filename="alixixi.pyw" line="143"/>
+        <location filename="orderlist.py" line="208"/>
         <source>SUCCESS</source>
         <translation>交易成功</translation>
     </message>
     <message>
-        <location filename="alixixi.pyw" line="144"/>
+        <location filename="orderlist.py" line="209"/>
         <source>WAIT_BUYER_PAY</source>
         <translation>等待买家付款</translation>
     </message>
     <message>
-        <location filename="alixixi.pyw" line="145"/>
+        <location filename="orderlist.py" line="210"/>
         <source>WAIT_SELLER_SEND</source>
-        <translation>WAIT_SELLER_SEND</translation>
+        <translation>等待卖家发货</translation>
     </message>
     <message>
-        <location filename="alixixi.pyw" line="146"/>
+        <location filename="orderlist.py" line="211"/>
         <source>WAIT_BUYER_RECEIVE</source>
         <translation>等待买家确认收货</translation>
     </message>
     <message>
-        <location filename="alixixi.pyw" line="147"/>
+        <location filename="orderlist.py" line="212"/>
         <source>WAIT_SELLER_ACT</source>
         <translation>分阶段等待卖家操作</translation>
     </message>
     <message>
-        <location filename="alixixi.pyw" line="148"/>
+        <location filename="orderlist.py" line="213"/>
         <source>WAIT_BUYER_CONFIRM_ACTION</source>
         <translation>分阶段等待买家确认卖家操作</translation>
     </message>
     <message>
-        <location filename="alixixi.pyw" line="149"/>
+        <location filename="orderlist.py" line="214"/>
         <source>WAIT_SELLER_PUSH</source>
         <translation>分阶段等待卖家推进</translation>
     </message>
     <message>
-        <location filename="alixixi.pyw" line="150"/>
+        <location filename="orderlist.py" line="215"/>
         <source>WAIT_LOGISTICS_TAKE_IN</source>
         <translation>等待物流公司揽件</translation>
     </message>
     <message>
-        <location filename="alixixi.pyw" line="151"/>
+        <location filename="orderlist.py" line="216"/>
         <source>WAIT_BUYER_SIGN</source>
         <translation>等待买家签收</translation>
     </message>
     <message>
-        <location filename="alixixi.pyw" line="152"/>
+        <location filename="orderlist.py" line="217"/>
         <source>SIGN_IN_SUCCESS</source>
         <translation>买家已签收</translation>
     </message>
     <message>
-        <location filename="alixixi.pyw" line="153"/>
+        <location filename="orderlist.py" line="218"/>
         <source>SIGN_IN_FAILED</source>
         <translation>签收失败</translation>
+    </message>
+    <message>
+        <location filename="orderlist.py" line="197"/>
+        <source>id:</source>
+        <translation>订单号：</translation>
+    </message>
+    <message>
+        <location filename="orderlist.py" line="198"/>
+        <source>toFullName:</source>
+        <translation>收货人：</translation>
+    </message>
+    <message>
+        <location filename="orderlist.py" line="199"/>
+        <source>toArea:</source>
+        <translation>收货地址：</translation>
+    </message>
+    <message>
+        <location filename="orderlist.py" line="197"/>
+        <source>status:</source>
+        <translation>订单状态：</translation>
+    </message>
+    <message>
+        <location filename="orderlist.py" line="203"/>
+        <source>companyName:</source>
+        <translation>物流公司：</translation>
+    </message>
+    <message>
+        <location filename="orderlist.py" line="203"/>
+        <source>logisticsBillNo:</source>
+        <translation>运单号码：</translation>
+    </message>
+</context>
+<context>
+    <name>OrderListReviewDialog</name>
+    <message>
+        <location filename="orderlistreviewdialog.ui" line="14"/>
+        <source>Order List Review</source>
+        <translation>查看订单列表</translation>
     </message>
 </context>
 </TS>

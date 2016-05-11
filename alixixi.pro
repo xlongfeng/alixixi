@@ -6,11 +6,12 @@ SOURCES += \
     alixixi.pyw \
     cnalibabaopen.py \
     settings.py \
-    cnalibabaopen.py
+    orderlist.py
 
 FORMS += \
     alixixi.ui \
     authorizedialog.ui \
-    orderlistgetdialog.ui
+    orderlistgetdialog.ui \
+    orderlistreviewdialog.ui
 	
 TRANSLATIONS += alixixi_zh_CN.ts
