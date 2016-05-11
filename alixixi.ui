@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>405</width>
+    <width>416</width>
     <height>300</height>
    </rect>
   </property>
@@ -35,6 +35,13 @@
        <widget class="QPushButton" name="authorizePushButton">
         <property name="text">
          <string>Authorize</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="reAuthorizePushButton">
+        <property name="text">
+         <string>Re Authorize</string>
         </property>
        </widget>
       </item>
@@ -173,8 +180,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>405</width>
-     <height>18</height>
+     <width>416</width>
+     <height>17</height>
     </rect>
    </property>
   </widget>

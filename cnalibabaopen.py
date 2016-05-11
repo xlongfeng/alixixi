@@ -45,6 +45,7 @@ from PyQt5.QtNetwork import QNetworkAccessManager, QNetworkReply, QNetworkReques
 import hmac, hashlib, json
 
 class CnAlibabaOpen(QObject):
+    pInstance = None
     openApiBaseHttpUrl = "http://gw.open.1688.com/openapi/"
     openApiBaseHttpsUrl = "https://gw.open.1688.com/openapi/"
     openApiProtocol = "param2/"
@@ -56,6 +57,7 @@ class CnAlibabaOpen(QObject):
     appSignature = "k7hhlL99gf"
     
     openApiResponse = pyqtSignal(dict)
+    openApiResponseException = pyqtSignal(str)
     
     def __init__(self, parent=None):
         super(CnAlibabaOpen, self).__init__(parent)
@@ -64,6 +66,12 @@ class CnAlibabaOpen(QObject):
         self.accessManager = QNetworkAccessManager(self)
         self.accessManager.finished.connect(self.finished)
         self.accessManager.sslErrors.connect(self.sslErrors)
+        
+    @classmethod
+    def instance(cls):
+        if cls.pInstance is None:
+            cls.pInstance = cls()
+        return cls.pInstance
         
     def openApiVersion(self, openApiName):
         return '2/' if openApiName in self.openApiVersion2 else '1/'
@@ -106,7 +114,7 @@ class CnAlibabaOpen(QObject):
         
     def accessTokenRequest(self, openApiParam = dict()):
         url = QUrl(
-            self.openApiBaseHttpsUrl + self.openApiProtocol + self.openApiVersion(openApiName) + 'system.oauth2/getToken/' + self.appKey)
+            self.openApiBaseHttpsUrl + self.openApiProtocol + '1/system.oauth2/getToken/' + self.appKey)
         query = QUrlQuery()
         query.addQueryItem('grant_type', 'refresh_token')
         query.addQueryItem('client_id', self.appKey)
@@ -155,9 +163,8 @@ class CnAlibabaOpen(QObject):
     def finished(self, reply):
         response = reply.readAll()
         jsonDecode = json.loads(response.data().decode('utf-8'))
-        # print(jsonDecode)
         if 'exception' in jsonDecode:
-            print(jsonDecode.get('exception'))
+            self.openApiResponseException.emit(jsonDecode.get('exception'))
         else:
             self.openApiResponse.emit(jsonDecode)
 

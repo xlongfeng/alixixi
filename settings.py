@@ -42,8 +42,17 @@
 from PyQt5.QtCore import QSettings, pyqtSignal, pyqtProperty
     
 class Settings(QSettings):
+    pInstance = None
+
     def __init__(self, parent=None):
         super(Settings, self).__init__('config.ini', QSettings.IniFormat, parent)
+        
+        
+    @classmethod
+    def instance(cls):
+        if cls.pInstance is None:
+            cls.pInstance = cls()
+        return cls.pInstance
     
     access_token_changed = pyqtSignal(str)
     
@@ -121,3 +130,11 @@ class Settings(QSettings):
     def resource_owner(self, value):
         self.setValue('resource_owner', value)
         self.resource_owner_changed.emit(value)
+        
+    @pyqtProperty(str)
+    def access_token_expires_in(self):
+        return self.value('access_token_expires_in', '')
+    
+    @access_token_expires_in.setter
+    def access_token_expires_in(self, value):
+        self.setValue('access_token_expires_in', value)

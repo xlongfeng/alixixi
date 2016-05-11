@@ -40,12 +40,13 @@
 #############################################################################
 
 
-from PyQt5.QtCore import Qt, QCoreApplication, QDate
+from PyQt5.QtCore import Qt, QCoreApplication, QDate, QTimer
 from PyQt5.QtWidgets import (QApplication, QComboBox, QDialog,
                              QGridLayout, QLabel, QLineEdit, QMessageBox,
                              QPushButton)
 
 import json
+from jinja2 import Template
 
 from ui_orderlistgetdialog import Ui_OrderListGetDialog
 from ui_orderlistreviewdialog import Ui_OrderListReviewDialog
@@ -63,7 +64,7 @@ class OrderListGetDialog(QDialog):
         self.ui.progressBar.setValue(0)
         
         self.settings = Settings(self)
-        self.cnAlibabaOpen = CnAlibabaOpen(self)
+        self.cnAlibabaOpen = CnAlibabaOpen.instance()
         self.cnAlibabaOpen.openApiResponse.connect(self.orderListGetReponse)
         self.cnAlibabaOpen.openApiResponse.connect(self.orderDetailGetResponse)
         
@@ -76,7 +77,7 @@ class OrderListGetDialog(QDialog):
         self.count = 0
         self.page = 1
         self.orderModelId = ''
-        self.orderListGetRequest()
+        QTimer.singleShot(100, self.orderListGetRequest)
         
     def orderDetailGetNext(self):
         if len(self.orderDetailIdList) > 0:
