@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS><TS version="2.0" language="zh_CN" sourcelanguage="">
+<!DOCTYPE TS>
+<TS version="2.1" language="zh_CN">
 <context>
     <name>Alixixi</name>
     <message>
@@ -190,24 +191,29 @@
         <translation>查看订单列表</translation>
     </message>
     <message>
-        <location filename="orderlistreviewdialog.ui" line="49"/>
+        <location filename="orderlistreviewdialog.ui" line="56"/>
         <source>about:blank</source>
         <translation>about:blank</translation>
     </message>
     <message>
-        <location filename="orderlistreviewdialog.ui" line="25"/>
-        <source>Search Next</source>
-        <translation>查找下一个</translation>
+        <location filename="orderlistreviewdialog.ui" line="46"/>
+        <source>Clear</source>
+        <translation>清空</translation>
+    </message>
+    <message>
+        <location filename="orderlistreviewdialog.ui" line="22"/>
+        <source>Search</source>
+        <translation>查找</translation>
     </message>
     <message>
         <location filename="orderlistreviewdialog.ui" line="32"/>
-        <source>Search Prev</source>
-        <translation>查找上一个</translation>
+        <source>Next</source>
+        <translation>下一个</translation>
     </message>
     <message>
         <location filename="orderlistreviewdialog.ui" line="39"/>
-        <source>Clear</source>
-        <translation>清空</translation>
+        <source>Prev</source>
+        <translation>上一个</translation>
     </message>
 </context>
 <context>

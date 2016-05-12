@@ -197,11 +197,12 @@ class OrderListReviewDialog(QDialog):
         super(OrderListReviewDialog, self).__init__(parent)
         self.ui = Ui_OrderListReviewDialog()
         self.ui.setupUi(self)
+        self.ui.label.setBuddy(self.ui.findTextLineEdit)
         self.resize(1050, 600)
         self.retranslate()
         
-        self.ui.searchNextPushButton.clicked.connect(self.searchNext)
-        self.ui.searchPrevPushButton.clicked.connect(self.searchPrev)
+        self.ui.nextPushButton.clicked.connect(self.searchNext)
+        self.ui.prevPushButton.clicked.connect(self.searchPrev)
         self.ui.clearPushButton.clicked.connect(self.searchClear)
         
         QTimer.singleShot(100, self.setHtml)

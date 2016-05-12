@@ -17,19 +17,26 @@
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
-      <widget class="QLineEdit" name="findTextLineEdit"/>
-     </item>
-     <item>
-      <widget class="QPushButton" name="searchNextPushButton">
+      <widget class="QLabel" name="label">
        <property name="text">
-        <string>Search Next</string>
+        <string>Search</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="searchPrevPushButton">
+      <widget class="QLineEdit" name="findTextLineEdit"/>
+     </item>
+     <item>
+      <widget class="QPushButton" name="nextPushButton">
        <property name="text">
-        <string>Search Prev</string>
+        <string>Next</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="prevPushButton">
+       <property name="text">
+        <string>Prev</string>
        </property>
       </widget>
      </item>
