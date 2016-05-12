@@ -40,13 +40,15 @@
 #############################################################################
 
 
-from PyQt5.QtCore import Qt, QCoreApplication, QDate, QTimer
+from PyQt5.QtCore import Qt, QCoreApplication, QDate, QDateTime, QTimer
 from PyQt5.QtWidgets import (QApplication, QComboBox, QDialog,
                              QGridLayout, QLabel, QLineEdit, QMessageBox,
                              QPushButton)
+from PyQt5.QtWebKit import QWebSettings
+from PyQt5.QtWebKitWidgets import QWebPage
 
 import json
-from jinja2 import Template
+from jinja2 import Environment, FileSystemLoader
 
 from ui_orderlistgetdialog import Ui_OrderListGetDialog
 from ui_orderlistreviewdialog import Ui_OrderListReviewDialog
@@ -70,7 +72,7 @@ class OrderListGetDialog(QDialog):
         
         # prepare to get order list
         self.orderList = dict()
-        self.orderDetailIdList = []        
+        self.orderDetailIdList = []
         self.createStartTime = createStartTime
         self.createEndTime = createEndTime
         self.totalCount = 0
@@ -115,28 +117,38 @@ class OrderListGetDialog(QDialog):
         param['pageSize'] = '10'
         self.cnAlibabaOpen.openApiRequest('trade.order.list.get', param)
         
+    def dateTimeConvert(self, dateTime):
+        return QDateTime.fromString(dateTime, 'yyyyMMddhhmmsszzz+0800').toString('yyyy-MM-dd hh:mm:ss')
+        
+    def currencyUnitConvert(self, price):
+        return float(price / 100.0)
+        
     def orderListAppend(self, modelList):
         self.orderDetailIdList = []
         for orderModel in modelList:
             id = orderModel['id']
             self.orderDetailIdList.append(id)
             self.orderList[id] = dict()
-            self.orderList[id]['status'] = orderModel['status']
-            self.orderList[id]['sumProductPayment'] = orderModel['sumProductPayment']
-            self.orderList[id]['carriage'] = orderModel['carriage']
-            self.orderList[id]['sumPayment'] = orderModel['sumPayment']
+            self.orderList[id]['id'] = id
+            self.orderList[id]['status'] = _translate('OrderListReview', orderModel['status'])
+            self.orderList[id]['gmtCreate'] = self.dateTimeConvert(orderModel['gmtCreate'])
+            self.orderList[id]['sumProductPayment'] = self.currencyUnitConvert(orderModel['sumProductPayment'])
+            self.orderList[id]['carriage'] = self.currencyUnitConvert(orderModel['carriage'])
+            self.orderList[id]['sumPayment'] = self.currencyUnitConvert(orderModel['sumPayment'])
             self.orderList[id]['orderEntries'] = []
             for orderEntryModel in orderModel['orderEntries']:
                 orderEntry = dict()
                 orderEntry['productName'] = orderEntryModel['productName']
                 specInfo = []
                 for specItems in orderEntryModel['specInfoModel']['specItems']:
-                    specInfo.append({specItems['specName']: specItems['specValue']})
+                    specInfo.append({'specName': specItems['specName'], 'specValue': specItems['specValue']})
                 orderEntry['specInfo'] = specInfo
-                orderEntry['price'] = orderEntryModel['price']
+                orderEntry['price'] = self.currencyUnitConvert(orderEntryModel['price'])
                 orderEntry['quantity'] = orderEntryModel['quantity']
-                orderEntry['promotionsFee'] = orderEntryModel['promotionsFee']
-                orderEntry['productName'] = orderEntryModel['productName']
+                orderEntry['promotionsFee'] = self.currencyUnitConvert(orderEntryModel['promotionsFee'])
+                orderEntry['actualPayFee'] = self.currencyUnitConvert(orderEntryModel['actualPayFee'])
+                orderEntry['mainSummImageUrl'] = orderEntryModel['mainSummImageUrl']
+                orderEntry['entryStatus'] = _translate('OrderListReview', orderEntryModel['entryStatus'])
                 self.orderList[id]['orderEntries'].append(orderEntry)
                 
         # prepare to get order detail
@@ -150,6 +162,7 @@ class OrderListGetDialog(QDialog):
             # first call
             self.totalCount = orderListResult['totalCount']
             if self.totalCount == 0:
+                QMessageBox.information(self, _translate('OrderListGetDialog', 'Order List Get'), _translate('OrderListGetDialog', 'Empty order list'))
                 self.reject()
                 return
             else:
@@ -173,7 +186,7 @@ class OrderListGetDialog(QDialog):
                     'logisticsOrderNo': logisticsOrderModel['logisticsOrderNo'],
                     'companyName': logisticsOrderModel['logisticsCompany']['companyName'],
                     'logisticsBillNo': logisticsOrderModel['logisticsBillNo'],
-                    'gmtLogisticsCompanySend': logisticsOrderModel['gmtLogisticsCompanySend']
+                    'gmtSend': self.dateTimeConvert(logisticsOrderModel['gmtSend'])
                 })
             self.orderList[id]['logisticsOrderList'] = logisticsOrderList
         
@@ -184,30 +197,14 @@ class OrderListReviewDialog(QDialog):
         super(OrderListReviewDialog, self).__init__(parent)
         self.ui = Ui_OrderListReviewDialog()
         self.ui.setupUi(self)
+        self.resize(1050, 600)
         self.retranslate()
         
-        with open('orderlist.json', 'r', encoding='utf-8') as f:
-            jsonDecode = json.load(f)
-            html = ''
-            for key in sorted(jsonDecode.keys(), reverse=True):
-                order = jsonDecode[key]
-                html += '-' * 80 + '<br/>'
-                html += _translate('OrderListReview', 'id:') + key+ _translate('OrderListReview', 'status:') + _translate('OrderListReview', order['status']) + '<br/>'
-                html += _translate('OrderListReview', 'toFullName:') + order['toFullName'] + '<br/>'
-                html += _translate('OrderListReview', 'toArea:') + order['toArea'] + '<br/>'
-                if 'logisticsOrderList' in order:
-                    logisticsOrderList = order['logisticsOrderList']
-                    for logisticsOrder in logisticsOrderList:
-                        html += _translate('OrderListReview', 'companyName:') + logisticsOrder['companyName'] + _translate('OrderListReview', 'logisticsBillNo:') + logisticsOrder['logisticsBillNo'] + '<br/>'
-                for orderEntry in order['orderEntries']:
-                    html += orderEntry['productName'] + '|' + str(orderEntry['price']) + '|' + str(orderEntry['quantity']) + '|' + str(orderEntry['promotionsFee']) + '<br/>'
-                    specInfo = orderEntry['specInfo']
-                    for specItem in specInfo:
-                        for specName in specItem:
-                            html += specName + specItem[specName]
-                    html += '<br/>'
-                html += '<br/>' + '<br/>'
-            self.ui.textEdit.setHtml(html)
+        self.ui.searchNextPushButton.clicked.connect(self.searchNext)
+        self.ui.searchPrevPushButton.clicked.connect(self.searchPrev)
+        self.ui.clearPushButton.clicked.connect(self.searchClear)
+        
+        QTimer.singleShot(100, self.setHtml)
         
     def retranslate(self):
         _translate('OrderListReview', 'CANCEL')
@@ -222,3 +219,27 @@ class OrderListReviewDialog(QDialog):
         _translate('OrderListReview', 'WAIT_BUYER_SIGN')
         _translate('OrderListReview', 'SIGN_IN_SUCCESS')
         _translate('OrderListReview', 'SIGN_IN_FAILED')
+        
+    def searchNext(self):
+        findText = self.ui.findTextLineEdit.text()
+        if len(findText) > 0:
+            self.ui.webView.findText(findText, QWebPage.FindWrapsAroundDocument)
+    
+    def searchPrev(self):
+        findText = self.ui.findTextLineEdit.text()
+        if len(findText) > 0:
+            self.ui.webView.findText(findText, QWebPage.FindBackward | QWebPage.FindWrapsAroundDocument)
+    
+    def searchClear(self):
+        self.ui.findTextLineEdit.setText('')
+        self.ui.webView.findText('')
+        
+    def setHtml(self):
+        with open('orderlist.json', 'r', encoding='utf-8') as f:
+            jsonDecode = json.load(f)
+            
+            orderList = jsonDecode.values()
+            orderList = sorted(orderList, key=lambda d: d['gmtCreate'], reverse=True)
+            env = Environment(loader=FileSystemLoader('templates'))
+            template = env.get_template('orderlist.html')
+            self.ui.webView.setHtml(template.render(orderList = orderList))
