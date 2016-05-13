@@ -54,7 +54,8 @@ from jinja2 import Environment, FileSystemLoader
 from ui_orderlistgetdialog import Ui_OrderListGetDialog
 from ui_orderlistreviewdialog import Ui_OrderListReviewDialog
 from settings import Settings
-from cnalibabaopen import *
+from cnalibabaopen import CnAlibabaOpen
+from orm import *
 
 _translate = QCoreApplication.translate
 
@@ -97,6 +98,7 @@ class OrderListGetDialog(QDialog):
             # task done
             with open('orderlist.json', 'w', encoding='utf-8') as f:
                 jsonEncode = json.dump(self.orderList, f)
+            session.commit()
             QMessageBox.information(self, _translate('OrderListGetDialog', 'Order List Get'), _translate('OrderListGetDialog', 'Query order list complete'))
             self.accept()
         
@@ -118,24 +120,33 @@ class OrderListGetDialog(QDialog):
         param['pageSize'] = '10'
         self.cnAlibabaOpen.openApiRequest('trade.order.list.get', param)
         
-    def dateTimeConvert(self, dateTime):
-        return QDateTime.fromString(dateTime, 'yyyyMMddhhmmsszzz+0800').toString('yyyy-MM-dd hh:mm:ss')
-        
-    def currencyUnitConvert(self, price):
-        return float(price / 100.0)
-        
     def orderListAppend(self, modelList):
         self.orderDetailIdList = []
         for orderModel in modelList:
+            orderId = orderModel['id']
+            session.add(AliOrderModel(
+                #buyerPhone = Column('buyer_phone', String),
+                carriage = ccyUnitConvert(orderModel['carriage']),
+                gmtCreate = strParseTime(orderModel['gmtCreate']),
+                orderId = orderId,
+                status = _translate('OrderListReview', orderModel['status']),
+                sumProductPayment = ccyUnitConvert(orderModel['sumProductPayment']),
+                sumPayment = ccyUnitConvert(orderModel['sumPayment']),
+                #orderEntries = Column('order_entries', String),
+                #logisticsOrderList = Column('logistics_order_list', String),
+                #toFullName = Column('to_full_name', String),
+                #toMobile = Column('to_mobile', String),
+                #toArea = Column('to_area', String),
+            ))
             id = orderModel['id']
             self.orderDetailIdList.append(id)
             self.orderList[id] = dict()
             self.orderList[id]['id'] = id
             self.orderList[id]['status'] = _translate('OrderListReview', orderModel['status'])
-            self.orderList[id]['gmtCreate'] = self.dateTimeConvert(orderModel['gmtCreate'])
-            self.orderList[id]['sumProductPayment'] = self.currencyUnitConvert(orderModel['sumProductPayment'])
-            self.orderList[id]['carriage'] = self.currencyUnitConvert(orderModel['carriage'])
-            self.orderList[id]['sumPayment'] = self.currencyUnitConvert(orderModel['sumPayment'])
+            self.orderList[id]['gmtCreate'] = str(strParseTime(orderModel['gmtCreate']))
+            self.orderList[id]['sumProductPayment'] = ccyUnitConvert(orderModel['sumProductPayment'])
+            self.orderList[id]['carriage'] = ccyUnitConvert(orderModel['carriage'])
+            self.orderList[id]['sumPayment'] = ccyUnitConvert(orderModel['sumPayment'])
             self.orderList[id]['orderEntries'] = []
             for orderEntryModel in orderModel['orderEntries']:
                 orderEntry = dict()
@@ -144,10 +155,10 @@ class OrderListGetDialog(QDialog):
                 for specItems in orderEntryModel['specInfoModel']['specItems']:
                     specInfo.append({'specName': specItems['specName'], 'specValue': specItems['specValue']})
                 orderEntry['specInfo'] = specInfo
-                orderEntry['price'] = self.currencyUnitConvert(orderEntryModel['price'])
+                orderEntry['price'] = ccyUnitConvert(orderEntryModel['price'])
                 orderEntry['quantity'] = orderEntryModel['quantity']
-                orderEntry['promotionsFee'] = self.currencyUnitConvert(orderEntryModel['promotionsFee'])
-                orderEntry['actualPayFee'] = self.currencyUnitConvert(orderEntryModel['actualPayFee'])
+                orderEntry['promotionsFee'] = ccyUnitConvert(orderEntryModel['promotionsFee'])
+                orderEntry['actualPayFee'] = ccyUnitConvert(orderEntryModel['actualPayFee'])
                 orderEntry['mainSummImageUrl'] = orderEntryModel['mainSummImageUrl']
                 orderEntry['entryStatus'] = _translate('OrderListReview', orderEntryModel['entryStatus'])
                 self.orderList[id]['orderEntries'].append(orderEntry)
@@ -187,7 +198,7 @@ class OrderListGetDialog(QDialog):
                     'logisticsOrderNo': logisticsOrderModel['logisticsOrderNo'],
                     'companyName': logisticsOrderModel['logisticsCompany']['companyName'],
                     'logisticsBillNo': logisticsOrderModel['logisticsBillNo'],
-                    'gmtSend': self.dateTimeConvert(logisticsOrderModel['gmtSend'])
+                    'gmtSend': str(strParseTime(logisticsOrderModel['gmtSend']))
                 })
             self.orderList[id]['logisticsOrderList'] = logisticsOrderList
         
