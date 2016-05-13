@@ -44,6 +44,7 @@ from PyQt5.QtCore import Qt, QCoreApplication, QDate, QDateTime, QTimer
 from PyQt5.QtWidgets import (QApplication, QComboBox, QDialog,
                              QGridLayout, QLabel, QLineEdit, QMessageBox,
                              QPushButton)
+from PyQt5.QtGui import QDesktopServices
 from PyQt5.QtWebKit import QWebSettings
 from PyQt5.QtWebKitWidgets import QWebPage
 
@@ -205,6 +206,9 @@ class OrderListReviewDialog(QDialog):
         self.ui.prevPushButton.clicked.connect(self.searchPrev)
         self.ui.clearPushButton.clicked.connect(self.searchClear)
         
+        self.ui.webView.page().setLinkDelegationPolicy(QWebPage.DelegateAllLinks)
+        self.ui.webView.linkClicked.connect(self.linkClicked)
+        self.ui.webView.setHtml(_translate('OrderListReview', 'Loading, wait a monent ...'))
         QTimer.singleShot(100, self.setHtml)
         
     def retranslate(self):
@@ -221,19 +225,21 @@ class OrderListReviewDialog(QDialog):
         _translate('OrderListReview', 'SIGN_IN_SUCCESS')
         _translate('OrderListReview', 'SIGN_IN_FAILED')
         
-    def searchNext(self):
-        findText = self.ui.findTextLineEdit.text()
+    def searchNext(self, options = QWebPage.FindWrapsAroundDocument):
+        findText = self.ui.findTextLineEdit.text().strip()
         if len(findText) > 0:
-            self.ui.webView.findText(findText, QWebPage.FindWrapsAroundDocument)
+            if self.ui.webView.findText(findText, QWebPage.FindWrapsAroundDocument) == False:
+                self.ui.webView.findText('', QWebPage.FindWrapsAroundDocument)
     
-    def searchPrev(self):
-        findText = self.ui.findTextLineEdit.text()
-        if len(findText) > 0:
-            self.ui.webView.findText(findText, QWebPage.FindBackward | QWebPage.FindWrapsAroundDocument)
+    def searchPrev(self, options = QWebPage.FindBackward | QWebPage.FindWrapsAroundDocument):
+        self.searchNext(options)
     
     def searchClear(self):
         self.ui.findTextLineEdit.setText('')
         self.ui.webView.findText('')
+        
+    def linkClicked(self, url):
+        QDesktopServices.openUrl(url)
         
     def setHtml(self):
         with open('orderlist.json', 'r', encoding='utf-8') as f:

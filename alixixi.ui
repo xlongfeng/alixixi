@@ -31,20 +31,6 @@
         </property>
        </widget>
       </item>
-      <item>
-       <widget class="QPushButton" name="authorizePushButton">
-        <property name="text">
-         <string>Authorize</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QPushButton" name="reAuthorizePushButton">
-        <property name="text">
-         <string>Re Authorize</string>
-        </property>
-       </widget>
-      </item>
      </layout>
     </item>
     <item>
@@ -154,13 +140,6 @@
      </widget>
     </item>
     <item>
-     <widget class="QPushButton" name="memberGetPushButton">
-      <property name="text">
-       <string>Request Member Information</string>
-      </property>
-     </widget>
-    </item>
-    <item>
      <spacer name="verticalSpacer">
       <property name="orientation">
        <enum>Qt::Vertical</enum>
@@ -181,7 +160,7 @@
      <x>0</x>
      <y>0</y>
      <width>416</width>
-     <height>17</height>
+     <height>18</height>
     </rect>
    </property>
   </widget>

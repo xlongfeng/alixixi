@@ -3319,6 +3319,8 @@ a.icon-mb {
                           <li>运单号码：<span class="bold stress">{{ logisticsOrder.logisticsBillNo }}</span></li>
                           <li>发货时间：{{ logisticsOrder.gmtSend }}</li>
                           {% endfor %}
+                          {% else %}
+                          <li>暂无该笔订单的物流信息，你可以联系卖家了解货品发货状态</li>
                           {% endif %}
                         </ul>
                       </div>
@@ -3349,9 +3351,9 @@ a.icon-mb {
                               <td class="order-detail">
                                 <dl class="cell-thumbnail">
                                   <dt class="side img-vertical">
-                                    <a data-tracelog="offerImg" class="img-wrap" href="" target="_blank">
+                                    <div data-tracelog="offerImg" class="img-wrap">
                                       <img src="{{ orderEntry.mainSummImageUrl }}" onload="resizeImage(this,64)">
-                                    </a>
+                                    </div>
                                   </dt>
                                   <dd class="description">{{ orderEntry.productName }}</dd>
                                   <dd class="sku">
@@ -3385,6 +3387,7 @@ a.icon-mb {
                               </td>
                               <td>
                                 <div class="status">{{ orderEntry.entryStatus }}</div>
+                                <div><a class="right action-refund-check" href="https://trade.1688.com/order/refund/view_assure_apply_refund.htm?orderId={{ order.id }}&userType=buyer&alipayAction=apply_refund">申请退款</a></div>
                               </td>
                               <td rowspan="1" class="total-money-td">
                                 <div class="total-money">{{ orderEntry.actualPayFee }}</div>

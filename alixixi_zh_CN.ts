@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS>
-<TS version="2.1" language="zh_CN">
+<!DOCTYPE TS><TS version="2.0" language="zh_CN" sourcelanguage="">
 <context>
     <name>Alixixi</name>
     <message>
@@ -14,74 +13,89 @@
         <translation>会员名</translation>
     </message>
     <message>
-        <location filename="alixixi.ui" line="37"/>
+        <location filename="alixixi.pyw" line="146"/>
         <source>Authorize</source>
         <translation>登陆</translation>
     </message>
     <message>
-        <location filename="alixixi.ui" line="53"/>
+        <location filename="alixixi.ui" line="39"/>
         <source>Order Query</source>
         <translation>查询订单</translation>
     </message>
     <message>
-        <location filename="alixixi.ui" line="61"/>
+        <location filename="alixixi.ui" line="47"/>
         <source>Date Range</source>
         <translation>日期范围</translation>
     </message>
     <message>
-        <location filename="alixixi.ui" line="79"/>
+        <location filename="alixixi.ui" line="65"/>
         <source>to</source>
         <translation>到</translation>
     </message>
     <message>
-        <location filename="alixixi.ui" line="103"/>
+        <location filename="alixixi.ui" line="89"/>
         <source>Today</source>
         <translation>今天</translation>
     </message>
     <message>
-        <location filename="alixixi.ui" line="110"/>
+        <location filename="alixixi.ui" line="96"/>
         <source>The last 2 days</source>
         <translation>最近2天</translation>
     </message>
     <message>
-        <location filename="alixixi.ui" line="117"/>
+        <location filename="alixixi.ui" line="103"/>
         <source>The last 3 days</source>
         <translation>最近3天</translation>
     </message>
     <message>
-        <location filename="alixixi.ui" line="124"/>
+        <location filename="alixixi.ui" line="110"/>
         <source>The last week</source>
         <translation>最近1周</translation>
     </message>
     <message>
-        <location filename="alixixi.ui" line="131"/>
+        <location filename="alixixi.ui" line="117"/>
         <source>The last 2 weeks</source>
         <translation>最近2周</translation>
     </message>
     <message>
-        <location filename="alixixi.ui" line="138"/>
+        <location filename="alixixi.ui" line="124"/>
         <source>The last month</source>
         <translation>最近1月</translation>
     </message>
     <message>
         <location filename="alixixi.ui" line="159"/>
         <source>Request Member Information</source>
-        <translation>查询会员信息</translation>
+        <translation type="obsolete">查询会员信息</translation>
     </message>
     <message>
-        <location filename="alixixi.ui" line="92"/>
+        <location filename="alixixi.ui" line="78"/>
         <source>Query List</source>
-        <translation>查询列表</translation>
+        <translation>更新订单</translation>
     </message>
     <message>
-        <location filename="alixixi.ui" line="149"/>
+        <location filename="alixixi.ui" line="135"/>
         <source>Review List</source>
-        <translation>查看列表</translation>
+        <translation>查看订单</translation>
     </message>
     <message>
-        <location filename="alixixi.ui" line="44"/>
+        <location filename="alixixi.pyw" line="147"/>
         <source>Re Authorize</source>
-        <translation>重新授权</translation>
+        <translation>更新授权</translation>
+    </message>
+    <message>
+        <location filename="alixixi.pyw" line="142"/>
+        <source>File</source>
+        <translation>文件</translation>
+    </message>
+    <message>
+        <location filename="alixixi.pyw" line="143"/>
+        <source>Close</source>
+        <translation>退出</translation>
+    </message>
+    <message>
+        <location filename="alixixi.pyw" line="145"/>
+        <source>Setting</source>
+        <translation>设置</translation>
     </message>
 </context>
 <context>
@@ -105,17 +119,17 @@
 <context>
     <name>OrderListGetDialog</name>
     <message>
-        <location filename="orderlist.py" line="166"/>
+        <location filename="orderlist.py" line="167"/>
         <source>Order List Get</source>
         <translation>查询订单列表</translation>
     </message>
     <message>
-        <location filename="orderlist.py" line="100"/>
+        <location filename="orderlist.py" line="101"/>
         <source>Query order list complete</source>
         <translation>查询订单列表完成</translation>
     </message>
     <message>
-        <location filename="orderlist.py" line="166"/>
+        <location filename="orderlist.py" line="167"/>
         <source>Empty order list</source>
         <translation>无新订单</translation>
     </message>
@@ -123,64 +137,69 @@
 <context>
     <name>OrderListReview</name>
     <message>
-        <location filename="orderlist.py" line="211"/>
+        <location filename="orderlist.py" line="216"/>
         <source>CANCEL</source>
         <translation>交易关闭</translation>
     </message>
     <message>
-        <location filename="orderlist.py" line="212"/>
+        <location filename="orderlist.py" line="217"/>
         <source>SUCCESS</source>
         <translation>交易成功</translation>
     </message>
     <message>
-        <location filename="orderlist.py" line="213"/>
+        <location filename="orderlist.py" line="218"/>
         <source>WAIT_BUYER_PAY</source>
         <translation>等待买家付款</translation>
     </message>
     <message>
-        <location filename="orderlist.py" line="214"/>
+        <location filename="orderlist.py" line="219"/>
         <source>WAIT_SELLER_SEND</source>
         <translation>等待卖家发货</translation>
     </message>
     <message>
-        <location filename="orderlist.py" line="215"/>
+        <location filename="orderlist.py" line="220"/>
         <source>WAIT_BUYER_RECEIVE</source>
         <translation>等待买家确认收货</translation>
     </message>
     <message>
-        <location filename="orderlist.py" line="216"/>
+        <location filename="orderlist.py" line="221"/>
         <source>WAIT_SELLER_ACT</source>
         <translation>分阶段等待卖家操作</translation>
     </message>
     <message>
-        <location filename="orderlist.py" line="217"/>
+        <location filename="orderlist.py" line="222"/>
         <source>WAIT_BUYER_CONFIRM_ACTION</source>
         <translation>分阶段等待买家确认卖家操作</translation>
     </message>
     <message>
-        <location filename="orderlist.py" line="218"/>
+        <location filename="orderlist.py" line="223"/>
         <source>WAIT_SELLER_PUSH</source>
         <translation>分阶段等待卖家推进</translation>
     </message>
     <message>
-        <location filename="orderlist.py" line="219"/>
+        <location filename="orderlist.py" line="224"/>
         <source>WAIT_LOGISTICS_TAKE_IN</source>
         <translation>等待物流公司揽件</translation>
     </message>
     <message>
-        <location filename="orderlist.py" line="220"/>
+        <location filename="orderlist.py" line="225"/>
         <source>WAIT_BUYER_SIGN</source>
         <translation>等待买家签收</translation>
     </message>
     <message>
-        <location filename="orderlist.py" line="221"/>
+        <location filename="orderlist.py" line="226"/>
         <source>SIGN_IN_SUCCESS</source>
         <translation>买家已签收</translation>
     </message>
     <message>
-        <location filename="orderlist.py" line="222"/>
+        <location filename="orderlist.py" line="227"/>
         <source>SIGN_IN_FAILED</source>
         <translation>签收失败</translation>
+    </message>
+    <message>
+        <location filename="orderlist.py" line="212"/>
+        <source>Loading, wait a monent ...</source>
+        <translation>正在载入，请稍后 ...</translation>
     </message>
 </context>
 <context>

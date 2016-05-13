@@ -42,7 +42,7 @@
 
 from PyQt5.QtCore import (Qt, QCoreApplication, QTranslator, QDate,
                           QDateTime, QTimer)
-from PyQt5.QtGui import QIntValidator, QDesktopServices
+from PyQt5.QtGui import QIcon, QIntValidator, QDesktopServices
 from PyQt5.QtWidgets import (QApplication, QComboBox, QDialog, QMainWindow,
                              QGridLayout, QLabel, QLineEdit, QMessageBox,
                              QPushButton)
@@ -117,16 +117,11 @@ class Alixixi(QMainWindow):
         self.cnAlibabaOpen = CnAlibabaOpen.instance()
         self.cnAlibabaOpen.openApiResponseException.connect(self.openApiResponseException)
         
-        self.ui.authorizePushButton.clicked.connect(self.authorizeRequest)
-        self.ui.reAuthorizePushButton.clicked.connect(self.reAuthorizeRequest)
-        
         self.settings = Settings.instance()
         self.settings.resource_owner_changed.connect(self.ui.loginIdLineEdit.setText)
         loginId = self.settings.resource_owner
         if len(loginId) > 0:
             self.ui.loginIdLineEdit.setText(self.settings.resource_owner)
-        else:
-            self.ui.reAuthorizePushButton.setDisabled(True)
         
         self.todayRange()
         self.ui.todayPushButton.clicked.connect(self.todayRange)
@@ -138,10 +133,18 @@ class Alixixi(QMainWindow):
         self.ui.orderListGetPushButton.clicked.connect(self.orderListGetRequest)
         self.ui.orderListReviewPushButton.clicked.connect(self.orderListReview)
         
-        self.ui.memberGetPushButton.clicked.connect(self.memberGetRequest)
-        self.ui.memberGetPushButton.setHidden(True)
+        self.addMenus()
         
         QTimer.singleShot(1000, self.refreshAccessToken)
+        
+    def addMenus(self):
+        menuBar = self.menuBar()
+        fileMenu = menuBar.addMenu(_translate('Alixixi', 'File'))
+        fileMenu.addAction(_translate('Alixixi', 'Close'), QCoreApplication.instance().quit)
+        
+        setttingsMenu = menuBar.addMenu(_translate('Alixixi', 'Setting'))
+        setttingsMenu.addAction(_translate('Alixixi', 'Authorize'), self.authorizeRequest)
+        setttingsMenu.addAction(_translate('Alixixi', 'Re Authorize'), self.reAuthorizeRequest)
         
     def openApiResponseException(self, warning):
         QMessageBox.warning(self, 'Open Api Response Exception', warning)
@@ -152,8 +155,10 @@ class Alixixi(QMainWindow):
         dialog.exec()
         
     def reAuthorizeRequest(self):
-        dialog = ReAuthorizeDialog(self)
-        dialog.exec()
+        loginId = self.settings.resource_owner
+        if len(loginId) > 0:
+            dialog = ReAuthorizeDialog(self)
+            dialog.exec()
         
     def todayRange(self):
         self.ui.createStartTimeDateEdit.setDate(QDate.currentDate())
@@ -189,13 +194,6 @@ class Alixixi(QMainWindow):
     def orderListReview(self):
         dialog = OrderListReviewDialog(self)
         dialog.exec()
-    
-    def memberGetRequest(self):
-        self.cnAlibabaOpen.openApiResponse.connect(self.memberGetResponse)
-        self.cnAlibabaOpen.openApiRequest('member.get', {'memberId': self.settings.memberId})
-
-    def memberGetResponse(self, response):
-        print(response)
         
     def refreshAccessToken(self):
         access_token_expires_in = self.settings.access_token_expires_in
@@ -208,6 +206,7 @@ if __name__ == '__main__':
     import sys
 
     app = QApplication(sys.argv)
+    app.setWindowIcon(QIcon('alixixi.ico'))
     translator = QTranslator(app)
     translator.load('alixixi_zh_CN')
     app.installTranslator(translator)
