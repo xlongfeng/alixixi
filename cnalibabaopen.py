@@ -44,6 +44,37 @@ from PyQt5.QtNetwork import QNetworkAccessManager, QNetworkReply, QNetworkReques
 
 import hmac, hashlib, json
 
+from sqlalchemy import Column, Integer, Float, String, DateTime, \
+    create_engine
+from sqlalchemy.orm import relationship, sessionmaker
+from sqlalchemy.ext.declarative import declarative_base
+
+Base = declarative_base()
+
+class OrderModel(Base):
+    __tablename__ = 'order.model'
+    
+    id = Column(Integer, primary_key=True)
+    buyerPhone = Column('buyer_phone', String)
+    carriage = Column('carriage', Float)
+    gmtCreate = Column('gmt_create', DateTime)
+    orderId = Column('order_id', String)
+    status = Column('status', String)
+    sumProductPayment = Column('sum_product_payment', Float)
+    
+    sumPayment = Column('sum_payment', Float)
+    orderEntries = Column('order_entries', String)
+    
+    logisticsOrderList = Column('logistics_order_list', String)
+    toFullName = Column('to_full_name', String)
+    toMobile = Column('to_mobile', String)
+    toArea = Column('to_area', String)
+
+engine = create_engine('sqlite:///alixixi.db')
+Base.metadata.create_all(engine)
+
+session = sessionmaker(engine)()
+
 class CnAlibabaOpen(QObject):
     pInstance = None
     openApiBaseHttpUrl = "http://gw.open.1688.com/openapi/"

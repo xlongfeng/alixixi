@@ -54,7 +54,7 @@ from jinja2 import Environment, FileSystemLoader
 from ui_orderlistgetdialog import Ui_OrderListGetDialog
 from ui_orderlistreviewdialog import Ui_OrderListReviewDialog
 from settings import Settings
-from cnalibabaopen import CnAlibabaOpen
+from cnalibabaopen import *
 
 _translate = QCoreApplication.translate
 
