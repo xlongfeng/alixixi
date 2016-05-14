@@ -114,17 +114,12 @@
 <context>
     <name>OrderListGetDialog</name>
     <message>
-        <location filename="orderlist.py" line="186"/>
+        <location filename="orderlist.py" line="185"/>
         <source>Order List Get</source>
         <translation>查询订单</translation>
     </message>
     <message>
-        <location filename="orderlist.py" line="117"/>
-        <source>Query order list complete</source>
-        <translation>查询订单完成</translation>
-    </message>
-    <message>
-        <location filename="orderlist.py" line="186"/>
+        <location filename="orderlist.py" line="185"/>
         <source>Empty order list</source>
         <translation>无新订单</translation>
     </message>
@@ -192,7 +187,7 @@
         <translation>签收失败</translation>
     </message>
     <message>
-        <location filename="orderlist.py" line="252"/>
+        <location filename="orderlist.py" line="250"/>
         <source>Loading, wait a monent ...</source>
         <translation>正在载入，请稍后 ...</translation>
     </message>

@@ -43,7 +43,7 @@
 from PyQt5.QtCore import Qt, QCoreApplication, QDate, QDateTime, QTimer
 from PyQt5.QtWidgets import (QApplication, QWidget, QComboBox, QDialog,
                              QGridLayout, QLabel, QLineEdit, QMessageBox,
-                             QPushButton)
+                             QPushButton, QDialogButtonBox)
 from PyQt5.QtGui import QDesktopServices
 from PyQt5.QtWebKit import QWebSettings
 from PyQt5.QtWebKitWidgets import QWebPage
@@ -80,6 +80,7 @@ class OrderListGetDialog(QDialog):
         super(OrderListGetDialog, self).__init__(parent)
         self.ui = Ui_OrderListGetDialog()
         self.ui.setupUi(self)
+        self.ui.buttonBox.rejected.connect(self.orderListGetRequestAbort)
         self.ui.progressBar.setRange(0, 100)
         self.ui.progressBar.setValue(0)
         
@@ -99,6 +100,14 @@ class OrderListGetDialog(QDialog):
         self.orderModelId = ''
         QTimer.singleShot(100, self.orderListGetRequest)
         
+    def closeEvent(self, event):
+        self.orderListGetRequestAbort()
+        super(OrderListGetDialog, self).closeEvent(event)
+        
+    def orderListGetRequestAbort(self):
+        if session.dirty:
+            session.rollback()
+        
     def orderDetailGetNext(self):
         if len(self.orderDetailIdList) > 0:
             # get next order detial
@@ -113,8 +122,7 @@ class OrderListGetDialog(QDialog):
         else:
             # task done
             session.commit()
-            QMessageBox.information(self, _translate('OrderListGetDialog', 'Order List Get'), _translate('OrderListGetDialog', 'Query order list complete'))
-            self.accept()
+            self.ui.buttonBox.setStandardButtons(QDialogButtonBox.Open | QDialogButtonBox.Close)
         
     def orderDetailGetRequest(self):
         param = dict()

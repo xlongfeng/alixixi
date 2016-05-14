@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>400</width>
-    <height>69</height>
+    <height>70</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -41,6 +41,22 @@
     <hint type="sourcelabel">
      <x>199</x>
      <y>47</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>199</x>
+     <y>34</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>accepted()</signal>
+   <receiver>OrderListGetDialog</receiver>
+   <slot>accept()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>199</x>
+     <y>48</y>
     </hint>
     <hint type="destinationlabel">
      <x>199</x>
