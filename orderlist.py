@@ -226,8 +226,9 @@ class OrderListReviewDialog(QDialog):
         self.ui = Ui_OrderListReviewDialog()
         self.ui.setupUi(self)
         self.ui.label.setBuddy(self.ui.findTextLineEdit)
-        self.resize(1050, 600)
+        self.resize(1050, 640)
         
+        self.advancedSearchFilter = dict()
         
         self.ui.firstPagePushButton.clicked.connect(self.firstPage)
         self.ui.prevPagePushButton.clicked.connect(self.prevPage)
@@ -239,10 +240,10 @@ class OrderListReviewDialog(QDialog):
         self.ui.clearPushButton.clicked.connect(self.searchClear)
         
         self.ui.advancedSearchGroupBox.toggled.connect(self.advancedSearchToggled)
+        self.advancedSearchToggled(self.ui.advancedSearchGroupBox.isChecked())
         self.ui.advancedSearchPushButton.clicked.connect(self.advancedSearch)
         self.ui.advancedSearchClearPushButton.clicked.connect(self.advancedSearchClear)
         
-        self.advancedSearchFilter = dict()
         self.pageInfoUpdate()
         
         self.ui.webView.settings().setAttribute(QWebSettings.OfflineStorageDatabaseEnabled, True)
@@ -325,10 +326,14 @@ class OrderListReviewDialog(QDialog):
         self.ui.webView.findText('')
         
     def advancedSearchToggled(self, on):
-        if not on and len(self.advancedSearchFilter) > 0:
-            self.advancedSearchFilter.clear()
-            self.pageInfoUpdate()
-            self.setHtml()
+        if on:
+            self.ui.advancedSearchGroupBox.setMaximumHeight(116777215)
+        else:
+            self.ui.advancedSearchGroupBox.setMaximumHeight(16)
+            if len(self.advancedSearchFilter) > 0:
+                self.advancedSearchFilter.clear()
+                self.pageInfoUpdate()
+                self.setHtml()
     
     def advancedSearch(self):
         buyerPhone = self.ui.buyerPhoneLineEdit.text().strip()
