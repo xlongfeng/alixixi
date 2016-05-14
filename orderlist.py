@@ -50,6 +50,7 @@ from PyQt5.QtWebKitWidgets import QWebPage
 
 import json
 from jinja2 import Environment, FileSystemLoader
+from sqlalchemy import desc
 
 from ui_orderlistgetdialog import Ui_OrderListGetDialog
 from ui_orderlistreviewdialog import Ui_OrderListReviewDialog
@@ -58,6 +59,20 @@ from cnalibabaopen import CnAlibabaOpen
 from orm import *
 
 _translate = QCoreApplication.translate
+
+def translates():
+    _translate('OrderListReview', 'CANCEL')
+    _translate('OrderListReview', 'SUCCESS')
+    _translate('OrderListReview', 'WAIT_BUYER_PAY')
+    _translate('OrderListReview', 'WAIT_SELLER_SEND')
+    _translate('OrderListReview', 'WAIT_BUYER_RECEIVE')
+    _translate('OrderListReview', 'WAIT_SELLER_ACT')
+    _translate('OrderListReview', 'WAIT_BUYER_CONFIRM_ACTION')
+    _translate('OrderListReview', 'WAIT_SELLER_PUSH')
+    _translate('OrderListReview', 'WAIT_LOGISTICS_TAKE_IN')
+    _translate('OrderListReview', 'WAIT_BUYER_SIGN')
+    _translate('OrderListReview', 'SIGN_IN_SUCCESS')
+    _translate('OrderListReview', 'SIGN_IN_FAILED')
 
 class OrderListGetDialog(QDialog):
     def __init__(self, createStartTime, createEndTime, parent=None):
@@ -96,8 +111,6 @@ class OrderListGetDialog(QDialog):
             self.orderListGetRequest()
         else:
             # task done
-            with open('orderlist.json', 'w', encoding='utf-8') as f:
-                jsonEncode = json.dump(self.orderList, f)
             session.commit()
             QMessageBox.information(self, _translate('OrderListGetDialog', 'Order List Get'), _translate('OrderListGetDialog', 'Query order list complete'))
             self.accept()
@@ -124,30 +137,8 @@ class OrderListGetDialog(QDialog):
         self.orderDetailIdList = []
         for orderModel in modelList:
             orderId = orderModel['id']
-            session.add(AliOrderModel(
-                #buyerPhone = Column('buyer_phone', String),
-                carriage = ccyUnitConvert(orderModel['carriage']),
-                gmtCreate = strParseTime(orderModel['gmtCreate']),
-                orderId = orderId,
-                status = _translate('OrderListReview', orderModel['status']),
-                sumProductPayment = ccyUnitConvert(orderModel['sumProductPayment']),
-                sumPayment = ccyUnitConvert(orderModel['sumPayment']),
-                #orderEntries = Column('order_entries', String),
-                #logisticsOrderList = Column('logistics_order_list', String),
-                #toFullName = Column('to_full_name', String),
-                #toMobile = Column('to_mobile', String),
-                #toArea = Column('to_area', String),
-            ))
-            id = orderModel['id']
-            self.orderDetailIdList.append(id)
-            self.orderList[id] = dict()
-            self.orderList[id]['id'] = id
-            self.orderList[id]['status'] = _translate('OrderListReview', orderModel['status'])
-            self.orderList[id]['gmtCreate'] = str(strParseTime(orderModel['gmtCreate']))
-            self.orderList[id]['sumProductPayment'] = ccyUnitConvert(orderModel['sumProductPayment'])
-            self.orderList[id]['carriage'] = ccyUnitConvert(orderModel['carriage'])
-            self.orderList[id]['sumPayment'] = ccyUnitConvert(orderModel['sumPayment'])
-            self.orderList[id]['orderEntries'] = []
+            self.orderDetailIdList.append(orderId)
+            orderEntries = []
             for orderEntryModel in orderModel['orderEntries']:
                 orderEntry = dict()
                 orderEntry['productName'] = orderEntryModel['productName']
@@ -161,8 +152,24 @@ class OrderListGetDialog(QDialog):
                 orderEntry['actualPayFee'] = ccyUnitConvert(orderEntryModel['actualPayFee'])
                 orderEntry['mainSummImageUrl'] = orderEntryModel['mainSummImageUrl']
                 orderEntry['entryStatus'] = _translate('OrderListReview', orderEntryModel['entryStatus'])
-                self.orderList[id]['orderEntries'].append(orderEntry)
-                
+                orderEntries.append(orderEntry)
+            
+            # add a new one or update an exist one
+            model = session.query(AliOrderModel).filter_by(orderId = orderId).one_or_none()
+            new = False
+            if not model:
+                model = AliOrderModel()
+                new = True
+            model.carriage = ccyUnitConvert(orderModel['carriage'])
+            model.gmtCreate = aliTimeToDateTime(orderModel['gmtCreate'])
+            model.orderId = orderId
+            model.status = _translate('OrderListReview', orderModel['status'])
+            model.sumProductPayment = ccyUnitConvert(orderModel['sumProductPayment'])
+            model.sumPayment = ccyUnitConvert(orderModel['sumPayment'])
+            model.orderEntries = json.dumps(orderEntries)
+            if new:
+                session.add(model)
+        
         # prepare to get order detail
         self.orderDetailGetNext()
         
@@ -185,12 +192,12 @@ class OrderListGetDialog(QDialog):
         if 'orderModel' not in response:
             return
         orderModel = response['orderModel']
-        
-        id = orderModel['id']
-        self.orderList[id]['toFullName'] = orderModel['toFullName']
-        self.orderList[id]['toMobile'] = orderModel['toMobile']
-        self.orderList[id]['buyerPhone'] = orderModel['buyerPhone']
-        self.orderList[id]['toArea'] = orderModel['toArea']
+        orderId = orderModel['id']
+        model = session.query(AliOrderModel).filter_by(orderId = orderId).one()
+        model.buyerPhone = orderModel['buyerPhone']
+        model.toArea = orderModel['toArea']
+        model.toFullName = orderModel['toFullName']
+        model.toMobile = orderModel['toMobile']
         if 'logisticsOrderList' in orderModel:
             logisticsOrderList = []
             for logisticsOrderModel in orderModel['logisticsOrderList']:
@@ -198,10 +205,10 @@ class OrderListGetDialog(QDialog):
                     'logisticsOrderNo': logisticsOrderModel['logisticsOrderNo'],
                     'companyName': logisticsOrderModel['logisticsCompany']['companyName'],
                     'logisticsBillNo': logisticsOrderModel['logisticsBillNo'],
-                    'gmtSend': str(strParseTime(logisticsOrderModel['gmtSend']))
+                    'gmtSend': str(aliTimeToDateTime(logisticsOrderModel['gmtSend']))
                 })
-            self.orderList[id]['logisticsOrderList'] = logisticsOrderList
-        
+            model.logisticsOrderList = json.dumps(logisticsOrderList)
+            
         self.orderDetailGetNext()
         
 class OrderListReviewDialog(QDialog):
@@ -211,7 +218,6 @@ class OrderListReviewDialog(QDialog):
         self.ui.setupUi(self)
         self.ui.label.setBuddy(self.ui.findTextLineEdit)
         self.resize(1050, 600)
-        self.retranslate()
         
         self.ui.nextPushButton.clicked.connect(self.searchNext)
         self.ui.prevPushButton.clicked.connect(self.searchPrev)
@@ -221,20 +227,6 @@ class OrderListReviewDialog(QDialog):
         self.ui.webView.linkClicked.connect(self.linkClicked)
         self.ui.webView.setHtml(_translate('OrderListReview', 'Loading, wait a monent ...'))
         QTimer.singleShot(100, self.setHtml)
-        
-    def retranslate(self):
-        _translate('OrderListReview', 'CANCEL')
-        _translate('OrderListReview', 'SUCCESS')
-        _translate('OrderListReview', 'WAIT_BUYER_PAY')
-        _translate('OrderListReview', 'WAIT_SELLER_SEND')
-        _translate('OrderListReview', 'WAIT_BUYER_RECEIVE')
-        _translate('OrderListReview', 'WAIT_SELLER_ACT')
-        _translate('OrderListReview', 'WAIT_BUYER_CONFIRM_ACTION')
-        _translate('OrderListReview', 'WAIT_SELLER_PUSH')
-        _translate('OrderListReview', 'WAIT_LOGISTICS_TAKE_IN')
-        _translate('OrderListReview', 'WAIT_BUYER_SIGN')
-        _translate('OrderListReview', 'SIGN_IN_SUCCESS')
-        _translate('OrderListReview', 'SIGN_IN_FAILED')
         
     def searchNext(self, options = QWebPage.FindWrapsAroundDocument):
         findText = self.ui.findTextLineEdit.text().strip()
@@ -253,11 +245,22 @@ class OrderListReviewDialog(QDialog):
         QDesktopServices.openUrl(url)
         
     def setHtml(self):
-        with open('orderlist.json', 'r', encoding='utf-8') as f:
-            jsonDecode = json.load(f)
-            
-            orderList = jsonDecode.values()
-            orderList = sorted(orderList, key=lambda d: d['gmtCreate'], reverse=True)
-            env = Environment(loader=FileSystemLoader('templates'))
-            template = env.get_template('orderlist.html')
-            self.ui.webView.setHtml(template.render(orderList = orderList))
+        orderList = []
+        for model in session.query(AliOrderModel).order_by(desc(AliOrderModel.gmtCreate)):
+            orderList.append(dict(
+                buyerPhone = model.buyerPhone,
+                carriage = model.carriage,
+                gmtCreate = model.gmtCreate,
+                orderId = model.orderId,
+                status = model.status,
+                sumProductPayment = model.sumProductPayment,
+                sumPayment = model.sumPayment,
+                orderEntries = json.loads(model.orderEntries),
+                logisticsOrderList = json.loads(model.logisticsOrderList) if len(model.logisticsOrderList) else None,
+                toFullName = model.toFullName,
+                toMobile = model.toMobile,
+                toArea = model.toArea,
+            ))
+        env = Environment(loader=FileSystemLoader('templates'))
+        template = env.get_template('orderlist.html')
+        self.ui.webView.setHtml(template.render(orderList = orderList))

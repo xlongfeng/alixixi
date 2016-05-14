@@ -69,3 +69,4 @@ ui_*.py
 
 # Application
 *.ini
+*.sqlite

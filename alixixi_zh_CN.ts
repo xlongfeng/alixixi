@@ -63,11 +63,6 @@
         <translation>最近1月</translation>
     </message>
     <message>
-        <location filename="alixixi.ui" line="159"/>
-        <source>Request Member Information</source>
-        <translation type="obsolete">查询会员信息</translation>
-    </message>
-    <message>
         <location filename="alixixi.ui" line="78"/>
         <source>Query List</source>
         <translation>更新订单</translation>
@@ -119,17 +114,17 @@
 <context>
     <name>OrderListGetDialog</name>
     <message>
-        <location filename="orderlist.py" line="167"/>
+        <location filename="orderlist.py" line="185"/>
         <source>Order List Get</source>
         <translation>查询订单列表</translation>
     </message>
     <message>
-        <location filename="orderlist.py" line="101"/>
+        <location filename="orderlist.py" line="116"/>
         <source>Query order list complete</source>
         <translation>查询订单列表完成</translation>
     </message>
     <message>
-        <location filename="orderlist.py" line="167"/>
+        <location filename="orderlist.py" line="185"/>
         <source>Empty order list</source>
         <translation>无新订单</translation>
     </message>
@@ -137,67 +132,67 @@
 <context>
     <name>OrderListReview</name>
     <message>
-        <location filename="orderlist.py" line="216"/>
+        <location filename="orderlist.py" line="64"/>
         <source>CANCEL</source>
         <translation>交易关闭</translation>
     </message>
     <message>
-        <location filename="orderlist.py" line="217"/>
+        <location filename="orderlist.py" line="65"/>
         <source>SUCCESS</source>
         <translation>交易成功</translation>
     </message>
     <message>
-        <location filename="orderlist.py" line="218"/>
+        <location filename="orderlist.py" line="66"/>
         <source>WAIT_BUYER_PAY</source>
         <translation>等待买家付款</translation>
     </message>
     <message>
-        <location filename="orderlist.py" line="219"/>
+        <location filename="orderlist.py" line="67"/>
         <source>WAIT_SELLER_SEND</source>
         <translation>等待卖家发货</translation>
     </message>
     <message>
-        <location filename="orderlist.py" line="220"/>
+        <location filename="orderlist.py" line="68"/>
         <source>WAIT_BUYER_RECEIVE</source>
         <translation>等待买家确认收货</translation>
     </message>
     <message>
-        <location filename="orderlist.py" line="221"/>
+        <location filename="orderlist.py" line="69"/>
         <source>WAIT_SELLER_ACT</source>
         <translation>分阶段等待卖家操作</translation>
     </message>
     <message>
-        <location filename="orderlist.py" line="222"/>
+        <location filename="orderlist.py" line="70"/>
         <source>WAIT_BUYER_CONFIRM_ACTION</source>
         <translation>分阶段等待买家确认卖家操作</translation>
     </message>
     <message>
-        <location filename="orderlist.py" line="223"/>
+        <location filename="orderlist.py" line="71"/>
         <source>WAIT_SELLER_PUSH</source>
         <translation>分阶段等待卖家推进</translation>
     </message>
     <message>
-        <location filename="orderlist.py" line="224"/>
+        <location filename="orderlist.py" line="72"/>
         <source>WAIT_LOGISTICS_TAKE_IN</source>
         <translation>等待物流公司揽件</translation>
     </message>
     <message>
-        <location filename="orderlist.py" line="225"/>
+        <location filename="orderlist.py" line="73"/>
         <source>WAIT_BUYER_SIGN</source>
         <translation>等待买家签收</translation>
     </message>
     <message>
-        <location filename="orderlist.py" line="226"/>
+        <location filename="orderlist.py" line="74"/>
         <source>SIGN_IN_SUCCESS</source>
         <translation>买家已签收</translation>
     </message>
     <message>
-        <location filename="orderlist.py" line="227"/>
+        <location filename="orderlist.py" line="75"/>
         <source>SIGN_IN_FAILED</source>
         <translation>签收失败</translation>
     </message>
     <message>
-        <location filename="orderlist.py" line="212"/>
+        <location filename="orderlist.py" line="229"/>
         <source>Loading, wait a monent ...</source>
         <translation>正在载入，请稍后 ...</translation>
     </message>

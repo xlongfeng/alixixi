@@ -70,7 +70,10 @@ class AliOrderModel(Base):
     toMobile = Column('to_mobile', String)
     toArea = Column('to_area', String)
     
-def strParseTime(time):
+def aliTimeToDateTime(alitime):
+    return datetime.strptime(alitime, '%Y%m%d%H%M%S%f+0800')
+
+def dateTimeToAliTime(datetime):
     return datetime.strptime(time, '%Y%m%d%H%M%S%f+0800')
 
 def ccyUnitConvert(value):
