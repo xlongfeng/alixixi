@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS>
-<TS version="2.1" language="zh_CN">
+<!DOCTYPE TS><TS version="2.0" language="zh_CN" sourcelanguage="">
 <context>
     <name>Alixixi</name>
     <message>
@@ -193,7 +192,7 @@
         <translation>签收失败</translation>
     </message>
     <message>
-        <location filename="orderlist.py" line="244"/>
+        <location filename="orderlist.py" line="252"/>
         <source>Loading, wait a monent ...</source>
         <translation>正在载入，请稍后 ...</translation>
     </message>
@@ -206,17 +205,17 @@
         <translation>查看订单</translation>
     </message>
     <message>
-        <location filename="orderlistreviewdialog.ui" line="113"/>
+        <location filename="orderlistreviewdialog.ui" line="217"/>
         <source>about:blank</source>
         <translation>about:blank</translation>
     </message>
     <message>
-        <location filename="orderlistreviewdialog.ui" line="103"/>
+        <location filename="orderlistreviewdialog.ui" line="183"/>
         <source>Clear</source>
         <translation>清空</translation>
     </message>
     <message>
-        <location filename="orderlistreviewdialog.ui" line="79"/>
+        <location filename="orderlistreviewdialog.ui" line="176"/>
         <source>Search</source>
         <translation>查找</translation>
     </message>
@@ -254,6 +253,36 @@
         <location filename="orderlistreviewdialog.ui" line="56"/>
         <source>0 / 0</source>
         <translation>0 / 0</translation>
+    </message>
+    <message>
+        <location filename="orderlistreviewdialog.ui" line="112"/>
+        <source>Advanced Search</source>
+        <translation>高级搜索</translation>
+    </message>
+    <message>
+        <location filename="orderlistreviewdialog.ui" line="128"/>
+        <source>To Full Name</source>
+        <translation>收货人</translation>
+    </message>
+    <message>
+        <location filename="orderlistreviewdialog.ui" line="138"/>
+        <source>To Area</source>
+        <translation>收货地址</translation>
+    </message>
+    <message>
+        <location filename="orderlistreviewdialog.ui" line="152"/>
+        <source>To Mobile</source>
+        <translation>手机</translation>
+    </message>
+    <message>
+        <location filename="orderlistreviewdialog.ui" line="162"/>
+        <source>Buyer Phone</source>
+        <translation>电话</translation>
+    </message>
+    <message>
+        <location filename="orderlistreviewdialog.ui" line="79"/>
+        <source>Find (on this page)</source>
+        <translation>查找(在当前页)</translation>
     </message>
 </context>
 <context>

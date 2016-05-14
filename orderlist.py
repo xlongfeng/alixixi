@@ -41,7 +41,7 @@
 
 
 from PyQt5.QtCore import Qt, QCoreApplication, QDate, QDateTime, QTimer
-from PyQt5.QtWidgets import (QApplication, QComboBox, QDialog,
+from PyQt5.QtWidgets import (QApplication, QWidget, QComboBox, QDialog,
                              QGridLayout, QLabel, QLineEdit, QMessageBox,
                              QPushButton)
 from PyQt5.QtGui import QDesktopServices
@@ -230,24 +230,37 @@ class OrderListReviewDialog(QDialog):
         self.ui.prevPushButton.clicked.connect(self.searchPrev)
         self.ui.clearPushButton.clicked.connect(self.searchClear)
         
-        self.offsetOfPage = 0
-        self.numOfPage = 10
-        self.totalPages = ceil(session.query(AliOrderModel.id).count() / self.numOfPage)
-        self.pageButtonStateUpdate()
+        self.ui.advancedSearchGroupBox.toggled.connect(self.advancedSearchToggled)
+        self.ui.advancedSearchPushButton.clicked.connect(self.advancedSearch)
+        self.ui.advancedSearchClearPushButton.clicked.connect(self.advancedSearchClear)
+        
+        self.advancedSearchFilter = dict()
+        self.pageInfoUpdate()
         
         self.ui.webView.settings().setAttribute(QWebSettings.OfflineStorageDatabaseEnabled, True)
         self.ui.webView.settings().setAttribute(QWebSettings.OfflineWebApplicationCacheEnabled, True)
         self.ui.webView.settings().setAttribute(QWebSettings.LocalStorageEnabled, True)
         self.ui.webView.settings().enablePersistentStorage()
-        print(self.ui.webView.settings().offlineWebApplicationCachePath())
         self.ui.webView.page().setLinkDelegationPolicy(QWebPage.DelegateAllLinks)
         self.ui.webView.linkClicked.connect(self.linkClicked)
+        
         if self.totalPages == 0:
             self.setHtml()
         else:
             self.ui.webView.setHtml(_translate('OrderListReview', 'Loading, wait a monent ...'))
             QTimer.singleShot(100, self.firstPage)
             
+    def queryFilter(self):
+        query = session.query(AliOrderModel)
+        for attr, value in self.advancedSearchFilter.items():
+            query= query.filter(getattr(AliOrderModel, attr).like("%%%s%%" % value))
+        return query
+    
+    def pageInfoUpdate(self):
+        self.offsetOfPage = 0
+        self.numOfPage = 10
+        self.totalPages = ceil(self.queryFilter().count() / self.numOfPage)
+    
     def pageButtonStateUpdate(self):
         if self.totalPages == 0 or self.totalPages == 1:
             self.ui.firstPagePushButton.setDisabled(True)
@@ -273,25 +286,21 @@ class OrderListReviewDialog(QDialog):
     def firstPage(self):
         if self.totalPages > 0:
             self.offsetOfPage = 0
-            self.pageButtonStateUpdate()
             self.setHtml()
     
     def prevPage(self):
         if self.totalPages > 0 and self.offsetOfPage > 0:
             self.offsetOfPage -= 1
-            self.pageButtonStateUpdate()
             self.setHtml()
     
     def nextPage(self):
         if self.totalPages > 0 and self.offsetOfPage < (self.totalPages - 1):
             self.offsetOfPage += 1
-            self.pageButtonStateUpdate()
             self.setHtml()
     
     def lastPage(self):
         if self.totalPages > 0:
             self.offsetOfPage = self.totalPages - 1
-            self.pageButtonStateUpdate()
             self.setHtml()
         
     def searchNext(self, options = QWebPage.FindWrapsAroundDocument):
@@ -307,16 +316,52 @@ class OrderListReviewDialog(QDialog):
         self.ui.findTextLineEdit.setText('')
         self.ui.webView.findText('')
         
+    def advancedSearchToggled(self, on):
+        if not on and len(self.advancedSearchFilter) > 0:
+            self.advancedSearchFilter.clear()
+            self.pageInfoUpdate()
+            self.setHtml()
+    
+    def advancedSearch(self):
+        buyerPhone = self.ui.buyerPhoneLineEdit.text().strip()
+        toArea = self.ui.toAreaLineEdit.text().strip()
+        toFullName = self.ui.toFullNameLineEdit.text().strip()
+        toMobile = self.ui.toMobileLineEdit.text().strip()
+        
+        self.advancedSearchFilter.clear()
+        
+        if len(buyerPhone) > 0:
+            self.advancedSearchFilter['buyerPhone'] = buyerPhone
+        
+        if len(toArea) > 0:
+            self.advancedSearchFilter['toArea'] = toArea
+        
+        if len(toFullName) > 0:
+            self.advancedSearchFilter['toFullName'] = toFullName
+        
+        if len(toMobile) > 0:
+            self.advancedSearchFilter['toMobile'] = toMobile
+        
+        self.pageInfoUpdate()
+        self.setHtml()
+        
+    def advancedSearchClear(self):
+        self.ui.buyerPhoneLineEdit.setText('')
+        self.ui.toAreaLineEdit.setText('')
+        self.ui.toFullNameLineEdit.setText('')
+        self.ui.toMobileLineEdit.setText('')
+        
     def linkClicked(self, url):
         QDesktopServices.openUrl(url)
         
     def setHtml(self):
+        self.pageButtonStateUpdate()
         if self.totalPages > 0:
             self.ui.pageNumLabel.setText('{0} / {1}'.format(self.offsetOfPage + 1, self.totalPages))
         else:
             self.ui.pageNumLabel.setText('0 / 0')
         orderList = []
-        for model in session.query(AliOrderModel).order_by(desc(AliOrderModel.gmtCreate)).offset(self.offsetOfPage * self.numOfPage).limit(self.numOfPage):
+        for model in self.queryFilter().order_by(desc(AliOrderModel.gmtCreate)).offset(self.offsetOfPage * self.numOfPage).limit(self.numOfPage):
             orderList.append(dict(
                 buyerPhone = model.buyerPhone,
                 carriage = model.carriage,
