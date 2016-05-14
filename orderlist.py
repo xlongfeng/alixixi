@@ -49,8 +49,9 @@ from PyQt5.QtWebKit import QWebSettings
 from PyQt5.QtWebKitWidgets import QWebPage
 
 import json
+from math import ceil
 from jinja2 import Environment, FileSystemLoader
-from sqlalchemy import desc
+from sqlalchemy import desc, func
 
 from ui_orderlistgetdialog import Ui_OrderListGetDialog
 from ui_orderlistreviewdialog import Ui_OrderListReviewDialog
@@ -219,14 +220,79 @@ class OrderListReviewDialog(QDialog):
         self.ui.label.setBuddy(self.ui.findTextLineEdit)
         self.resize(1050, 600)
         
+        
+        self.ui.firstPagePushButton.clicked.connect(self.firstPage)
+        self.ui.prevPagePushButton.clicked.connect(self.prevPage)
+        self.ui.nextPagePushButton.clicked.connect(self.nextPage)
+        self.ui.lastPagePushButton.clicked.connect(self.lastPage)
+
         self.ui.nextPushButton.clicked.connect(self.searchNext)
         self.ui.prevPushButton.clicked.connect(self.searchPrev)
         self.ui.clearPushButton.clicked.connect(self.searchClear)
         
+        self.offsetOfPage = 0
+        self.numOfPage = 10
+        self.totalPages = ceil(session.query(AliOrderModel.id).count() / self.numOfPage)
+        self.pageButtonStateUpdate()
+        
+        self.ui.webView.settings().setAttribute(QWebSettings.OfflineStorageDatabaseEnabled, True)
+        self.ui.webView.settings().setAttribute(QWebSettings.OfflineWebApplicationCacheEnabled, True)
+        self.ui.webView.settings().setAttribute(QWebSettings.LocalStorageEnabled, True)
+        self.ui.webView.settings().enablePersistentStorage()
+        print(self.ui.webView.settings().offlineWebApplicationCachePath())
         self.ui.webView.page().setLinkDelegationPolicy(QWebPage.DelegateAllLinks)
         self.ui.webView.linkClicked.connect(self.linkClicked)
-        self.ui.webView.setHtml(_translate('OrderListReview', 'Loading, wait a monent ...'))
-        QTimer.singleShot(100, self.setHtml)
+        if self.totalPages == 0:
+            self.setHtml()
+        else:
+            self.ui.webView.setHtml(_translate('OrderListReview', 'Loading, wait a monent ...'))
+            QTimer.singleShot(100, self.firstPage)
+            
+    def pageButtonStateUpdate(self):
+        if self.totalPages == 0 or self.totalPages == 1:
+            self.ui.firstPagePushButton.setDisabled(True)
+            self.ui.prevPagePushButton.setDisabled(True)
+            self.ui.nextPagePushButton.setDisabled(True)
+            self.ui.lastPagePushButton.setDisabled(True)
+        elif self.offsetOfPage == 0:
+            self.ui.firstPagePushButton.setDisabled(True)
+            self.ui.prevPagePushButton.setDisabled(True)
+            self.ui.nextPagePushButton.setEnabled(True)
+            self.ui.lastPagePushButton.setEnabled(True)
+        elif self.offsetOfPage == (self.totalPages - 1):
+            self.ui.firstPagePushButton.setEnabled(True)
+            self.ui.prevPagePushButton.setEnabled(True)
+            self.ui.nextPagePushButton.setDisabled(True)
+            self.ui.lastPagePushButton.setDisabled(True)
+        else:
+            self.ui.firstPagePushButton.setEnabled(True)
+            self.ui.prevPagePushButton.setEnabled(True)
+            self.ui.nextPagePushButton.setEnabled(True)
+            self.ui.lastPagePushButton.setEnabled(True)
+    
+    def firstPage(self):
+        if self.totalPages > 0:
+            self.offsetOfPage = 0
+            self.pageButtonStateUpdate()
+            self.setHtml()
+    
+    def prevPage(self):
+        if self.totalPages > 0 and self.offsetOfPage > 0:
+            self.offsetOfPage -= 1
+            self.pageButtonStateUpdate()
+            self.setHtml()
+    
+    def nextPage(self):
+        if self.totalPages > 0 and self.offsetOfPage < (self.totalPages - 1):
+            self.offsetOfPage += 1
+            self.pageButtonStateUpdate()
+            self.setHtml()
+    
+    def lastPage(self):
+        if self.totalPages > 0:
+            self.offsetOfPage = self.totalPages - 1
+            self.pageButtonStateUpdate()
+            self.setHtml()
         
     def searchNext(self, options = QWebPage.FindWrapsAroundDocument):
         findText = self.ui.findTextLineEdit.text().strip()
@@ -245,8 +311,12 @@ class OrderListReviewDialog(QDialog):
         QDesktopServices.openUrl(url)
         
     def setHtml(self):
+        if self.totalPages > 0:
+            self.ui.pageNumLabel.setText('{0} / {1}'.format(self.offsetOfPage + 1, self.totalPages))
+        else:
+            self.ui.pageNumLabel.setText('0 / 0')
         orderList = []
-        for model in session.query(AliOrderModel).order_by(desc(AliOrderModel.gmtCreate)):
+        for model in session.query(AliOrderModel).order_by(desc(AliOrderModel.gmtCreate)).offset(self.offsetOfPage * self.numOfPage).limit(self.numOfPage):
             orderList.append(dict(
                 buyerPhone = model.buyerPhone,
                 carriage = model.carriage,
@@ -256,7 +326,7 @@ class OrderListReviewDialog(QDialog):
                 sumProductPayment = model.sumProductPayment,
                 sumPayment = model.sumPayment,
                 orderEntries = json.loads(model.orderEntries),
-                logisticsOrderList = json.loads(model.logisticsOrderList) if len(model.logisticsOrderList) else None,
+                logisticsOrderList = json.loads(model.logisticsOrderList) if model.logisticsOrderList else None,
                 toFullName = model.toFullName,
                 toMobile = model.toMobile,
                 toArea = model.toArea,
