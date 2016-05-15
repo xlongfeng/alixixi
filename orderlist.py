@@ -151,10 +151,11 @@ class OrderListGetDialog(QDialog):
             for orderEntryModel in orderModel['orderEntries']:
                 orderEntry = dict()
                 orderEntry['productName'] = orderEntryModel['productName']
-                specInfo = []
-                for specItems in orderEntryModel['specInfoModel']['specItems']:
-                    specInfo.append({'specName': specItems['specName'], 'specValue': specItems['specValue']})
-                orderEntry['specInfo'] = specInfo
+                if 'specInfoModel' in orderEntryModel:
+                    specInfo = []
+                    for specItems in orderEntryModel['specInfoModel']['specItems']:
+                        specInfo.append({'specName': specItems['specName'], 'specValue': specItems['specValue']})
+                    orderEntry['specInfo'] = specInfo
                 orderEntry['price'] = ccyUnitConvert(orderEntryModel['price'])
                 orderEntry['quantity'] = orderEntryModel['quantity']
                 orderEntry['promotionsFee'] = ccyUnitConvert(orderEntryModel['promotionsFee'])
