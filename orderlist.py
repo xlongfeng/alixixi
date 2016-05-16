@@ -51,7 +51,7 @@ from PyQt5.QtWebKitWidgets import QWebPage
 import json
 from math import ceil
 from jinja2 import Environment, FileSystemLoader
-from sqlalchemy import desc, func
+from sqlalchemy import desc, or_
 
 from ui_orderlistgetdialog import Ui_OrderListGetDialog
 from ui_orderlistreviewdialog import Ui_OrderListReviewDialog
@@ -226,25 +226,17 @@ class OrderListReviewDialog(QDialog):
         super(OrderListReviewDialog, self).__init__(parent)
         self.ui = Ui_OrderListReviewDialog()
         self.ui.setupUi(self)
-        self.ui.label.setBuddy(self.ui.findTextLineEdit)
         self.resize(1050, 640)
-        
-        self.advancedSearchFilter = dict()
         
         self.ui.firstPagePushButton.clicked.connect(self.firstPage)
         self.ui.prevPagePushButton.clicked.connect(self.prevPage)
         self.ui.nextPagePushButton.clicked.connect(self.nextPage)
         self.ui.lastPagePushButton.clicked.connect(self.lastPage)
-
-        self.ui.nextPushButton.clicked.connect(self.searchNext)
-        self.ui.prevPushButton.clicked.connect(self.searchPrev)
-        self.ui.clearPushButton.clicked.connect(self.searchClear)
         
-        self.ui.advancedSearchGroupBox.toggled.connect(self.advancedSearchToggled)
-        self.advancedSearchToggled(self.ui.advancedSearchGroupBox.isChecked())
-        self.ui.advancedSearchPushButton.clicked.connect(self.advancedSearch)
-        self.ui.advancedSearchClearPushButton.clicked.connect(self.advancedSearchClear)
+        self.ui.searchPushButton.clicked.connect(self.advancedSearch)
+        self.ui.clearPushButton.clicked.connect(self.advancedSearchClear)
         
+        self.fuzzySearch = ''
         self.pageInfoUpdate()
         
         self.ui.webView.settings().setAttribute(QWebSettings.OfflineStorageDatabaseEnabled, True)
@@ -262,8 +254,13 @@ class OrderListReviewDialog(QDialog):
             
     def queryFilter(self):
         query = session.query(AliOrderModel)
-        for attr, value in self.advancedSearchFilter.items():
-            query= query.filter(getattr(AliOrderModel, attr).like("%%%s%%" % value))
+        value = self.fuzzySearch
+        if len(value) > 0:
+            query= query.filter(or_(AliOrderModel.buyerPhone.like('%%%s%%' % value),
+                                    AliOrderModel.logisticsOrderList.like('%%"logisticsBillNo": "%s"%%' % value),
+                                    AliOrderModel.toArea.like('%%%s%%' % value),
+                                    AliOrderModel.toFullName.like('%%%s%%' % value),
+                                    AliOrderModel.toMobile.like('%%%s%%' % value)))
         return query
     
     def pageInfoUpdate(self):
@@ -312,58 +309,14 @@ class OrderListReviewDialog(QDialog):
         if self.totalPages > 0:
             self.offsetOfPage = self.totalPages - 1
             self.setHtml()
-        
-    def searchNext(self, options = QWebPage.FindWrapsAroundDocument):
-        findText = self.ui.findTextLineEdit.text().strip()
-        if len(findText) > 0:
-            if self.ui.webView.findText(findText, QWebPage.FindWrapsAroundDocument) == False:
-                self.ui.webView.findText('', QWebPage.FindWrapsAroundDocument)
-    
-    def searchPrev(self, options = QWebPage.FindBackward | QWebPage.FindWrapsAroundDocument):
-        self.searchNext(options)
-    
-    def searchClear(self):
-        self.ui.findTextLineEdit.setText('')
-        self.ui.webView.findText('')
-        
-    def advancedSearchToggled(self, on):
-        if on:
-            self.ui.advancedSearchGroupBox.setMaximumHeight(116777215)
-        else:
-            self.ui.advancedSearchGroupBox.setMaximumHeight(16)
-            if len(self.advancedSearchFilter) > 0:
-                self.advancedSearchFilter.clear()
-                self.pageInfoUpdate()
-                self.setHtml()
     
     def advancedSearch(self):
-        buyerPhone = self.ui.buyerPhoneLineEdit.text().strip()
-        toArea = self.ui.toAreaLineEdit.text().strip()
-        toFullName = self.ui.toFullNameLineEdit.text().strip()
-        toMobile = self.ui.toMobileLineEdit.text().strip()
-        
-        self.advancedSearchFilter.clear()
-        
-        if len(buyerPhone) > 0:
-            self.advancedSearchFilter['buyerPhone'] = buyerPhone
-        
-        if len(toArea) > 0:
-            self.advancedSearchFilter['toArea'] = toArea
-        
-        if len(toFullName) > 0:
-            self.advancedSearchFilter['toFullName'] = toFullName
-        
-        if len(toMobile) > 0:
-            self.advancedSearchFilter['toMobile'] = toMobile
-        
+        self.fuzzySearch = self.ui.searchLineEdit.text().strip()
         self.pageInfoUpdate()
         self.setHtml()
         
     def advancedSearchClear(self):
-        self.ui.buyerPhoneLineEdit.setText('')
-        self.ui.toAreaLineEdit.setText('')
-        self.ui.toFullNameLineEdit.setText('')
-        self.ui.toMobileLineEdit.setText('')
+        self.ui.searchLineEdit.setText('')
         
     def linkClicked(self, url):
         QDesktopServices.openUrl(url)

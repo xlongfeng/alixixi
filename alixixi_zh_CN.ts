@@ -187,7 +187,7 @@
         <translation>签收失败</translation>
     </message>
     <message>
-        <location filename="orderlist.py" line="261"/>
+        <location filename="orderlist.py" line="254"/>
         <source>Loading, wait a monent ...</source>
         <translation>正在载入，请稍后 ...</translation>
     </message>
@@ -195,89 +195,49 @@
 <context>
     <name>OrderListReviewDialog</name>
     <message>
-        <location filename="orderlistreviewdialog.ui" line="6"/>
+        <location filename="orderlistreviewdialog.ui" line="14"/>
         <source>Order List Review</source>
         <translation>查看订单</translation>
     </message>
     <message>
-        <location filename="orderlistreviewdialog.ui" line="203"/>
+        <location filename="orderlistreviewdialog.ui" line="99"/>
         <source>about:blank</source>
         <translation>about:blank</translation>
     </message>
     <message>
-        <location filename="orderlistreviewdialog.ui" line="175"/>
+        <location filename="orderlistreviewdialog.ui" line="89"/>
         <source>Clear</source>
         <translation>清空</translation>
     </message>
     <message>
-        <location filename="orderlistreviewdialog.ui" line="168"/>
+        <location filename="orderlistreviewdialog.ui" line="82"/>
         <source>Search</source>
         <translation>查找</translation>
     </message>
     <message>
-        <location filename="orderlistreviewdialog.ui" line="81"/>
-        <source>Next</source>
-        <translation>下一个</translation>
-    </message>
-    <message>
-        <location filename="orderlistreviewdialog.ui" line="88"/>
-        <source>Prev</source>
-        <translation>上一个</translation>
-    </message>
-    <message>
-        <location filename="orderlistreviewdialog.ui" line="21"/>
+        <location filename="orderlistreviewdialog.ui" line="29"/>
         <source>Prev Page</source>
         <translation>上一页</translation>
     </message>
     <message>
-        <location filename="orderlistreviewdialog.ui" line="28"/>
+        <location filename="orderlistreviewdialog.ui" line="36"/>
         <source>Next Page</source>
         <translation>下一页</translation>
     </message>
     <message>
-        <location filename="orderlistreviewdialog.ui" line="35"/>
+        <location filename="orderlistreviewdialog.ui" line="43"/>
         <source>Last Page</source>
         <translation>末页</translation>
     </message>
     <message>
-        <location filename="orderlistreviewdialog.ui" line="14"/>
+        <location filename="orderlistreviewdialog.ui" line="22"/>
         <source>First Page</source>
         <translation>首页</translation>
     </message>
     <message>
-        <location filename="orderlistreviewdialog.ui" line="48"/>
+        <location filename="orderlistreviewdialog.ui" line="56"/>
         <source>0 / 0</source>
         <translation>0 / 0</translation>
-    </message>
-    <message>
-        <location filename="orderlistreviewdialog.ui" line="104"/>
-        <source>Advanced Search</source>
-        <translation>高级搜索</translation>
-    </message>
-    <message>
-        <location filename="orderlistreviewdialog.ui" line="120"/>
-        <source>To Full Name</source>
-        <translation>收货人</translation>
-    </message>
-    <message>
-        <location filename="orderlistreviewdialog.ui" line="130"/>
-        <source>To Area</source>
-        <translation>收货地址</translation>
-    </message>
-    <message>
-        <location filename="orderlistreviewdialog.ui" line="144"/>
-        <source>To Mobile</source>
-        <translation>手机</translation>
-    </message>
-    <message>
-        <location filename="orderlistreviewdialog.ui" line="154"/>
-        <source>Buyer Phone</source>
-        <translation>电话</translation>
-    </message>
-    <message>
-        <location filename="orderlistreviewdialog.ui" line="71"/>
-        <source>Find (on this page)</source>
-        <translation>查找(在当前页)</translation>
     </message>
 </context>
 <context>
