@@ -13,14 +13,14 @@
         <translation>会员名</translation>
     </message>
     <message>
-        <location filename="alixixi.pyw" line="146"/>
+        <location filename="alixixi.pyw" line="144"/>
         <source>Authorize</source>
         <translation>登陆</translation>
     </message>
     <message>
-        <location filename="alixixi.ui" line="39"/>
-        <source>Order Query</source>
-        <translation>查询订单</translation>
+        <location filename="alixixi.pyw" line="213"/>
+        <source>Ali Order Query</source>
+        <translation>阿里订单查询</translation>
     </message>
     <message>
         <location filename="alixixi.ui" line="47"/>
@@ -28,69 +28,89 @@
         <translation>日期范围</translation>
     </message>
     <message>
-        <location filename="alixixi.ui" line="65"/>
+        <location filename="alixixi.ui" line="69"/>
         <source>to</source>
         <translation>到</translation>
     </message>
     <message>
-        <location filename="alixixi.ui" line="89"/>
-        <source>Today</source>
-        <translation>今天</translation>
-    </message>
-    <message>
-        <location filename="alixixi.ui" line="96"/>
-        <source>The last 2 days</source>
-        <translation>最近2天</translation>
-    </message>
-    <message>
-        <location filename="alixixi.ui" line="103"/>
-        <source>The last 3 days</source>
-        <translation>最近3天</translation>
-    </message>
-    <message>
-        <location filename="alixixi.ui" line="110"/>
-        <source>The last week</source>
-        <translation>最近1周</translation>
-    </message>
-    <message>
-        <location filename="alixixi.ui" line="117"/>
-        <source>The last 2 weeks</source>
-        <translation>最近2周</translation>
-    </message>
-    <message>
-        <location filename="alixixi.ui" line="124"/>
-        <source>The last month</source>
-        <translation>最近1月</translation>
-    </message>
-    <message>
-        <location filename="alixixi.ui" line="78"/>
+        <location filename="alixixi.ui" line="86"/>
         <source>Query List</source>
         <translation>更新订单</translation>
     </message>
     <message>
-        <location filename="alixixi.ui" line="135"/>
+        <location filename="alixixi.ui" line="97"/>
         <source>Review List</source>
         <translation>查看订单</translation>
     </message>
     <message>
-        <location filename="alixixi.pyw" line="147"/>
+        <location filename="alixixi.pyw" line="145"/>
         <source>Re Authorize</source>
         <translation>更新授权</translation>
     </message>
     <message>
-        <location filename="alixixi.pyw" line="142"/>
+        <location filename="alixixi.pyw" line="140"/>
         <source>File</source>
         <translation>文件</translation>
     </message>
     <message>
-        <location filename="alixixi.pyw" line="143"/>
+        <location filename="alixixi.pyw" line="141"/>
         <source>Close</source>
         <translation>退出</translation>
     </message>
     <message>
-        <location filename="alixixi.pyw" line="145"/>
+        <location filename="alixixi.pyw" line="143"/>
         <source>Setting</source>
         <translation>设置</translation>
+    </message>
+    <message>
+        <location filename="alixixi.pyw" line="147"/>
+        <source>Ali Order</source>
+        <translation>阿里订单</translation>
+    </message>
+    <message>
+        <location filename="alixixi.pyw" line="148"/>
+        <source>Update Today</source>
+        <translation>更新今天</translation>
+    </message>
+    <message>
+        <location filename="alixixi.pyw" line="149"/>
+        <source>Update the Last 2 Days</source>
+        <translation>更新最近2天</translation>
+    </message>
+    <message>
+        <location filename="alixixi.pyw" line="150"/>
+        <source>Update the Last 3 Days</source>
+        <translation>更新最近3天</translation>
+    </message>
+    <message>
+        <location filename="alixixi.pyw" line="151"/>
+        <source>Update the Last 5 Days</source>
+        <translation>更新最近5天</translation>
+    </message>
+    <message>
+        <location filename="alixixi.pyw" line="152"/>
+        <source>Update the Last Week</source>
+        <translation>更新最近1周</translation>
+    </message>
+    <message>
+        <location filename="alixixi.pyw" line="153"/>
+        <source>Update the Last 2 Weeks</source>
+        <translation>更新最近2周</translation>
+    </message>
+    <message>
+        <location filename="alixixi.pyw" line="154"/>
+        <source>Update the Last Month</source>
+        <translation>更新最近1月</translation>
+    </message>
+    <message>
+        <location filename="alixixi.pyw" line="209"/>
+        <source>Date range error, start time later than the end of time</source>
+        <translation>日期范围错误，开始时间比结束时间晚</translation>
+    </message>
+    <message>
+        <location filename="alixixi.pyw" line="213"/>
+        <source>Date range error, time range is too long, must be less than 30 days</source>
+        <translation>日期范围错误，时间范围过长，必需小于30天</translation>
     </message>
 </context>
 <context>
@@ -114,14 +134,29 @@
 <context>
     <name>OrderListGetDialog</name>
     <message>
-        <location filename="orderlist.py" line="195"/>
-        <source>Order List Get</source>
-        <translation>查询订单</translation>
+        <location filename="orderlist.py" line="197"/>
+        <source>Ali Order List</source>
+        <translation>阿里订单</translation>
     </message>
     <message>
-        <location filename="orderlist.py" line="195"/>
+        <location filename="orderlist.py" line="197"/>
         <source>Empty order list</source>
         <translation>无新订单</translation>
+    </message>
+    <message>
+        <location filename="orderlistgetdialog.ui" line="22"/>
+        <source>Date Range</source>
+        <translation>日期范围</translation>
+    </message>
+    <message>
+        <location filename="orderlistgetdialog.ui" line="50"/>
+        <source>to</source>
+        <translation>到</translation>
+    </message>
+    <message>
+        <location filename="orderlistgetdialog.ui" line="75"/>
+        <source>Order Quantity</source>
+        <translation>订单数量</translation>
     </message>
 </context>
 <context>
@@ -187,7 +222,7 @@
         <translation>签收失败</translation>
     </message>
     <message>
-        <location filename="orderlist.py" line="254"/>
+        <location filename="orderlist.py" line="258"/>
         <source>Loading, wait a monent ...</source>
         <translation>正在载入，请稍后 ...</translation>
     </message>
@@ -196,8 +231,8 @@
     <name>OrderListReviewDialog</name>
     <message>
         <location filename="orderlistreviewdialog.ui" line="14"/>
-        <source>Order List Review</source>
-        <translation>查看订单</translation>
+        <source>Ali Order List</source>
+        <translation>阿里订单</translation>
     </message>
     <message>
         <location filename="orderlistreviewdialog.ui" line="99"/>

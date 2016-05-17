@@ -80,9 +80,11 @@ class OrderListGetDialog(QDialog):
         super(OrderListGetDialog, self).__init__(parent)
         self.ui = Ui_OrderListGetDialog()
         self.ui.setupUi(self)
-        self.ui.buttonBox.rejected.connect(self.orderListGetRequestAbort)
+        self.ui.createStartTimeDateEdit.setDate(createStartTime)
+        self.ui.createEndTimeDateEdit.setDate(createEndTime)
         self.ui.progressBar.setRange(0, 100)
         self.ui.progressBar.setValue(0)
+        self.ui.buttonBox.rejected.connect(self.orderListGetRequestAbort)
         
         self.settings = Settings(self)
         self.cnAlibabaOpen = CnAlibabaOpen.instance()
@@ -92,8 +94,8 @@ class OrderListGetDialog(QDialog):
         # prepare to get order list
         self.orderList = dict()
         self.orderDetailIdList = []
-        self.createStartTime = createStartTime
-        self.createEndTime = createEndTime
+        self.createStartTime = createStartTime.toString('yyyyMMdd00000000+0800')
+        self.createEndTime = createEndTime.toString('yyyyMMdd23595900+0800')
         self.totalCount = 0
         self.count = 0
         self.page = 1
@@ -191,10 +193,12 @@ class OrderListGetDialog(QDialog):
             # first call
             self.totalCount = orderListResult['totalCount']
             if self.totalCount == 0:
-                QMessageBox.information(self, _translate('OrderListGetDialog', 'Order List Get'), _translate('OrderListGetDialog', 'Empty order list'))
+                QMessageBox.information(self, _translate('OrderListGetDialog', 'Ali Order List'),
+                                        _translate('OrderListGetDialog', 'Empty order list'))
                 self.reject()
                 return
             else:
+                self.ui.quantityLineEdit.setText(str(self.totalCount))
                 self.ui.progressBar.setRange(0, self.totalCount)
         self.orderListAppend(orderListResult['modelList'])
                 

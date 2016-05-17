@@ -123,14 +123,12 @@ class Alixixi(QMainWindow):
         if len(loginId) > 0:
             self.ui.loginIdLineEdit.setText(self.settings.resource_owner)
         
-        self.todayRange()
-        self.ui.todayPushButton.clicked.connect(self.todayRange)
-        self.ui.last2DaysPushButton.clicked.connect(self.last2DaysRange)
-        self.ui.last3DaysPushButton.clicked.connect(self.last3DaysRange)
-        self.ui.lastWeekPushButton.clicked.connect(self.lastWeekRange)
-        self.ui.last2WeeksPushButton.clicked.connect(self.last2WeeksRange)
-        self.ui.lastMonthPushButton.clicked.connect(self.lastMonthRange)
-        self.ui.orderListGetPushButton.clicked.connect(self.orderListGetRequest)
+        self.createStartTime = QDate.currentDate()
+        self.createEndTime = QDate.currentDate()
+        
+        self.ui.createStartTimeDateEdit.setDate(QDate.currentDate())
+        self.ui.createEndTimeDateEdit.setDate(QDate.currentDate())
+        self.ui.orderListGetPushButton.clicked.connect(self.orderListGet)
         self.ui.orderListReviewPushButton.clicked.connect(self.orderListReview)
         
         self.addMenus()
@@ -146,6 +144,15 @@ class Alixixi(QMainWindow):
         setttingsMenu.addAction(_translate('Alixixi', 'Authorize'), self.authorizeRequest)
         setttingsMenu.addAction(_translate('Alixixi', 'Re Authorize'), self.reAuthorizeRequest)
         
+        aliOrderMenu = menuBar.addMenu(_translate('Alixixi', 'Ali Order'))
+        aliOrderMenu.addAction(_translate('Alixixi', 'Update Today'), self.todayOrderListGet)
+        aliOrderMenu.addAction(_translate('Alixixi', 'Update the Last 2 Days'), self.last2DaysOrderListGet)
+        aliOrderMenu.addAction(_translate('Alixixi', 'Update the Last 3 Days'), self.last3DaysOrderListGet)
+        aliOrderMenu.addAction(_translate('Alixixi', 'Update the Last 5 Days'), self.last5DaysOrderListGet)
+        aliOrderMenu.addAction(_translate('Alixixi', 'Update the Last Week'), self.lastWeekOrderListGet)
+        aliOrderMenu.addAction(_translate('Alixixi', 'Update the Last 2 Weeks'), self.last2WeeksOrderListGet)
+        aliOrderMenu.addAction(_translate('Alixixi', 'Update the Last Month'), self.lastMonthOrderListGet)
+        
     def openApiResponseException(self, warning):
         QMessageBox.warning(self, 'Open Api Response Exception', warning)
         
@@ -160,34 +167,56 @@ class Alixixi(QMainWindow):
             dialog = ReAuthorizeDialog(self)
             dialog.exec()
         
-    def todayRange(self):
-        self.ui.createStartTimeDateEdit.setDate(QDate.currentDate())
-        self.ui.createEndTimeDateEdit.setDate(QDate.currentDate())
+    def todayOrderListGet(self):
+        self.createStartTime = QDate.currentDate()
+        self.createEndTime = QDate.currentDate()
+        self.orderListGetRequest()
         
-    def last2DaysRange(self):
-        self.ui.createStartTimeDateEdit.setDate(QDate.currentDate().addDays(-1))
-        self.ui.createEndTimeDateEdit.setDate(QDate.currentDate())
+    def last2DaysOrderListGet(self):
+        self.createStartTime = QDate.currentDate().addDays(-1)
+        self.createEndTime = QDate.currentDate()
+        self.orderListGetRequest()
 
-    def last3DaysRange(self):
-        self.ui.createStartTimeDateEdit.setDate(QDate.currentDate().addDays(-2))
-        self.ui.createEndTimeDateEdit.setDate(QDate.currentDate())
+    def last3DaysOrderListGet(self):
+        self.createStartTime = QDate.currentDate().addDays(-2)
+        self.createEndTime = QDate.currentDate()
+        self.orderListGetRequest()
         
-    def lastWeekRange(self):
-        self.ui.createStartTimeDateEdit.setDate(QDate.currentDate().addDays(-6))
-        self.ui.createEndTimeDateEdit.setDate(QDate.currentDate())
+    def last5DaysOrderListGet(self):
+        self.createStartTime = QDate.currentDate().addDays(-4)
+        self.createEndTime = QDate.currentDate()
+        self.orderListGetRequest()
         
-    def last2WeeksRange(self):
-        self.ui.createStartTimeDateEdit.setDate(QDate.currentDate().addDays(-13))
-        self.ui.createEndTimeDateEdit.setDate(QDate.currentDate())
+    def lastWeekOrderListGet(self):
+        self.createStartTime = QDate.currentDate().addDays(-6)
+        self.createEndTime = QDate.currentDate()
+        self.orderListGetRequest()
         
-    def lastMonthRange(self):
-        self.ui.createStartTimeDateEdit.setDate(QDate.currentDate().addDays(-30))
-        self.ui.createEndTimeDateEdit.setDate(QDate.currentDate())
+    def last2WeeksOrderListGet(self):
+        self.createStartTime = QDate.currentDate().addDays(-13)
+        self.createEndTime = QDate.currentDate()
+        self.orderListGetRequest()
+        
+    def lastMonthOrderListGet(self):
+        self.createStartTime = QDate.currentDate().addDays(-30)
+        self.createEndTime = QDate.currentDate()
+        self.orderListGetRequest()
+        
+    def orderListGet(self):
+        self.createStartTime = self.ui.createStartTimeDateEdit.date()
+        self.createEndTime = self.ui.createEndTimeDateEdit.date()
+        if self.createStartTime > self.createEndTime:
+            QMessageBox.warning(self, _translate('Alixixi', 'Ali Order Query'),
+                                _translate('Alixixi', 'Date range error, start time later than the end of time'))
+            return
+        if self.createStartTime.addDays(30) < self.createEndTime:
+            QMessageBox.warning(self, _translate('Alixixi', 'Ali Order Query'),
+                                _translate('Alixixi', 'Date range error, time range is too long, must be less than 30 days'))
+            return        
+        self.orderListGetRequest()
         
     def orderListGetRequest(self):
-        createStartTime = self.ui.createStartTimeDateEdit.date().toString('yyyyMMdd00000000+0800')
-        createEndTime = self.ui.createEndTimeDateEdit.date().toString('yyyyMMdd23595900+0800')
-        dialog = OrderListGetDialog(createStartTime, createEndTime, self)
+        dialog = OrderListGetDialog(self.createStartTime, self.createEndTime, self)
         if dialog.exec() == QDialog.Accepted:
             self.orderListReview()
         

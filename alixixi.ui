@@ -36,7 +36,7 @@
     <item>
      <widget class="QGroupBox" name="groupBox">
       <property name="title">
-       <string>Order Query</string>
+       <string>Ali Order Query</string>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout">
        <item>
@@ -51,7 +51,11 @@
          <item row="0" column="1">
           <layout class="QHBoxLayout" name="horizontalLayout_2">
            <item>
-            <widget class="QDateEdit" name="createStartTimeDateEdit"/>
+            <widget class="QDateEdit" name="createStartTimeDateEdit">
+             <property name="calendarPopup">
+              <bool>true</bool>
+             </property>
+            </widget>
            </item>
            <item>
             <widget class="QLabel" name="label_3">
@@ -70,58 +74,16 @@
             </widget>
            </item>
            <item>
-            <widget class="QDateEdit" name="createEndTimeDateEdit"/>
+            <widget class="QDateEdit" name="createEndTimeDateEdit">
+             <property name="calendarPopup">
+              <bool>true</bool>
+             </property>
+            </widget>
            </item>
            <item>
             <widget class="QPushButton" name="orderListGetPushButton">
              <property name="text">
               <string>Query List</string>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </item>
-         <item row="1" column="1">
-          <layout class="QGridLayout" name="gridLayout">
-           <item row="0" column="0">
-            <widget class="QPushButton" name="todayPushButton">
-             <property name="text">
-              <string>Today</string>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="1">
-            <widget class="QPushButton" name="last2DaysPushButton">
-             <property name="text">
-              <string>The last 2 days</string>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="2">
-            <widget class="QPushButton" name="last3DaysPushButton">
-             <property name="text">
-              <string>The last 3 days</string>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="0">
-            <widget class="QPushButton" name="lastWeekPushButton">
-             <property name="text">
-              <string>The last week</string>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="1">
-            <widget class="QPushButton" name="last2WeeksPushButton">
-             <property name="text">
-              <string>The last 2 weeks</string>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="2">
-            <widget class="QPushButton" name="lastMonthPushButton">
-             <property name="text">
-              <string>The last month</string>
              </property>
             </widget>
            </item>
