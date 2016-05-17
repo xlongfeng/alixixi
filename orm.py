@@ -55,7 +55,7 @@ class AliOrderModel(Base):
     createDate =  Column('create_date', DateTime)
     writeDate =  Column('write_date', DateTime)
     
-    buyerPhone = Column('buyer_phone', String)
+    
     carriage = Column('carriage', Float)
     gmtCreate = Column('gmt_create', DateTime)
     orderId = Column('order_id', String)
@@ -66,9 +66,10 @@ class AliOrderModel(Base):
     orderEntries = Column('order_entries', String)
     
     logisticsOrderList = Column('logistics_order_list', String)
+    toArea = Column('to_area', String)
     toFullName = Column('to_full_name', String)
     toMobile = Column('to_mobile', String)
-    toArea = Column('to_area', String)
+    toPhone = Column('to_phone', String)
     
 def aliTimeToDateTime(alitime):
     return datetime.strptime(alitime, '%Y%m%d%H%M%S%f+0800')
