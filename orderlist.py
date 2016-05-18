@@ -208,10 +208,12 @@ class OrderListGetDialog(QDialog):
         orderModel = response['orderModel']
         orderId = orderModel['id']
         model = session.query(AliOrderModel).filter_by(orderId = orderId).one()
-        model.buyerPhone = orderModel['buyerPhone']
         model.toArea = orderModel['toArea']
         model.toFullName = orderModel['toFullName']
-        model.toMobile = orderModel['toMobile']
+        if 'toMobile' in orderModel:
+            model.toMobile = orderModel['toMobile']
+        if 'toPhone' in orderModel:
+            model.toPhone = orderModel['toPhone']
         if 'logisticsOrderList' in orderModel:
             logisticsOrderList = []
             for logisticsOrderModel in orderModel['logisticsOrderList']:
@@ -334,7 +336,6 @@ class OrderListReviewDialog(QDialog):
         orderList = []
         for model in self.queryFilter().order_by(desc(AliOrderModel.gmtCreate)).offset(self.offsetOfPage * self.numOfPage).limit(self.numOfPage):
             orderList.append(dict(
-                buyerPhone = model.buyerPhone,
                 carriage = model.carriage,
                 gmtCreate = model.gmtCreate,
                 orderId = model.orderId,
@@ -343,9 +344,10 @@ class OrderListReviewDialog(QDialog):
                 sumPayment = model.sumPayment,
                 orderEntries = json.loads(model.orderEntries),
                 logisticsOrderList = json.loads(model.logisticsOrderList) if model.logisticsOrderList else None,
-                toFullName = model.toFullName,
-                toMobile = model.toMobile,
                 toArea = model.toArea,
+                toFullName = model.toFullName,
+                toPhone = model.toPhone,
+                toMobile = model.toMobile,
             ))
         env = Environment(loader=FileSystemLoader('templates'))
         template = env.get_template('orderlist.html')
