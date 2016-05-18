@@ -13,7 +13,7 @@
   <property name="windowTitle">
    <string>Ali Order List</string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout_2">
+  <layout class="QVBoxLayout" name="verticalLayout">
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
@@ -91,6 +91,9 @@
       </widget>
      </item>
     </layout>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="customFilterHorizontalLayout"/>
    </item>
    <item>
     <widget class="QWebView" name="webView">

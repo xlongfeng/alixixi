@@ -41,7 +41,7 @@
 
 
 from PyQt5.QtCore import (Qt, QCoreApplication, QTranslator, QDate,
-                          QDateTime, QTimer)
+                          QDateTime, QTimer, QProcess)
 from PyQt5.QtGui import QIcon, QIntValidator, QDesktopServices
 from PyQt5.QtWidgets import (QApplication, QComboBox, QDialog, QMainWindow,
                              QGridLayout, QLabel, QLineEdit, QMessageBox,
@@ -52,7 +52,8 @@ from ui_orderlistgetdialog import Ui_OrderListGetDialog
 from ui_alixixi import Ui_Alixixi
 from settings import Settings
 from cnalibabaopen import CnAlibabaOpen
-from orderlist import OrderListGetDialog, OrderListReviewDialog
+from orderlist import *
+from taobaoassistant import *
 
 _translate = QCoreApplication.translate
 
@@ -128,8 +129,12 @@ class Alixixi(QMainWindow):
         
         self.ui.createStartTimeDateEdit.setDate(QDate.currentDate())
         self.ui.createEndTimeDateEdit.setDate(QDate.currentDate())
-        self.ui.orderListGetPushButton.clicked.connect(self.orderListGet)
-        self.ui.orderListReviewPushButton.clicked.connect(self.orderListReview)
+        self.ui.aliOrderUpdatePushButton.clicked.connect(self.aliOrderListUpdate)
+        self.ui.aliOrderReviewPushButton.clicked.connect(self.aliOrderListReview)
+        
+        self.ui.tbOrderUpdatePushButton.clicked.connect(self.tbOrderListUpdate)
+        self.ui.tbOrderReviewPushButton.clicked.connect(self.tbOrderListReview)
+        self.ui.tbOrderLogisticsUpdatePushButton.clicked.connect(self.tbOrderListLogisticsUpdate)
         
         self.addMenus()
         
@@ -143,15 +148,18 @@ class Alixixi(QMainWindow):
         setttingsMenu = menuBar.addMenu(_translate('Alixixi', 'Setting'))
         setttingsMenu.addAction(_translate('Alixixi', 'Authorize'), self.authorizeRequest)
         setttingsMenu.addAction(_translate('Alixixi', 'Re Authorize'), self.reAuthorizeRequest)
+        setttingsMenu.addAction(_translate('Alixixi', 'Taobao Assistant'), self.taobaoAssistantSetting)
         
         aliOrderMenu = menuBar.addMenu(_translate('Alixixi', 'Ali Order'))
-        aliOrderMenu.addAction(_translate('Alixixi', 'Update Today'), self.todayOrderListGet)
-        aliOrderMenu.addAction(_translate('Alixixi', 'Update the Last 2 Days'), self.last2DaysOrderListGet)
-        aliOrderMenu.addAction(_translate('Alixixi', 'Update the Last 3 Days'), self.last3DaysOrderListGet)
-        aliOrderMenu.addAction(_translate('Alixixi', 'Update the Last 5 Days'), self.last5DaysOrderListGet)
-        aliOrderMenu.addAction(_translate('Alixixi', 'Update the Last Week'), self.lastWeekOrderListGet)
-        aliOrderMenu.addAction(_translate('Alixixi', 'Update the Last 2 Weeks'), self.last2WeeksOrderListGet)
-        aliOrderMenu.addAction(_translate('Alixixi', 'Update the Last Month'), self.lastMonthOrderListGet)
+        aliOrderUpdateMenu = aliOrderMenu.addMenu(_translate('Alixixi', 'Update'))
+        aliOrderUpdateMenu.addAction(_translate('Alixixi', 'Today'), self.todayOrderListGet)
+        aliOrderUpdateMenu.addAction(_translate('Alixixi', 'The Last 2 Days'), self.last2DaysOrderListGet)
+        aliOrderUpdateMenu.addAction(_translate('Alixixi', 'The Last 3 Days'), self.last3DaysOrderListGet)
+        aliOrderUpdateMenu.addAction(_translate('Alixixi', 'The Last 5 Days'), self.last5DaysOrderListGet)
+        aliOrderUpdateMenu.addAction(_translate('Alixixi', 'The Last Week'), self.lastWeekOrderListGet)
+        aliOrderUpdateMenu.addAction(_translate('Alixixi', 'The Last 2 Weeks'), self.last2WeeksOrderListGet)
+        aliOrderUpdateMenu.addAction(_translate('Alixixi', 'The Last Month'), self.lastMonthOrderListGet)
+        aliOrderMenu.addAction(_translate('Alixixi', 'Review'), self.aliOrderListReview)
         
     def openApiResponseException(self, warning):
         QMessageBox.warning(self, 'Open Api Response Exception', warning)
@@ -166,43 +174,48 @@ class Alixixi(QMainWindow):
         if len(loginId) > 0:
             dialog = ReAuthorizeDialog(self)
             dialog.exec()
+            
+    def taobaoAssistantSetting(self):
+        dialog = TaobaoAssistantSettingDialog(self)
+        if dialog.exec() == QDialog.Accepted:
+            dialog.save()
         
     def todayOrderListGet(self):
         self.createStartTime = QDate.currentDate()
         self.createEndTime = QDate.currentDate()
-        self.orderListGetRequest()
+        self.aliOrderListGetRequest()
         
     def last2DaysOrderListGet(self):
         self.createStartTime = QDate.currentDate().addDays(-1)
         self.createEndTime = QDate.currentDate()
-        self.orderListGetRequest()
+        self.aliOrderListGetRequest()
 
     def last3DaysOrderListGet(self):
         self.createStartTime = QDate.currentDate().addDays(-2)
         self.createEndTime = QDate.currentDate()
-        self.orderListGetRequest()
+        self.aliOrderListGetRequest()
         
     def last5DaysOrderListGet(self):
         self.createStartTime = QDate.currentDate().addDays(-4)
         self.createEndTime = QDate.currentDate()
-        self.orderListGetRequest()
+        self.aliOrderListGetRequest()
         
     def lastWeekOrderListGet(self):
         self.createStartTime = QDate.currentDate().addDays(-6)
         self.createEndTime = QDate.currentDate()
-        self.orderListGetRequest()
+        self.aliOrderListGetRequest()
         
     def last2WeeksOrderListGet(self):
         self.createStartTime = QDate.currentDate().addDays(-13)
         self.createEndTime = QDate.currentDate()
-        self.orderListGetRequest()
+        self.aliOrderListGetRequest()
         
     def lastMonthOrderListGet(self):
         self.createStartTime = QDate.currentDate().addDays(-30)
         self.createEndTime = QDate.currentDate()
-        self.orderListGetRequest()
+        self.aliOrderListGetRequest()
         
-    def orderListGet(self):
+    def aliOrderListUpdate(self):
         self.createStartTime = self.ui.createStartTimeDateEdit.date()
         self.createEndTime = self.ui.createEndTimeDateEdit.date()
         if self.createStartTime > self.createEndTime:
@@ -213,16 +226,50 @@ class Alixixi(QMainWindow):
             QMessageBox.warning(self, _translate('Alixixi', 'Ali Order Query'),
                                 _translate('Alixixi', 'Date range error, time range is too long, must be less than 30 days'))
             return        
-        self.orderListGetRequest()
+        self.aliOrderListGetRequest()
         
-    def orderListGetRequest(self):
+    def aliOrderListGetRequest(self):
         dialog = OrderListGetDialog(self.createStartTime, self.createEndTime, self)
         if dialog.exec() == QDialog.Accepted:
-            self.orderListReview()
+            self.aliOrderListReview()
         
-    def orderListReview(self):
+    def aliOrderListReview(self):
         dialog = OrderListReviewDialog(self)
         dialog.exec()
+        
+    def tbOrderListUpdate(self):
+        path = self.settings.taobao_assistant_install_path
+        if not taobaoAssistantInstallPathCheck(path):
+            QMessageBox.warning(self, _translate('Alixixi', 'Taobao Order'),
+                                _translate('Alixixi', 'Taobao assistant installation path set is not correct'))
+        elif taobaoAssistantWorkbenchIsRunning():
+            QMessageBox.warning(self, _translate('Alixixi', 'Taobao Order'),
+                                _translate('Alixixi', 'Taobao assistant has been running'))
+        else:
+            QProcess.startDetached(taobaoAssistantWorkbenchPath(path), list())
+        
+    def tbOrderListReview(self):
+        path = self.settings.taobao_assistant_install_path
+        if not taobaoAssistantInstallPathCheck(path):
+            QMessageBox.warning(self, _translate('Alixixi', 'Taobao Order'),
+                                _translate('Alixixi', 'Taobao assistant installation path set is not correct'))
+        elif taobaoAssistantWorkbenchIsRunning():
+            QMessageBox.warning(self, _translate('Alixixi', 'Taobao Order'),
+                                _translate('Alixixi', 'Please close the taobao assistant, and try again'))
+        else:
+            dialog = TaobaoOrderListReviewDialog(self)
+            dialog.exec()
+        
+    def tbOrderListLogisticsUpdate(self):
+        path = self.settings.taobao_assistant_install_path
+        if not taobaoAssistantInstallPathCheck(path):
+            QMessageBox.warning(self, _translate('Alixixi', 'Taobao Order'),
+                                _translate('Alixixi', 'Taobao assistant installation path set is not correct'))
+        elif taobaoAssistantWorkbenchIsRunning():
+            QMessageBox.warning(self, _translate('Alixixi', 'Taobao Order'),
+                                _translate('Alixixi', 'Please close the taobao assistant, and try again'))
+        else:
+            pass
         
     def refreshAccessToken(self):
         access_token_expires_in = self.settings.access_token_expires_in

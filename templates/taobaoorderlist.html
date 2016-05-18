@@ -1,0 +1,2031 @@
+<!DOCTYPE html>
+<html>
+  
+  <head>
+    <title>淘宝订单详情</title>
+    <style type="text/css">
+body {
+	font:12px/1.5 Tahoma,Helvetica,Arial,'宋体',sans-serif
+}
+html,legend {
+	color:#404040;
+	background:#fff
+}
+body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,code,form,fieldset,legend,input,button,textarea,p,blockquote,th,td {
+	margin:0;
+	padding:0
+}
+table {
+	border-collapse:collapse;
+	border-spacing:0
+}
+fieldset,img {
+	border:none
+}
+address,caption,cite,code,dfn,em,strong,th,var {
+	font-style:normal;
+	font-weight:400
+}
+li {
+	list-style:none
+}
+caption,th {
+	text-align:left
+}
+h1,h2,h3,h4,h5,h6 {
+	font-size:100%
+}
+h1 {
+	font-size:18px
+}
+h2 {
+	font-size:16px
+}
+h3 {
+	font-size:14px
+}
+q:before,q:after {
+	content:''
+}
+abbr,acronym {
+	border:none;
+	font-variant:normal
+}
+sup {
+	vertical-align:text-top
+}
+sub {
+	vertical-align:text-bottom
+}
+input,button,textarea,select {
+	font-family:inherit;
+	font-size:inherit;
+	font-weight:inherit
+}
+input,button,textarea,select {
+	*font-size:100%
+}
+select,input,button,textarea {
+	font:100% Tahoma,Helvetica,Arial,sans-serif
+}
+table {
+	font-size:inherit;
+	font:100%
+}
+pre,code,kbd,samp,tt {
+	font-family:'Courier New',Courier,monospace
+}
+small {
+	font-size:100%
+}
+a {
+	color:#36c;
+	text-decoration:none
+}
+a:hover {
+	color:#f60;
+	text-decoration:underline
+}
+abbr,acronym {
+	border-bottom:1px dotted;
+	cursor:help
+}
+ins {
+	text-decoration:none
+}
+del {
+	text-decoration:line-through
+}
+hr {
+	color:#D1D7DC;
+	background-color:#D1D7DC;
+	border:none;
+	height:1px
+}
+html {
+	overflow-y:scroll
+}
+#page,#page3 {
+	width:950px;
+	margin-left:auto;
+	margin-right:auto
+}
+#page3 {
+	width:750px
+}
+.col-main {
+	float:left;
+	width:100%
+}
+.col-sub,.col-extra {
+	float:left
+}
+.main-wrap:after,.col-sub:after,.col-extra:after {
+	content:'\0020';
+	display:block;
+	height:0;
+	clear:both
+}
+.main-wrap,.col-sub,.col-extra {
+	zoom:1
+}
+.col-main {
+	min-height:1px
+}
+body:first-of-type .main-wrap {
+	position:relative
+}
+.hidden {
+	display:none
+}
+.invisible {
+	visibility:hidden
+}
+.h {
+	color:#F50!important
+}
+.floatleft {
+	float:left!important
+}
+.floatright {
+	float:right!important
+}
+.clearfix:after {
+	content:'\0020';
+	display:block;
+	height:0;
+	clear:both
+}
+.box .rc-tp,.box .rc-bt {
+	position:relative;
+	display:block;
+	height:4px
+}
+.box .rc-tp span,.box .rc-bt span {
+	float:right;
+	width:4px;
+	height:4px
+}
+.box .rc-tp {
+	margin-bottom:-4px;
+	background-position:-3px 0
+}
+.box .rc-bt {
+	margin-top:-4px;
+	background-position:-3px -3px
+}
+.box .rc-bt span {
+	background-position:0 -3px
+}
+.box {
+	position:relative;
+	margin-bottom:10px
+}
+.box .hd {
+	height:21px;
+	border:1px solid #ccc;
+	border-bottom:none;
+	background-color:#fbfbfb;
+	background-position:0 -7px;
+	background-repeat:repeat-x
+}
+.box .hd h3 {
+	font-size:12px;
+	line-height:21px;
+	color:#404040;
+	padding-left:10px
+}
+.box .bd {
+	padding:10px;
+	border:1px solid #ccc;
+	background-color:#f7f7f7
+}
+.box .ft .act {
+	position:absolute;
+	top:1px;
+	right:1px;
+	line-height:21px;
+	padding-right:5px
+}
+.box .ft .act li {
+	float:left;
+	padding-left:10px
+}
+.box .ft .act li a {
+	color:#404040
+}
+.box-h14 .hd {
+	height:23px;
+	background-position:0 -28px
+}
+.box-h14 .hd h3 {
+	font-size:14px;
+	line-height:23px
+}
+.box-h14 .ft .act {
+	line-height:23px
+}
+.more {
+	padding-right:12px
+}
+.price strong,.vip-price em,.market-price del,.list-price strong {
+	font-size:14px;
+	color:#f50;
+	padding-left:16px
+}
+.vip-price em {
+	font-weight:700
+}
+.market-price del {
+	font-size:12px;
+	color:gray;
+	background-position:0 -27px
+}
+.list-price strong {
+	background:0 0
+}
+.detail-price strong {
+	font-size:24px;
+	font-weight:400;
+	color:#f50;
+	padding-right:5px
+}
+.pic a {
+	display:table-cell;
+	vertical-align:middle;
+	text-align:center
+}
+.pic a img {
+	vertical-align:middle
+}
+.s30,.s30 a {
+	width:30px;
+	height:30px
+}
+.s40,.s40 a {
+	width:40px;
+	height:40px
+}
+.s50,.s50 a {
+	width:50px;
+	height:50px
+}
+.s60,.s60 a {
+	width:60px;
+	height:60px
+}
+.s70,.s70 a {
+	width:70px;
+	height:70px
+}
+.s80,.s80 a {
+	width:80px;
+	height:80px
+}
+.s110x90,.s110x90 a {
+	width:110px;
+	height:90px
+}
+.s120,.s120 a {
+	width:120px;
+	height:120px
+}
+.s160,.s160 a {
+	width:160px;
+	height:160px
+}
+.s220,.s220 a {
+	width:220px;
+	height:220px
+}
+.s310,.s310 a {
+	width:310px;
+	height:310px
+}
+.s30 img {
+	max-width:30px;
+	max-height:30px
+}
+.s40 img {
+	max-width:40px;
+	max-height:40px
+}
+.s50 img {
+	max-width:50px;
+	max-height:50px
+}
+.s60 img {
+	max-width:60px;
+	max-height:60px
+}
+.s70 img {
+	max-width:70px;
+	max-height:70px
+}
+.s80 img {
+	max-width:80px;
+	max-height:80px
+}
+.s110x90 img {
+	max-width:110px;
+	max-height:90px
+}
+.s120 img {
+	max-width:120px;
+	max-height:120px
+}
+.s160 img {
+	max-width:160px;
+	max-height:160px
+}
+.s220 img {
+	max-width:220px;
+	max-height:220px
+}
+.s310 img {
+	max-width:310px;
+	max-height:310px
+}
+.item {
+	text-align:center
+}
+.item .pic {
+	border:1px solid #E4E4E4
+}
+.btn,.small-btn,.long-btn,.short-btn,.small-long-btn {
+	width:80px;
+	height:25px;
+	line-height:25px;
+	display:inline-block;
+	text-align:center;
+	font-size:14px;
+	font-weight:700;
+	border:none;
+	cursor:pointer;
+	color:#fff
+}
+.small-btn {
+	background-position:0 -150px;
+	width:51px;
+	height:21px;
+	line-height:21px;
+	font-size:12px;
+	font-weight:400
+}
+.long-btn {
+	background-position:0 -300px;
+	width:100px;
+	font-size:12px
+}
+.short-btn {
+	background-position:0 -450px;
+	width:60px;
+	font-size:12px
+}
+.small-long-btn {
+	background-position:0 -600px;
+	width:61px;
+	height:21px;
+	font-size:12px;
+	line-height:21px;
+	font-weight:400
+}
+.btn,.small-btn,.long-btn,.short-btn,.small-long-btn {
+	color:#fff
+}
+.btn:hover,.small-btn:hover,.long-btn:hover,.short-btn:hover,.small-long-btn:hover {
+	color:#fff;
+	text-decoration:underline
+}
+button.btn:hover,button.small-btn:hover,button.long-btn:hover,button.short-btn:hover,button.small-long-btn:hover {
+	text-decoration:none
+}
+.crumbs a {
+	padding-right:8px;
+	margin-right:1px
+}
+.crumbs span {
+	display:none
+}
+.msg .error,.msg .stop,.msg .alert,.msg .attention,.msg .tips,.msg .ok,.msg .notice,.msg .question,.msg .help,.msg .small-help {
+	color:#404040;
+	border:1px solid #ddd;
+	float:left;
+	padding:2px 10px 2px 23px;
+	line-height:18px
+}
+.msg .error {
+	background-position:3px 3px;
+	border-color:#ff8080;
+	background-color:#fff2f2
+}
+.msg .stop {
+	background-position:3px -47px;
+	border-color:#ff8080;
+	background-color:#fff2f2
+}
+.msg .alert {
+	background-position:3px -97px;
+	border-color:#ff8c40;
+	background-color:#fff5f6
+}
+.msg .attention {
+	background-position:3px -147px;
+	border-color:#40b3ff;
+	background-color:#e5f5ff
+}
+.msg .tips {
+	background-position:3px -197px;
+	border-color:#ffcc7f;
+	background-color:#ffffe5
+}
+.msg .ok {
+	background-position:3px -247px;
+	border-color:#4dbf00;
+	background-color:#f0ffe5
+}
+.msg .notice {
+	background-position:5px -295px;
+	border-color:#40b3ff;
+	background-color:#e6f5ff
+}
+.msg .question {
+	background-position:3px -347px;
+	border-color:#bfbfbf;
+	background-color:#f2f2f2
+}
+.msg .small-help {
+	background-position:5px -1095px;
+	border-color:#fff;
+	background-color:#fff
+}
+.msg .help {
+	background-position:3px -1197px;
+	border-color:#fff;
+	background-color:#fff
+}
+.msg24 .error,.msg24 .attention,.msg24 .tips,.msg24 .ok,.msg24 .question {
+	font-size:14px;
+	font-weight:700;
+	color:#404040;
+	border:1px solid #ddd;
+	padding:17px 10px 17px 56px;
+	line-height:22px
+}
+.msg24 .error {
+	background-position:12px -388px;
+	border-color:#ff8080;
+	background-color:#fff2f2
+}
+.msg24 .attention {
+	background-position:12px -488px;
+	border-color:#40b3ff;
+	background-color:#e5f5ff
+}
+.msg24 .tips {
+	background-position:15px -888px;
+	border-color:#ffcc7f;
+	background-color:#ffffe5
+}
+.msg24 .ok {
+	background-position:12px -988px;
+	border-color:#4dbf00;
+	background-color:#f0ffe5
+}
+.msg24 .question {
+	background-position:12px -788px;
+	border-color:#bfbfbf;
+	background-color:#f2f2f2
+}
+.msg .naked,.msg24 .naked {
+	border:none;
+	background-color:transparent
+}
+.msg24 .naked-tips {
+	background-position:15px -688px
+}
+.msg24 .naked-ok {
+	background-position:12px -588px
+}
+.msg:after,.msg24:after {
+	content:'\0020';
+	display:block;
+	height:0;
+	clear:both
+}
+.page-feedback-msg {
+	border:1px solid #ff8080;
+	background:#fff2f2
+}
+.page-feedback-msg h2 {
+	float:left;
+	display:inline;
+	width:80px;
+	line-height:35px;
+	padding:2px 10px 2px 50px;
+	margin:10px 0;
+	color:#f50;
+	font-size:17px
+}
+.page-feedback-msg .msg-list {
+	margin:0 0 0 130px;
+	background:#fff
+}
+.page-feedback-msg h3 {
+	margin:0;
+	padding:20px 10px 15px
+}
+.page-feedback-msg ol {
+	margin-top:-5px;
+	padding:0 10px 15px
+}
+.page-feedback-msg ol li {
+	list-style:inside decimal
+}
+.clearfix {
+	*zoom:1
+}
+.box .rc-tp,.box .rc-bt {
+	_overflow:hidden
+}
+.box .hd h3,.box .act {
+	*line-height:23px;
+	_line-height:21px
+}
+.box-h14 .hd h3,.box-h14 .act {
+	*line-height:25px;
+	_line-height:23px
+}
+.pic {
+	*overflow:hidden
+}
+.pic a {
+	*display:block;
+	*font-family:Arial;
+	*line-height:1
+}
+.s30 a {
+	*font-size:26px
+}
+.s40 a {
+	*font-size:35px
+}
+.s50 a {
+	*font-size:44px
+}
+.s60 a {
+	*font-size:52px
+}
+.s70 a {
+	*font-size:61px
+}
+.s80 a {
+	*font-size:70px
+}
+.s110x90 a {
+	*font-size:79px
+}
+.s120 a {
+	*font-size:105px
+}
+.s160 a {
+	*font-size:140px
+}
+.s220 a {
+	*font-size:192px
+}
+.s310 a {
+	*font-size:271px
+}
+.btn,.small-btn,.long-btn,.short-btn {
+	*display:inline
+}
+.msg,.msg24 {
+	*zoom:1
+}
+.page-feedback-msg ol {
+	*zoom:1;
+	*padding-left:0
+}
+#logo {
+	height:52px
+}
+.btn {
+	font-size:12px
+}
+.button,.long-button {
+	display:inline-block;
+	height:26px;
+	overflow:hidden;
+	line-height:25px;
+	text-align:center;
+	vertical-align:middle;
+	white-space:nowrap;
+	color:#fff
+}
+.button:hover,.long-button:hover {
+	color:#fff;
+	text-decoration:none
+}
+.button {
+	width:52px
+}
+.long-button {
+	width:68px
+}
+.order-dashboard {
+	margin-top:10px;
+	background-color:#fff7eb
+}
+.order-dashboard .bz {
+	margin:12px 0 12px;
+	padding:6px;
+	background:#FFF;
+	border:1px solid #E5E5E5
+}
+.step-point {
+	position:absolute;
+	top:-10px;
+	left:12%;
+	width:20px;
+	height:10px;
+	overflow:hidden;
+}
+.icon-rate-gift {
+	display:inline-block;
+	margin:0 5px;
+	width:16px;
+	height:14px;
+	vertical-align:text-bottom;
+}
+.order-dashboard .tbnotes {
+	margin-top:15px;
+	padding-top:5px;
+	line-height:21px;
+	border-top:1px solid #ddd
+}
+.order-dashboard .tbnotes span {
+	font-weight:700;
+	color:#f60
+}
+.order-dashboard .actions {
+	margin:7px 0
+}
+.order-dashboard .actions .btn-disabled,.order-dashboard .actions .btn-disabled:hover {
+	cursor:default;
+	text-decoration:none;
+	color:gray
+}
+.buy-delay-time {
+	margin-top:5px
+}
+.sell-delay-time {
+	top:-4px;
+	left:3px;
+	*top:-2px;
+	*left:7px
+}
+.tabs-nav {
+	position:absolute;
+	left:20px;
+	z-index:50
+}
+.tabs-nav li {
+	display:inline;
+	float:left;
+	width:130px;
+	height:27px;
+	margin-right:3px;
+	padding-top:8px;
+	line-height:21px;
+	text-align:center;
+  background:url(http://assets.alicdn.com/app/trade/img/tabview_bg.gif) no-repeat 0 6px;
+	cursor:pointer
+}
+.tabs-nav a {
+	display:block;
+	width:130px;
+	color:#111
+}
+.tabs-nav .current {
+	background-position:0 -40px
+}
+.tabs-nav .current a {
+	font-weight:700;
+	font-size:14px;
+	color:#333
+}
+.tabs-nav .current a:hover {
+	text-decoration:none;
+	cursor:default
+}
+.tabs-panels {
+	clear:both;
+	position:relative;
+	top:29px;
+	overflow:hidden;
+	margin-bottom:40px;
+	padding:10px 20px;
+	border:1px solid #AEC7E5
+}
+.tabs-container {
+	position:relative;
+	margin:20px 0
+}
+.tabs-container h2,.tabs-container .info-box {
+	display:none
+}
+.orderinfo-layout {
+	width:860px;
+	overflow:hidden;
+	line-height:30px
+}
+.internal-msg dl {
+	margin:10px 0
+}
+.internal-msg dt {
+	padding:.5em 1em;
+	background-color:#E8F2FF;
+	border:1px solid #ddd;
+	border-bottom:none
+}
+.internal-msg dd {
+	margin-bottom:10px;
+	padding:1em 2em 2em;
+	word-wrap:break-word;
+	border:1px solid #ddd
+}
+.tabs-container .tabs-panels .order-info {
+	display:block
+}
+.order-info dl {
+	width:860px;
+	overflow:hidden;
+	line-height:30px
+}
+.order-info dt,.order-info dd {
+	min-height:30px;
+	_height:30px
+}
+.order-info hr {
+	margin:10px 0 5px;
+	*margin:0
+}
+.order-info .clearfix {
+	clear:both;
+	line-height:0
+}
+.associated_products dl {
+	width:860px;
+	overflow:hidden;
+	line-height:30px
+}
+.addr_and_note dt,.invoice-info dt,.misc-info dt,.misc-info dd,.contact-info dt,.contact-info dd {
+	display:inline;
+	float:left
+}
+.addr_and_note {
+	line-height:190%
+}
+.addr_and_note dt {
+	width:78px;
+	font-weight:700
+}
+.addr_and_note dd {
+	margin-bottom:4px;
+	padding-left:80px;
+	*padding-left:0;
+	word-wrap:break-word
+}
+.addr_and_note .msg-input {
+	width:490px;
+	*padding-left:0!important
+}
+.addr_and_note .msg-input textarea {
+	width:100%;
+	height:70px;
+	*margin-bottom:10px
+}
+.addr_and_note .msg-input .operate {
+	margin-top:-25px;
+	text-align:right
+}
+.addr_and_note .msg-input .txt-residual {
+	color:red
+}
+.invoice-info {
+	margin-bottom:10px
+}
+.invoice-info dt {
+	width:78px;
+	font-weight:700
+}
+.invoice-info dd {
+	padding-left:80px;
+	*padding-left:0;
+	word-wrap:break-word
+}
+.misc-info dl {
+	margin-left:35px;
+	border-bottom:1px solid #f4f4f4
+}
+.misc-info dt {
+	width:100px;
+	text-align:right
+}
+.misc-info dd {
+	width:182px;
+	text-align:left
+}
+.misc-info .stage-time dl {
+	display:none
+}
+.misc-info .stage-time .current {
+	display:block
+}
+.misc-info .stage-time .view-all {
+	display:inline-block;
+	margin:5px 0 0 63px
+}
+.misc-info .expand dl {
+	display:block
+}
+.contact-info dl {
+	margin-left:50px
+}
+.contact-info dt {
+	width:85px;
+	text-align:right
+}
+.contact-info dd {
+	width:200px
+}
+.misc-info th,.misc-info td,.contact-info th,.contact-info td,.dealer-info th,.dealer-info td {
+	padding:5px 10px 5px 0
+}
+.contact-info td {
+	text-align:left
+}
+.contact-info .nickname,.contact-info .name,.contact-info .mail {
+	margin-right:10px
+}
+.contact-info .fast-buy-tel {
+	padding-right:15px;
+	line-height:19px;
+}
+.misc-info span {
+	display:inline;
+	float:left
+}
+.misc-info .label {
+	width:90px;
+	margin-right:5px;
+	text-align:right
+}
+.order-info .trade-time td {
+	padding:15px 0 0
+}
+.order-info .trade-time ul {
+	padding:5px 0;
+	overflow:hidden;
+	_zoom:1;
+	border-bottom:1px solid #f4f4f4
+}
+.order-info .trade-time .first {
+	border-top:1px solid #ddd
+}
+.order-info .trade-time li,.order-info .trade-time span {
+	display:inline;
+	float:left
+}
+.order-info .trade-time li {
+	width:33%
+}
+.order-info .trade-time .label {
+	width:102px;
+	text-align:right
+}
+.coder-info .nickname {
+	margin-right:10px
+}
+.coder-info th,.coder-info td {
+	padding:5px 10px 5px 0
+}
+.coder-info td {
+	text-align:left
+}
+.simple-list {
+	width:100%;
+	margin-bottom:20px;
+	border-top:1px solid #eed
+}
+.simple-list th {
+	width:70px;
+	vertical-align:top
+}
+.simple-list th,.simple-list td {
+	padding:7px 0
+}
+.simple-list td {
+	padding-left:0;
+	vertical-align:top
+}
+.simple-list td ul {
+	overflow:hidden;
+	*zoom:1
+}
+.simple-list td li {
+	display:inline;
+	float:left;
+	padding-right:20px
+}
+.simple-list td .user-type {
+	width:100px
+}
+.simple-list td .sex {
+	width:60px
+}
+.simple-list td .phone {
+	width:150px
+}
+.simple-list td .adress {
+	display:block
+}
+.simple-list td .contract {
+	width:600px;
+	height:120px;
+	border:1px solid #ccc
+}
+.logistics-info .view-logistics-info {
+	margin-left:10px
+}
+.tabs-panels col.item {
+	width:260px
+}
+.tabs-panels col.sku {
+	width:110px
+}
+.tabs-panels col.status {
+	width:90px
+}
+.tabs-panels col.service {
+	width:90px
+}
+.tabs-panels col.verify-state {
+	width:90px
+}
+.tabs-panels col.price {
+	width:75px
+}
+.tabs-panels col.num {
+	width:50px
+}
+.tabs-panels col.discount {
+	width:120px
+}
+.tabs-panels col.order-price {
+	width:100px
+}
+.tabs-panels col.post-fee {
+	width:90px
+}
+.order-info .col0 {
+	width:auto;
+	*width:335px
+}
+.order-info .col1 {
+	width:90px
+}
+.order-info .col2 {
+	width:90px
+}
+.order-info .col3 {
+	width:75px
+}
+.order-info .col4 {
+	width:50px
+}
+.order-info .col5 {
+	width:120px
+}
+.order-info .col6 {
+	width:100px
+}
+.tm-seller .order-info col.item {
+	*width:240px
+}
+.sep-row td {
+	padding:5px 0;
+	border-bottom:1px solid #ddd;
+	*height:10px
+}
+.order-hd {
+	background:#e8f2ff;
+	color:#404040
+}
+.order-hd th {
+	padding:8px 10px;
+	line-height:130%;
+	text-align:center;
+	border-bottom:1px solid #ddd
+}
+.order-hd .item {
+	border-left:1px solid #ddd
+}
+.order-hd .last {
+	border-right:1px solid #ddd
+}
+.order-item td {
+	padding:8px 5px;
+	line-height:130%;
+	vertical-align:middle;
+	text-align:center;
+	border:1px solid #ddd;
+	border-top:none
+}
+.order-item .item {
+	border-left:1px solid #ddd
+}
+.order-item .pic-info {
+	display:inline;
+	float:left;
+	margin-right:5px
+}
+.order-item .pic-info .pic {
+	overflow:hidden;
+	border:none
+}
+.order-item .txt-info {
+	margin-left:55px;
+	line-height:18px;
+	text-align:left;
+	color:gray
+}
+.order-item .txt-info .desc {
+	color:#404040
+}
+.order-item .txt-info p {
+	margin-top:2px;
+	word-break:break-all
+}
+.order-item .txt-info .code-icon {
+	display:inline-block;
+	width:12px;
+	height:10px;
+	margin-left:5px;
+	vertical-align:middle;
+	text-indent:-9999px;
+	cursor:pointer
+}
+.order-item .txt-info .xiaobao {
+	position:relative;
+	top:2px;
+	width:16px;
+	margin-left:3px
+}
+.order-item .txt-info .good-icons a {
+	display:inline-block;
+	zoom:1;
+	*display:inline;
+	height:16px;
+	width:16px;
+}
+.order-item .txt-info .good-icons .xb-aclass {
+	background-position:0 -95px
+}
+.order-item .txt-info .good-icons .xb-quality {
+	background-position:0 -57px
+}
+.order-item .txt-info .good-icons .xb-maintain {
+	background-position:0 -19px
+}
+.order-item .txt-info .good-icons .xb-deliver {
+	background-position:0 -38px
+}
+.order-item .txt-info .good-icons .xb-return {
+	background-position:0 0
+}
+.order-item .txt-info .good-icons .xb-description {
+	background-position:0 -76px
+}
+.order-item .txt-info .good-icons .xb-zhijian {
+	background-position:0 -116px
+}
+.order-item .txt-info .good-icons .xb-dbb {
+	background-position:0 -137px
+}
+.order-item .sku {
+	color:gray
+}
+.order-item .sku span {
+	display:block
+}
+.order-item .sku .old-props {
+	display:inline-block;
+	margin:3px 0
+}
+.order-item .refund-doing {
+	padding-left:18px;
+	*background-position:5px -150px
+}
+.order-item .refund-status,.order-item .refund-reason {
+	display:block
+}
+.order-item .verify-state {
+	text-align:center
+}
+.order-item .anomal-sign {
+	display:inline-block;
+	min-width:66px;
+	_width:66px;
+	height:16px;
+	margin-top:8px;
+	line-height:16px;
+	background:#f60;
+	color:#fff
+}
+.order-item .price,.order-item .num {
+	color:#404040
+}
+.order-item .discount {
+	padding-left:5px;
+	padding-right:5px
+}
+.order-item .discount li {
+	padding-left:10px;
+	text-align:left;
+}
+.order-item .order-price {
+	padding:10px 0 5px;
+	vertical-align:middle;
+	line-height:18px
+}
+.order-item .order-price strong {
+	font-size:16px;
+	color:#666
+}
+.order-item .discount-events {
+	margin:5px 2px;
+	padding:2px;
+	background:#f3f8ff;
+	border:1px solid #cce1ff
+}
+.order-item .discount-events li {
+	padding-left:10px;
+	text-align:left;
+}
+.order-ft td {
+	padding-right:0;
+	border:none
+}
+.order-ft .trade-gift {
+	display:inline;
+	float:left;
+	margin-top:5px;
+	padding-left:23px;
+}
+.order-ft .total-price {
+	display:inline;
+	float:left;
+	text-align:right
+}
+.order-ft .total-price strong {
+	font-size:18px;
+	font-weight:400;
+	color:#f50
+}
+.order-ft .point-info {
+	margin-top:5px;
+	text-align:left;
+	color:gray
+}
+.order-ft .cif-tip {
+	display:inline;
+	float:right;
+	margin-right:-10px;
+	_margin-right:-5px
+}
+.order-ft .money-detail a {
+	color:gray;
+	text-decoration:none
+}
+.order-ft .money-detail a:hover {
+	text-decoration:underline
+}
+.order-ft .get-money,.order-ft .trade-money {
+	clear:both;
+	display:inline;
+	float:right;
+	padding-top:15px;
+	*padding-top:35px;
+	line-height:23px;
+	text-align:right
+}
+.order-ft .get-money strong {
+	padding-right:5px;
+	font-weight:700;
+	font-size:16px;
+	color:#f50
+}
+.order-ft .trade-money .lb {
+	color:gray
+}
+.order-ft .trade-money strong {
+	padding-right:5px;
+	font-size:16px;
+	color:gray
+}
+.order-ft .actual-payment,.order-ft .view-payment {
+	display:inline;
+	float:right;
+	height:22px;
+	line-height:22px
+}
+.order-ft .actual-payment {
+	margin-top:-2px
+}
+.order-ft .view-payment {
+	width:110px;
+	margin-left:5px;
+	text-align:left;
+	text-indent:10px;
+	color:gray;
+	cursor:pointer
+}
+.order-ft .payment-details {
+	display:none;
+	margin-top:-1px;
+	padding:5px 5px 5px 0;
+	line-height:22px;
+	border:1px solid #ddd;
+	color:gray
+}
+.order-ft .payment-details li {
+	position:relative;
+	min-width:230px;
+	_width:230px
+}
+.order-ft .payment-details .desc,.order-ft .payment-details .money {
+	height:22px
+}
+.order-ft .payment-details .desc {
+	display:block;
+	padding-right:60px;
+	text-align:right;
+	white-space:nowrap
+}
+.order-ft .payment-details .money {
+	position:absolute;
+	top:0;
+	right:0;
+	width:60px;
+	overflow:hidden;
+	white-space:nowrap;
+	text-align:left
+}
+.order-ft .payment-details .money i {
+	margin-right:3px;
+	font-family:arial,verdana;
+	font-style:normal
+}
+.order-ft .expand .view-payment {
+	background-position:0 -23px
+}
+.order-ft .expand .payment-details {
+	clear:both;
+	display:inline;
+	float:right
+}
+.order-exception .ks-contentbox p,.order-exception .ks-overlay-content p {
+	margin-bottom:3px;
+	color:#404040
+}
+.order-exception .ks-contentbox a,.order-exception .ks-overlay-content a {
+	color:#0336cc
+}
+.reason-popup {
+	padding:5px;
+	background:#fff7c8;
+	border:1px solid #fec500;
+	border-radius:3px;
+	-webkit-border-radius:3px;
+	-moz-border-radius:3px
+}
+.reason-popup .ks-contentbox,.reason-popup .ks-overlay-content {
+	padding:5px 10px;
+	background:#fff;
+	color:#666
+}
+.reason-popup .triangle {
+	position:absolute;
+	top:50%;
+	left:-8px;
+	width:10px;
+	height:16px;
+	margin-top:-8px;
+}
+.logistics-list {
+	position:relative;
+	margin-top:20px
+}
+.logistics-list h3 {
+	margin-bottom:15px;
+	padding-bottom:5px;
+	border-bottom:1px solid #ccc
+}
+.logistics-list hr {
+	display:none
+}
+.logistics-list .error-tip {
+	position:absolute;
+	top:-3px;
+	left:67px
+}
+.logistics-list dl {
+	line-height:22px
+}
+.logistics-list dt {
+	width:65px;
+	height:22px
+}
+.logistics-list dt.estimated-time {
+	width:90px
+}
+.logistics-list dd {
+	position:relative;
+	margin:-22px 0 0 65px
+}
+.logistics-list dd.estimated-time {
+	margin-left:90px
+}
+.logistics-list dd.show-copy {
+	border:1px solid #FFCC7F
+}
+.logistics-list strong {
+	font-weight:700
+}
+.logistics-list ol {
+	margin-bottom:16px
+}
+.logistics-list .highlight {
+	margin:0 3px;
+	color:#f60
+}
+.logistics-list .clearfix {
+	overflow:hidden;
+	height:0
+}
+.logistics-id {
+	width:130px;
+	height:20px;
+	margin-left:64px;
+	line-height:20px;
+	border:1px solid #FFF7EB
+}
+.logistics-id a {
+	position:relative;
+	z-index:9;
+	visibility:hidden;
+	cursor:default
+}
+.logistics-id a.hover {
+	color:#f60;
+	text-decoration:underline;
+	cursor:pointer
+}
+.logistics-id .msg {
+	position:absolute;
+	z-index:99;
+	top:-1px;
+	left:-1px;
+	width:131px
+}
+.refund-list .col0 {
+	width:160px;
+	*width:140px
+}
+.refund-list .col1 {
+	width:240px;
+	*width:220px;
+	*width:230px
+}
+.refund-list .col2,.refund-list .col3,.refund-list .col5 {
+	width:100px;
+	*width:80px
+}
+.refund-list .col4 {
+	width:120px;
+	*width:100px
+}
+.refund-list .col6 {
+	width:90px;
+	*width:70px
+}
+.refund-list th,.refund-list td {
+	padding:10px 5px;
+	text-align:center
+}
+.refund-list th {
+	padding:5px 10px;
+	background-color:#E8F2FF;
+	border-top:1px solid #ccc
+}
+.refund-list td {
+	border-top:1px solid #ddd
+}
+.refund-list td.item-desc {
+	text-align:left
+}
+.refund-list .num {
+	border-left:1px solid #ccc
+}
+.refund-list .detail {
+	border-right:1px solid #ccc
+}
+.refund-list .last td {
+	border-bottom:1px solid #ccc
+}
+.remind-delivery-popup {
+	padding:10px 5px;
+	background:#FFD887;
+	border:1px solid #FFA352;
+	color:#404040;
+	font:12px '宋体';
+	border-radius:3px;
+	-webkit-border-radius:3px;
+	-moz-border-radius:3px;
+	box-shadow:2px 2px 0 #ccc;
+	-moz-box-shadow:2px 2px 0 #ccc;
+	-webkit-box-shadow:2px 2px 0 #ccc
+}
+.remind-delivery-popup .triangle {
+	position:absolute;
+	left:20px;
+	bottom:-12px;
+	z-index:100;
+	width:22px;
+	height:15px;
+}
+#hot-line {
+	position:absolute;
+	top:9px;
+	right:0;
+	width:300px;
+	height:19px;
+	line-height:1;
+	*line-height:1.2
+}
+#hot-line span {
+	display:inline;
+	float:left;
+	font-weight:700;
+	font-size:14px;
+	color:#990D1B
+}
+.tabs-container .helpline {
+	position:absolute;
+	top:10px;
+	right:10px;
+	font-weight:700;
+	color:#f60
+}
+.tabs-container .helpline a {
+	font-weight:400
+}
+.overseas-transfer {
+	margin-top:15px
+}
+.overseas-transfer .overseas-container {
+	border:1px solid #aec7e5;
+	background-color:#F5F5F5;
+	margin-top:5px;
+	padding:15px 30px;
+	text-align:center
+}
+.overseas-transfer .overseas-container img {
+	width:100%
+}
+.overseas-transfer .overseas-container .overseas-status {
+	border-top:1px solid #e6e6e6;
+	margin-top:15px;
+	text-align:left
+}
+.overseas-transfer .overseas-container .overseas-status .status-bold {
+	margin-top:10px;
+	color:#404040;
+	font-weight:700;
+	line-height:30px
+}
+.overseas-transfer .overseas-container .overseas-status .status-light {
+	color:gray;
+	line-height:30px
+}
+.trade-open-container {
+	margin:0;
+	padding:10px 0 20px 0
+}
+.tm-buyer .trade-open-container .title {
+	margin:0 0 15px 0;
+	padding:0 0 5px 0;
+	border-bottom:1px solid #ddd;
+	font-size:12px
+}
+.tm-seller .trade-open-container {
+	border-top:1px solid #ddd
+}
+.tm-seller .trade-open-container .title {
+	font-size:14px;
+	margin:0 0 10px 0;
+	padding:0
+}
+.ks-overlay {
+	position:absolute;
+	left:-9999px;
+	top:-9999px
+}
+.ks-overlay-hidden {
+	visibility:hidden
+}
+.ks-overlay-mask-hidden {
+	display:none
+}
+.ks-overlay-shown {
+	visibility:visible
+}
+.ks-overlay-mask-shown {
+	display:block
+}
+.trade-open-overlay {
+	width:948px;
+	border:1px solid #e9e9e9;
+	overflow-y:auto
+}
+.trade-open-overlay iframe {
+	width:100%;
+	border:0;
+	display:block
+}
+.trade-open-overlay .ks-stdmod-header,.trade-open-overlay .ks-dialog-header {
+	font-size:14px;
+	height:32px;
+	line-height:32px;
+	padding:0 0 0 8px;
+	border-bottom:1px solid #e9e9e9;
+	background:#fafafa
+}
+.trade-open-overlay .ks-ext-close,.trade-open-overlay .ks-dialog-close {
+	height:18px;
+	width:18px;
+	border:1px solid transparent;
+	right:6px;
+	top:6px;
+	vertical-align:middle;
+	position:absolute;
+	text-decoration:none;
+	outline:0;
+	_border-color:tomato;
+	_filter:chroma(color=#ff6347);
+	overflow:hidden;
+	cursor:pointer
+}
+.trade-open-overlay .ks-ext-close .ks-ext-close-x,.trade-open-overlay .ks-dialog-close .ks-dialog-close-x {
+	display:block;
+	background:no-repeat;
+	height:13px;
+	white-space:nowrap;
+	text-indent:100%;
+	overflow:hidden;
+	width:13px;
+	margin:2.5px
+}
+.trade-open-overlay .ks-ext-close:hover,.trade-open-overlay .ks-dialog-close:hover {
+	border:1px solid #CED5E0;
+	background:#fff
+}
+.addr_and_note .tel {
+	vertical-align:middle
+}
+.addr_and_note .tel-virtual {
+	color:gray;
+	margin-left:16px
+}
+.addr_and_note .success {
+	color:#404040
+}
+.addr_and_note .fail {
+	color:gray
+}
+.addr_and_note .tel-info {
+	margin-left:8px;
+	padding:4px;
+	background:#ffffe5;
+	border:1px solid #ffcc7f
+}
+.addr_and_note .tele-img,.addr_and_note .simple-list .tele-img {
+	vertical-align:-3px;
+	margin-right:2px;
+	*margin-right:0
+}
+.simple-list .tel-info {
+	margin-left:8px;
+	padding:4px;
+	background:#ffffe5;
+	border:1px solid #ffcc7f
+}
+.simple-list .tele-img {
+	vertical-align:-3px;
+	margin-right:2px;
+	*margin-right:0
+}
+.ks-partialship-delay {
+	border:7px solid #b5b5b5
+}
+.ks-partialship-delay .ks-dialog-header {
+	font-size:14px;
+	font-weight:700;
+	height:30px;
+	line-height:30px;
+	overflow:hidden;
+	padding:1px 1px 1px 10px
+}
+.ks-partialship-delay .ks-dialog-body {
+	background-color:#fff
+}
+.ks-partialship-delay .ks-dialog-close {
+	height:22px;
+	width:22px;
+	border:1px solid transparent;
+	right:6px;
+	top:6px;
+	vertical-align:middle;
+	position:absolute;
+	text-decoration:none;
+	outline:0;
+	_border-color:tomato;
+	_filter:chroma(color=#ff6347);
+	overflow:hidden;
+	cursor:pointer
+}
+.ks-partialship-delay .ks-dialog-close .ks-dialog-close-x {
+	display:block;
+	background:no-repeat;
+	height:22px;
+	text-indent:-9999px;
+	width:22px;
+	margin-right:7px
+}
+.ks-partialship-delay .ks-dialog-close .ks-dialog-close-x:hover {
+}
+.delayopacity {
+	width:576px;
+	height:202px;
+	*height:196px;
+	position:absolute;
+	left:50%;
+	margin-left:-280px;
+	top:50%;
+	margin-top:-126px;
+	*margin-top:-126px;
+	_margin-top:-127px;
+	background-color:gray;
+	opacity:.5;
+	*margin-left:-288px;
+	_margin-left:-290px;
+	z-index:99
+}
+.delay-popup {
+	left:-9999px;
+	top:-9999px;
+	border-color:#FFD47F;
+	background:none repeat scroll 0 0 #FCD880;
+	border:1px solid #F8A448;
+	font-family:tahoma,宋体;
+	font-size:12px;
+	position:absolute;
+	z-index:100;
+	width:260px;
+	padding:5px 5px 5px 16px
+}
+.delay-popup .bbox {
+	max-width:1000px;
+	padding:4px 5px 1px 0;
+	height:30px
+}
+.delay-popup .bbox .bbd {
+	line-height:15px;
+	margin-top:0
+}
+.delay-popup i {
+	overflow:hidden;
+	position:absolute;
+	z-index:101
+}
+.delay-popup .bottom {
+	background-position:0 -13px;
+	bottom:-11px;
+	height:13px;
+	left:23px;
+	width:21px
+}
+.view-custom-info i,.mobile-custom-info dd,.mobile-custom-info .triangle {
+}
+.view-custom-info {
+	position:relative;
+	display:inline-block;
+	width:94px;
+	height:20px;
+	margin-top:5px;
+	line-height:20px;
+	text-align:left;
+	text-indent:6px;
+	border:1px solid #ddd;
+	cursor:pointer;
+	background:-moz-linear-gradient(top,#fff,#f2f2f2);
+	background:-webkit-gradient(linear,0 0,0 bottom,from(#fff),to(#f2f2f2));
+	background:-o-linear-gradient(top,#fff,#f2f2f2);
+	filter:progid:DXImageTransform.Microsoft.gradient(startcolorstr=#ffffff,endcolorstr=#f2f2f2,gradientType=0)
+}
+.view-custom-info i {
+	position:absolute;
+	top:8px;
+	right:5px;
+	width:7px;
+	height:4px;
+	overflow:hidden
+}
+.expand-custom-info i {
+	background-position:0 -12px
+}
+.mobile-custom-info {
+	padding:10px 0;
+	background:#fff;
+	border:1px solid #ddd;
+	color:gray
+}
+.mobile-custom-info .ks-contentbox,.mobile-custom-info .ks-overlay-content {
+	*overflow:hidden
+}
+.mobile-custom-info .list {
+	display:table-row;
+	*float:left
+}
+.mobile-custom-info dl {
+	display:table-cell;
+	width:206px;
+	padding:0 8px;
+	vertical-align:top;
+	word-wrap:break-word;
+	border-left:1px solid #efefef;
+	*display:inline;
+	*zoom:1;
+	*width:202px;
+	*margin:-500px 0;
+	*padding:500px 8px
+}
+.mobile-custom-info .first {
+	border-left:none
+}
+.mobile-custom-info dd {
+	margin-top:5px;
+	padding-left:34px;
+	line-height:1.8;
+	background-position:26px -47px
+}
+.mobile-custom-info .triangle {
+	position:absolute;
+	top:-6px;
+	width:11px;
+	height:6px;
+	overflow:hidden;
+	background-position:0 -25px
+}
+.view-contract-info {
+	position:relative;
+	display:inline-block;
+	width:94px;
+	height:20px;
+	margin-top:5px;
+	line-height:20px;
+	text-align:left;
+	text-indent:6px;
+	border:1px solid #ddd;
+	cursor:pointer;
+	background:-moz-linear-gradient(top,#fff,#f2f2f2);
+	background:-webkit-gradient(linear,0 0,0 bottom,from(#fff),to(#f2f2f2));
+	background:-o-linear-gradient(top,#fff,#f2f2f2);
+	filter:progid:DXImageTransform.Microsoft.gradient(startcolorstr=#ffffff,endcolorstr=#f2f2f2,gradientType=0)
+}
+.view-contract-info i {
+	position:absolute;
+	top:8px;
+	right:5px;
+	width:7px;
+	height:4px;
+	overflow:hidden;
+}
+.expand-contract-info i {
+	background-position:0 -12px
+}
+.contract-info {
+	padding:10px;
+	background:#fff;
+	border:1px solid #ddd;
+	color:#666
+}
+.contract-info li {
+	margin:2px 0;
+	padding-left:85px;
+	line-height:1.5
+}
+.contract-info .label,.contract-info .desc {
+	display:inline-block;
+	overflow:hidden;
+	vertical-align:top
+}
+.contract-info .label {
+	width:85px;
+	margin-left:-85px;
+	text-align:right;
+	white-space:nowrap
+}
+.contract-info .desc {
+	width:310px;
+	word-wrap:break-word
+}
+    </style>
+  </head>
+  
+  <body id="trade-order-detail" data-spm="3" class="tm-seller">
+    <!-- 卖家普通订单定制 -->
+    <!-- E GLOBAL HTML -->
+    <div id="page">
+      <div id="content">
+      <ul>
+      {% if tradeList %}
+      {% for trade in tradeList %}
+      <li>
+        <div class="tabs-container" id="J_TabView" data-spm="3">
+          <ul class="tabs-nav">
+            <li class="current">
+              <a name="tab0">订单信息</a></li>
+          </ul>
+          <div class="tabs-panels">
+            <div class="info-box order-info">
+              <h2>订单信息</h2>
+              <div class="bd">
+                <table>
+                  <colgroup>
+                    <col class="item" />
+                    <col class="sku" />
+                    <col class="status" />
+                    <col class="service" />
+                    <col class="price" />
+                    <col class="num" />
+                    <col class="discount" />
+                    <col class="order-price" /></colgroup>
+                  <tbody class="contact-info">
+                    <tr>
+                      <th colspan="8">
+                        <h4>买家信息</h4></th>
+                    </tr>
+                    <tr>
+                      <td colspan="4">昵称：
+                        <span class="nickname">{{ trade.buyer_nick }}</span>
+                      </td>
+                      {% if trade.buyer_message %}
+                      <td colspan="4">买家留言：<span class="nickname" style="color:#f50"> {{ trade.buyer_message }}</span></td>
+                      {% endif %}
+                    </tr>
+                    <tr>
+                      <td colspan="4">收货人：
+                        <span class="nickname">{{ trade.receiver_name }}</span></td>
+                      <td colspan="4" class="contact">联系电话：
+                        <span class="tel">
+                        {% if trade.receiver_mobile %}
+                        {{ trade.receiver_mobile }}
+                        {% else %}
+                        {{ trade.receiver_phone }}
+                        {% endif %}
+                        </span>
+                       </td>
+                    </tr>
+                    <tr>
+                      <td colspan="4">收货地址：
+                        <span class="block-item" id="J_BlockBuyerAddress" >{{ trade.receiver_state }} {{ trade.receiver_city }} {{ trade.receiver_district }} {{ trade.receiver_address }}</span></td>
+                      <td colspan="4">邮政编码：
+                        <span class="nickname"> {{ trade.receiver_zip }}</span></td>
+                    </tr>
+                    <!--
+                    <tr>
+                      <td colspan="4">
+                        <div>支付宝：{{ trade.buyer_alipay_no }}</div>
+                      </td>
+                      <td colspan="4" valign="top">邮件：
+                        <span>{{ trade.buyer_email }}</span>
+                      </td>
+                    </tr>
+                    -->
+                  </tbody>
+                  <!-- 订单信息 -->
+                  <tbody class="order">
+                    <tr class="sep-row">
+                      <td colspan="8"></td>
+                    </tr>
+                    <tr class="order-hd">
+                      <th class="item">宝贝</th>
+                      <th class="sku">宝贝属性</th>
+                      <th class="status">状态</th>
+                      <th class="service">服务</th>
+                      <th class="price">单价(元)</th>
+                      <th class="num">数量</th>
+                      <th class="discount">优惠</th>
+                      <th class="order-price last">商品总价(元)</th></tr>
+                    {% for order in trade.orders %}
+                    <tr class="order-item">
+                      <td class="item">
+                        <div class="pic-info">
+                          <div class="pic s50">
+                            <img alt="" src="" />
+                          </div>
+                        </div>
+                        <div class="txt-info">
+                          <div class="desc">
+                            <span class="name">
+                              <a href="//trade.taobao.com/trade/detail/tradeSnap.htm?trade_id={{ order.oid }}" title="{{ order.title }}" target="_blank">{{ order.title }}</a></span>
+                            <br />
+                            <a title="" href="http://trade.taobao.com/trade/security/security_card.htm?bizOrderId={{ order.oid }}" target="_blank" style="vertical-align: middle;">
+                              <img src="" /></a>
+                          </div>
+                        </div>
+                      </td>
+                      <td class="sku">
+                        <div class="props">
+                          {% for property in order.propertites %}
+                          <span>{{ property }}</span>
+                          {% endfor %}
+                        </div>
+                      </td>
+                      <td class="status">{{ order.status }}</td>
+                      <td class="service"></td>
+                      <td class="price">{{ order.price }}</td>
+                      <td class="num">{{ order.num }}</td>
+                      <td class="discount"><ul><li>限时促销:省 {{ order.discount_fee }} 元</li></ul></td>
+                      <td class="order-price" rowspan="1">{{ order.payment }}<li>(快递 : 0.00 )</li></td>
+                    </tr>
+                    {% endfor %}
+                    <tr class="order-ft">
+                      <td colspan="8">
+                        <div class="get-money" colspan="6">实收款：
+                          <strong>{{ trade.payment }}</strong>元</div></td>
+                    </tr>
+                  </tbody>
+                  <!-- 其它信息 -->
+                  <tbody class="misc-info">
+                    <tr class="sep-row">
+                      <td colspan="8"></td>
+                    </tr>
+                    <tr>
+                      <td colspan="4">
+                        <span class="label">订单编号:</span>
+                        <span class="order-num">{{ trade.tid }}</span></td>
+                      <td colspan="4">
+                        <span class="label">创建时间:</span>
+                        <span class="trade-time">{{ trade.created }}</span></td>
+                    </tr>
+                    <tr>
+                      <td colspan="4">
+                        <span class="label">支付宝交易号:</span>
+                        <span class="alilay-num">{{ trade.alipay_no }}</span></td>
+                      <td colspan="4">
+                        <span class="label">付款时间:</span>
+                        <span class="pay-time">{% if trade.pay_time%}{{ trade.pay_time }}{% endif %}</span></td>
+                    </tr>
+                    {% for logisticsOrder in trade.logisticsOrderList %}
+                    {% if logisticsOrder.company_name %}
+                    <tr>
+                      <td colspan="4">
+                        <span class="label">物流公司:</span>
+                        <span class="order-num">{{ logisticsOrder.company_name }}</span></td>
+                      <td colspan="4">
+                        <span class="label">运单号码:</span>
+                        <span class="trade-time">{{ logisticsOrder.out_sid }}</span></td>
+                    </tr>
+                    {% endif %}
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </li>
+      {% endfor %}
+      {% else %}
+      <li>没有符合条件的订单，请尝试其它搜索条件。</li>
+      {% endif %}
+      </ul>
+      </div>
+    </div>
+  </body>
+
+</html>

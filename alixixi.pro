@@ -6,11 +6,13 @@ SOURCES += \
     alixixi.pyw \
     cnalibabaopen.py \
     settings.py \
+    taobaoassistant.py \
     orderlist.py
 
 FORMS += \
     alixixi.ui \
     authorizedialog.ui \
+    taobaoassistantsettingdialog.ui \
     orderlistgetdialog.ui \
     orderlistreviewdialog.ui
 	
