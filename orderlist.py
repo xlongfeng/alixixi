@@ -220,6 +220,7 @@ class OrderListGetDialog(QDialog):
                 logisticsOrderList.append({
                     'logisticsOrderNo': logisticsOrderModel['logisticsOrderNo'],
                     'companyName': logisticsOrderModel['logisticsCompany']['companyName'],
+                    'companyNo': logisticsOrderModel['logisticsCompany']['companyNo'],
                     'logisticsBillNo': logisticsOrderModel['logisticsBillNo'],
                     'gmtSend': str(aliTimeToDateTime(logisticsOrderModel['gmtSend']))
                 })
@@ -262,11 +263,11 @@ class OrderListReviewDialog(QDialog):
         query = session.query(AliOrderModel)
         value = self.fuzzySearch
         if len(value) > 0:
-            query= query.filter(or_(AliOrderModel.buyerPhone.like('%%%s%%' % value),
-                                    AliOrderModel.logisticsOrderList.like('%%"logisticsBillNo": "%s"%%' % value),
+            query= query.filter(or_(AliOrderModel.logisticsOrderList.like('%%"logisticsBillNo": "%s"%%' % value),
                                     AliOrderModel.toArea.like('%%%s%%' % value),
                                     AliOrderModel.toFullName.like('%%%s%%' % value),
-                                    AliOrderModel.toMobile.like('%%%s%%' % value)))
+                                    AliOrderModel.toMobile.like('%%%s%%' % value),
+                                    AliOrderModel.toPhone.like('%%%s%%' % value)))
         return query
     
     def pageInfoUpdate(self):
