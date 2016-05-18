@@ -161,6 +161,9 @@ class Alixixi(QMainWindow):
         aliOrderUpdateMenu.addAction(_translate('Alixixi', 'The Last Month'), self.lastMonthOrderListGet)
         aliOrderMenu.addAction(_translate('Alixixi', 'Review'), self.aliOrderListReview)
         
+        salePerformanceMenu = menuBar.addMenu(_translate('Alixixi', 'Sales'))
+        salePerformanceMenu.addAction(_translate('Alixixi', 'Reporting'), self.saleReportReview)
+        
     def openApiResponseException(self, warning):
         QMessageBox.warning(self, 'Open Api Response Exception', warning)
         
@@ -236,6 +239,9 @@ class Alixixi(QMainWindow):
     def aliOrderListReview(self):
         dialog = OrderListReviewDialog(self)
         dialog.exec()
+        
+    def saleReportReview(self):
+        pass
         
     def tbOrderListUpdate(self):
         path = self.settings.taobao_assistant_install_path
