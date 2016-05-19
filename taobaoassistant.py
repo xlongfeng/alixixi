@@ -41,7 +41,7 @@
 
 
 from PyQt5.QtCore import (Qt, QObject, QCoreApplication, QDate, QDateTime,
-                          QTimer, QProcess)
+                          QTimer, QProcess, QUrl)
 from PyQt5.QtCore import QFile, QProcess,QRegExp
 from PyQt5.QtWidgets import (QDialog, QMessageBox, QFileDialog, QSpacerItem,
                              QSizePolicy, QPushButton, QDialogButtonBox)
@@ -114,20 +114,27 @@ class TaobaoAssistantFdb(QObject):
 _translate = QCoreApplication.translate
 
 def taobaoAssistantWorkbenchName():
-    return 'Workbench.exe'
+    return 'TaobaoWorkbench.exe'
 
 def taobaoAssistantWorkbench():
-    return '{}/{}'.format(Settings.instance().taobao_assistant_install_path, taobaoAssistantWorkbenchName())
+    return '{}/{}'.format(Settings.instance().taobao_assistant_install_path,
+                          taobaoAssistantWorkbenchName())
 
 def taobaoAssistantWorkbenchIsRunning():
     process = QProcess()
     process.start('tasklist')
     process.waitForFinished()
-    tasklist = process.readAllStandardOutput().data().decode('utf-8')
-    return tasklist.find(taobaoAssistantWorkbenchName()) != -1
+    tasklist = process.readAllStandardOutput()
+    return tasklist.indexOf(taobaoAssistantWorkbenchName()) != -1
 
 def taobaoAssistantInstallPathCheck():
     return QFile.exists(taobaoAssistantWorkbench())
+
+def taobaoAssistantInstallPathVerify(path):
+    return QFile.exists('{}/{}'.format(path, taobaoAssistantWorkbenchName()))
+
+def taobaoAssistantWorkbenchLaunch():
+    QDesktopServices.openUrl(QUrl.fromLocalFile(taobaoAssistantWorkbench()))
 
 class TaobaoAssistantSettingDialog(QDialog):
     def __init__(self, parent=None):
@@ -144,7 +151,7 @@ class TaobaoAssistantSettingDialog(QDialog):
                                          _translate('TaobaoAssistantSettingDialog', 'Taobao assistant install path'),
                                          'C:/')
         if len(installPath) > 0:
-            if not taobaoAssistantInstallPathCheck(installPath):
+            if not taobaoAssistantInstallPathVerify(installPath):
                 QMessageBox.warning(self, _translate('TaobaoAssistantSettingDialog', 'Taobao assistant install path'),
                                     _translate('TaobaoAssistantSettingDialog', 'The selected path is not correct'))
             else:
@@ -283,6 +290,7 @@ class TaobaoOrderListReviewDialog(QDialog):
         self.ui.searchLineEdit.setText('')
         
     def waitSellerSendGoods(self):
+        self.fuzzySearch = ''
         self.waitSellerSendGoodsButton.setStyleSheet('color: #f50; font: bold')
         self.waitBuyerPayButton.setStyleSheet('')
         self.allOrdersButton.setStyleSheet('')
@@ -291,6 +299,7 @@ class TaobaoOrderListReviewDialog(QDialog):
         self.setHtml()
     
     def waitBuyerPay(self):
+        self.fuzzySearch = ''
         self.waitSellerSendGoodsButton.setStyleSheet('')
         self.waitBuyerPayButton.setStyleSheet('color: #f50; font: bold')
         self.allOrdersButton.setStyleSheet('')
@@ -299,6 +308,7 @@ class TaobaoOrderListReviewDialog(QDialog):
         self.setHtml()
     
     def allOrders(self):
+        self.fuzzySearch = ''
         self.waitSellerSendGoodsButton.setStyleSheet('')
         self.waitBuyerPayButton.setStyleSheet('')
         self.allOrdersButton.setStyleSheet('color: #f50; font: bold')
@@ -388,20 +398,25 @@ class TaobaoOrderLogisticsUpdateDialog(QDialog):
         
         totalCount = 0
         count = 0
-        for tid, pay_time, receiver_name in fbdSession.query(TaobaoTrade.tid, TaobaoTrade.pay_time, TaobaoTrade.receiver_name).filter(TaobaoTrade.status == 3):
+        for tid, pay_time, receiver_name in fbdSession.query(
+            TaobaoTrade.tid,
+            TaobaoTrade.pay_time,
+            TaobaoTrade.receiver_name).filter(TaobaoTrade.status == 3):
             totalCount += 1
             taobaoTradeEx = fbdSession.query(TaobaoTradeEx).filter_by(tid = tid).one()
-            aliOrderModel = session.query(AliOrderModel.gmtCreate, AliOrderModel.logisticsOrderList).filter(AliOrderModel.toFullName == receiver_name).order_by(desc(AliOrderModel.gmtCreate)).first()
-            if not taobaoTradeEx.company_code and aliOrderModel != None:
+            aliOrderModel = session.query(AliOrderModel.gmtCreate, AliOrderModel.logisticsOrderList) \
+                .filter(AliOrderModel.toFullName == receiver_name).order_by(desc(AliOrderModel.gmtCreate)).first()
+            if not taobaoTradeEx.company_code and aliOrderModel and aliOrderModel[1]:
+                # first logistic information
                 gmtCreate = aliOrderModel[0]
+                logistics = json.loads(aliOrderModel[1])[0]
                 timedelta = gmtCreate - pay_time
-                if timedelta.days < 0 or timedelta.days > 5:
+                usedSid = fbdSession.query(TaobaoTradeEx).filter_by(
+                    out_sid = logistics['logisticsBillNo']).one_or_none()
+                if timedelta.days < 0 or timedelta.days > 5 or usedSid:
                     continue
-                logisticsOrderList = aliOrderModel[1]
-                if not logisticsOrderList:
-                    continue
-                logistics = json.loads(logisticsOrderList)[0]
-                taobaoTradeEx.company_code, taobaoTradeEx.company_name, taobaoTradeEx.out_sid = logistics['companyNo'], logistics['companyName'], logistics['logisticsBillNo']
+                taobaoTradeEx.company_code, taobaoTradeEx.company_name, taobaoTradeEx.out_sid = \
+                logistics['companyNo'], logistics['companyName'], logistics['logisticsBillNo']
                 count += 1
         
         self.ui.qunatityLineEdit.setText('{} / {}'.format(count, totalCount))
@@ -418,7 +433,7 @@ class TaobaoOrderLogisticsUpdateDialog(QDialog):
     def logisticsUpdateAccept(self):
         fbdSession.commit()
         TaobaoAssistantFdb.instance().fdbDisconnect()
-        QProcess.startDetached(taobaoAssistantWorkbench(), list())
+        taobaoAssistantWorkbenchLaunch()
     
     def logisticsUpdateReject(self):
         if fbdSession.dirty:

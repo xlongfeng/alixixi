@@ -66,6 +66,8 @@ target/
 
 # Qt stuff
 ui_*.py
+*_rc.py
+*.qm
 
 # Application
 *.ini

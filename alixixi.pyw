@@ -255,7 +255,7 @@ class Alixixi(QMainWindow):
             QMessageBox.warning(self, _translate('Alixixi', 'Taobao Order'),
                                 _translate('Alixixi', 'Taobao assistant has been running'))
         else:
-            QProcess.startDetached(taobaoAssistantWorkbench(), list())
+            taobaoAssistantWorkbenchLaunch()
         
     def tbOrderListReview(self):
         if not taobaoAssistantInstallPathCheck():
