@@ -86,16 +86,3 @@ engine = create_engine('sqlite:///storage.sqlite')
 Base.metadata.create_all(engine)
 
 session = sessionmaker(engine)()
-
-'''AutoMapBase = automap_base()
-
-fdbUrl = sqlalchemy.engine.url.URL('firebird',username='SYSDBA',password='masterkey',database='APPTRADE.DAT', query={'charset': 'utf-8'})
-fbdEngine = create_engine(fdbUrl)
-
-AutoMapBase.prepare(fbdEngine, reflect=True)
-
-TaobaoTrade = AutoMapBase.classes.trade
-TaobaoTradeEx = AutoMapBase.classes.tradeex
-TaobaoOrder = AutoMapBase.classes.orders
-
-fbdSession = sessionmaker(fbdEngine)()'''

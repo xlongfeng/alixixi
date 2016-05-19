@@ -13,6 +13,7 @@ FORMS += \
     alixixi.ui \
     authorizedialog.ui \
     taobaoassistantsettingdialog.ui \
+    taobaoorderlogisticsupdatedialog.ui \
     orderlistgetdialog.ui \
     orderlistreviewdialog.ui
 	

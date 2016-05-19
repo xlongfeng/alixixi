@@ -18,7 +18,7 @@
         <translation>登陆</translation>
     </message>
     <message>
-        <location filename="alixixi.pyw" line="226"/>
+        <location filename="alixixi.pyw" line="229"/>
         <source>Ali Order Query</source>
         <translation>阿里订单查询</translation>
     </message>
@@ -73,12 +73,12 @@
         <translation>最近 5 天</translation>
     </message>
     <message>
-        <location filename="alixixi.pyw" line="222"/>
+        <location filename="alixixi.pyw" line="225"/>
         <source>Date range error, start time later than the end of time</source>
         <translation>日期范围错误，开始时间比结束时间晚</translation>
     </message>
     <message>
-        <location filename="alixixi.pyw" line="226"/>
+        <location filename="alixixi.pyw" line="229"/>
         <source>Date range error, time range is too long, must be less than 30 days</source>
         <translation>日期范围错误，时间范围过长，必需小于30天</translation>
     </message>
@@ -123,24 +123,39 @@
         <translation>更新物流信息</translation>
     </message>
     <message>
-        <location filename="alixixi.pyw" line="269"/>
+        <location filename="alixixi.pyw" line="272"/>
         <source>Taobao Order</source>
         <translation>淘宝订单</translation>
     </message>
     <message>
-        <location filename="alixixi.pyw" line="266"/>
+        <location filename="alixixi.pyw" line="269"/>
         <source>Taobao assistant installation path set is not correct</source>
         <translation>淘宝助理安装路径设置不正确</translation>
     </message>
     <message>
-        <location filename="alixixi.pyw" line="246"/>
+        <location filename="alixixi.pyw" line="251"/>
         <source>Taobao assistant has been running</source>
         <translation>淘宝助理已经运行</translation>
     </message>
     <message>
-        <location filename="alixixi.pyw" line="269"/>
+        <location filename="alixixi.pyw" line="272"/>
         <source>Please close the taobao assistant, and try again</source>
         <translation>请先关闭淘宝助理，再重试</translation>
+    </message>
+    <message>
+        <location filename="alixixi.pyw" line="164"/>
+        <source>Sales</source>
+        <translation>销售</translation>
+    </message>
+    <message>
+        <location filename="alixixi.pyw" line="165"/>
+        <source>Reporting</source>
+        <translation>报表</translation>
+    </message>
+    <message>
+        <location filename="alixixi.ui" line="111"/>
+        <source>Open Taobao Assistant</source>
+        <translation>打开淘宝助理</translation>
     </message>
 </context>
 <context>
@@ -252,22 +267,22 @@
         <translation>签收失败</translation>
     </message>
     <message>
-        <location filename="orderlist.py" line="258"/>
+        <location filename="orderlist.py" line="261"/>
         <source>Loading, wait a monent ...</source>
         <translation>正在载入，请稍后 ...</translation>
     </message>
     <message>
-        <location filename="taobaoassistant.py" line="134"/>
+        <location filename="taobaoassistant.py" line="189"/>
         <source>Wait Seller Send Goods</source>
         <translation>等待发货</translation>
     </message>
     <message>
-        <location filename="taobaoassistant.py" line="137"/>
+        <location filename="taobaoassistant.py" line="192"/>
         <source>Wait Buyer Pay</source>
         <translation>等待付款</translation>
     </message>
     <message>
-        <location filename="taobaoassistant.py" line="140"/>
+        <location filename="taobaoassistant.py" line="195"/>
         <source>All Orders</source>
         <translation>所有订单</translation>
     </message>
@@ -316,8 +331,8 @@
     </message>
     <message>
         <location filename="orderlistreviewdialog.ui" line="56"/>
-        <source>0 / 0</source>
-        <translation>0 / 0</translation>
+        <source>0 / 0 - (0)</source>
+        <translation>0 / 0 - (0)</translation>
     </message>
 </context>
 <context>
@@ -346,12 +361,12 @@
         <translation>浏览</translation>
     </message>
     <message>
-        <location filename="taobaoassistant.py" line="95"/>
+        <location filename="taobaoassistant.py" line="148"/>
         <source>Taobao assistant install path</source>
         <translation>淘宝助理安装路径</translation>
     </message>
     <message>
-        <location filename="taobaoassistant.py" line="95"/>
+        <location filename="taobaoassistant.py" line="148"/>
         <source>The selected path is not correct</source>
         <translation>选择的路径不正确</translation>
     </message>
@@ -359,47 +374,47 @@
 <context>
     <name>TaobaoOrderListReview</name>
     <message>
-        <location filename="taobaoassistant.py" line="252"/>
+        <location filename="taobaoassistant.py" line="315"/>
         <source>0</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="taobaoassistant.py" line="253"/>
+        <location filename="taobaoassistant.py" line="316"/>
         <source>1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="taobaoassistant.py" line="254"/>
+        <location filename="taobaoassistant.py" line="317"/>
         <source>WAIT_BUYER_PAY</source>
         <translation>待付款</translation>
     </message>
     <message>
-        <location filename="taobaoassistant.py" line="255"/>
+        <location filename="taobaoassistant.py" line="318"/>
         <source>WAIT_SELLER_SEND_GOODS</source>
         <translation>待发货</translation>
     </message>
     <message>
-        <location filename="taobaoassistant.py" line="256"/>
+        <location filename="taobaoassistant.py" line="319"/>
         <source>WAIT_BUYER_CONFIRM_GOODS</source>
         <translation>已发货</translation>
     </message>
     <message>
-        <location filename="taobaoassistant.py" line="257"/>
+        <location filename="taobaoassistant.py" line="320"/>
         <source>5</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="taobaoassistant.py" line="258"/>
+        <location filename="taobaoassistant.py" line="321"/>
         <source>WAIT_BUYER_RATE_GOODS</source>
         <translation>待评价</translation>
     </message>
     <message>
-        <location filename="taobaoassistant.py" line="259"/>
+        <location filename="taobaoassistant.py" line="322"/>
         <source>TRADE_FINISHED</source>
         <translation>交易成功</translation>
     </message>
     <message>
-        <location filename="taobaoassistant.py" line="260"/>
+        <location filename="taobaoassistant.py" line="323"/>
         <source>UNKNOWN_STATUS</source>
         <translation>未知状态</translation>
     </message>
@@ -407,9 +422,32 @@
 <context>
     <name>TaobaoOrderListReviewDialog</name>
     <message>
-        <location filename="taobaoassistant.py" line="109"/>
+        <location filename="taobaoassistant.py" line="162"/>
         <source>Taobao Order List</source>
         <translation>淘宝订单</translation>
+    </message>
+</context>
+<context>
+    <name>TaobaoOrderLogisticsUpdateDialog</name>
+    <message>
+        <location filename="taobaoorderlogisticsupdatedialog.ui" line="14"/>
+        <source>Taobao Order Logistics Update</source>
+        <translation>更新淘宝订单物流</translation>
+    </message>
+    <message>
+        <location filename="taobaoorderlogisticsupdatedialog.ui" line="32"/>
+        <source>orders logistics information will be updated.</source>
+        <translation>(可发货 / 待发货)订单物流信息可以更新.</translation>
+    </message>
+    <message>
+        <location filename="taobaoorderlogisticsupdatedialog.ui" line="44"/>
+        <source>Continue update to taobao assistant?</source>
+        <translation>继续更新到淘宝助理?</translation>
+    </message>
+    <message>
+        <location filename="taobaoorderlogisticsupdatedialog.ui" line="54"/>
+        <source>Ali order need to be updated first.</source>
+        <translation>没有找到对应的物流信息，需要先更新阿里订单.</translation>
     </message>
 </context>
 </TS>

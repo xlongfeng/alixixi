@@ -106,9 +106,9 @@
        </attribute>
        <layout class="QVBoxLayout" name="verticalLayout_2">
         <item>
-         <widget class="QPushButton" name="tbOrderUpdatePushButton">
+         <widget class="QPushButton" name="tbAssistantOpenPushButton">
           <property name="text">
-           <string>Update</string>
+           <string>Open Taobao Assistant</string>
           </property>
          </widget>
         </item>

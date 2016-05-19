@@ -51,7 +51,7 @@ from PyQt5.QtWebKitWidgets import QWebPage
 import json
 from math import ceil
 from jinja2 import Environment, FileSystemLoader
-from sqlalchemy import desc, or_
+from sqlalchemy import desc, or_, func
 
 from ui_orderlistgetdialog import Ui_OrderListGetDialog
 from ui_orderlistreviewdialog import Ui_OrderListReviewDialog
@@ -259,8 +259,11 @@ class OrderListReviewDialog(QDialog):
             self.ui.webView.setHtml(_translate('OrderListReview', 'Loading, wait a monent ...'))
             QTimer.singleShot(100, self.firstPage)
             
-    def queryFilter(self):
-        query = session.query(AliOrderModel)
+    def queryFilter(self, count = False):
+        if not count:
+            query = session.query(AliOrderModel)
+        else:
+            query = session.query(func.count(AliOrderModel.id))
         value = self.fuzzySearch
         if len(value) > 0:
             query= query.filter(or_(AliOrderModel.logisticsOrderList.like('%%"logisticsBillNo": "%s"%%' % value),
@@ -273,7 +276,8 @@ class OrderListReviewDialog(QDialog):
     def pageInfoUpdate(self):
         self.offsetOfPage = 0
         self.numOfPage = 10
-        self.totalPages = ceil(self.queryFilter().count() / self.numOfPage)
+        self.totalCount = self.queryFilter(True).scalar()
+        self.totalPages = ceil(self.totalCount / self.numOfPage)
     
     def pageButtonStateUpdate(self):
         if self.totalPages == 0 or self.totalPages == 1:
@@ -331,9 +335,9 @@ class OrderListReviewDialog(QDialog):
     def setHtml(self):
         self.pageButtonStateUpdate()
         if self.totalPages > 0:
-            self.ui.pageNumLabel.setText('{0} / {1}'.format(self.offsetOfPage + 1, self.totalPages))
+            self.ui.pageNumLabel.setText('{} / {} - ({})'.format(self.offsetOfPage + 1, self.totalPages, self.totalCount))
         else:
-            self.ui.pageNumLabel.setText('0 / 0')
+            self.ui.pageNumLabel.setText('0 / 0 - (0)')
         orderList = []
         for model in self.queryFilter().order_by(desc(AliOrderModel.gmtCreate)).offset(self.offsetOfPage * self.numOfPage).limit(self.numOfPage):
             orderList.append(dict(

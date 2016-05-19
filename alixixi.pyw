@@ -132,7 +132,7 @@ class Alixixi(QMainWindow):
         self.ui.aliOrderUpdatePushButton.clicked.connect(self.aliOrderListUpdate)
         self.ui.aliOrderReviewPushButton.clicked.connect(self.aliOrderListReview)
         
-        self.ui.tbOrderUpdatePushButton.clicked.connect(self.tbOrderListUpdate)
+        self.ui.tbAssistantOpenPushButton.clicked.connect(self.tbAssistantOpen)
         self.ui.tbOrderReviewPushButton.clicked.connect(self.tbOrderListReview)
         self.ui.tbOrderLogisticsUpdatePushButton.clicked.connect(self.tbOrderListLogisticsUpdate)
         
@@ -243,20 +243,18 @@ class Alixixi(QMainWindow):
     def saleReportReview(self):
         pass
         
-    def tbOrderListUpdate(self):
-        path = self.settings.taobao_assistant_install_path
-        if not taobaoAssistantInstallPathCheck(path):
+    def tbAssistantOpen(self):
+        if not taobaoAssistantInstallPathCheck():
             QMessageBox.warning(self, _translate('Alixixi', 'Taobao Order'),
                                 _translate('Alixixi', 'Taobao assistant installation path set is not correct'))
         elif taobaoAssistantWorkbenchIsRunning():
             QMessageBox.warning(self, _translate('Alixixi', 'Taobao Order'),
                                 _translate('Alixixi', 'Taobao assistant has been running'))
         else:
-            QProcess.startDetached(taobaoAssistantWorkbenchPath(path), list())
+            QProcess.startDetached(taobaoAssistantWorkbench(), list())
         
     def tbOrderListReview(self):
-        path = self.settings.taobao_assistant_install_path
-        if not taobaoAssistantInstallPathCheck(path):
+        if not taobaoAssistantInstallPathCheck():
             QMessageBox.warning(self, _translate('Alixixi', 'Taobao Order'),
                                 _translate('Alixixi', 'Taobao assistant installation path set is not correct'))
         elif taobaoAssistantWorkbenchIsRunning():
@@ -267,15 +265,15 @@ class Alixixi(QMainWindow):
             dialog.exec()
         
     def tbOrderListLogisticsUpdate(self):
-        path = self.settings.taobao_assistant_install_path
-        if not taobaoAssistantInstallPathCheck(path):
+        if not taobaoAssistantInstallPathCheck():
             QMessageBox.warning(self, _translate('Alixixi', 'Taobao Order'),
                                 _translate('Alixixi', 'Taobao assistant installation path set is not correct'))
         elif taobaoAssistantWorkbenchIsRunning():
             QMessageBox.warning(self, _translate('Alixixi', 'Taobao Order'),
                                 _translate('Alixixi', 'Please close the taobao assistant, and try again'))
         else:
-            pass
+            dialog = TaobaoOrderLogisticsUpdateDialog(self)
+            dialog.exec()
         
     def refreshAccessToken(self):
         access_token_expires_in = self.settings.access_token_expires_in

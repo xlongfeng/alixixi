@@ -40,10 +40,11 @@
 #############################################################################
 
 
-from PyQt5.QtCore import Qt, QCoreApplication, QDate, QDateTime, QTimer
+from PyQt5.QtCore import (Qt, QObject, QCoreApplication, QDate, QDateTime,
+                          QTimer, QProcess)
 from PyQt5.QtCore import QFile, QProcess,QRegExp
 from PyQt5.QtWidgets import (QDialog, QMessageBox, QFileDialog, QSpacerItem,
-                             QSizePolicy, QPushButton)
+                             QSizePolicy, QPushButton, QDialogButtonBox)
 from PyQt5.QtGui import QDesktopServices, QRegExpValidator
 from PyQt5.QtWebKit import QWebSettings
 from PyQt5.QtWebKitWidgets import QWebPage
@@ -51,20 +52,72 @@ from PyQt5.QtWebKitWidgets import QWebPage
 import json
 from math import ceil
 from jinja2 import Environment, FileSystemLoader
-from sqlalchemy import desc, or_
+from sqlalchemy import Column, ForeignKey, \
+     Integer, Float, String, DateTime, \
+     create_engine, desc, or_, func
+from sqlalchemy.orm import relationship, sessionmaker
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.ext.automap import automap_base
+from sqlalchemy.pool import NullPool
 
 from ui_taobaoassistantsettingdialog import Ui_TaobaoAssistantSettingDialog
+from ui_taobaoorderlogisticsupdatedialog import Ui_TaobaoOrderLogisticsUpdateDialog
 from ui_orderlistreviewdialog import Ui_OrderListReviewDialog
 from settings import Settings
 from orm import *
+
+AutoMapBase = automap_base()
+
+TaobaoTrade = None
+TaobaoTradeEx =None
+TaobaoOrder = None
+fbdSession = None
+
+class TaobaoAssistantFdb(QObject):
+    pInstance = None
+    
+    @classmethod
+    def instance(cls):
+        if cls.pInstance is None:
+            cls.pInstance = cls()
+        return cls.pInstance
+
+    def __init__(self, parent=None):
+        super(TaobaoAssistantFdb, self).__init__(parent)
+        self.settings = Settings.instance()
+        self.settings.taobao_assistant_install_path_changed.connect(self.fdbConnect)
+        self.fdbConnect()
+    
+    def fdbUrl(self):
+        tbaUser = self.settings.resource_owner
+        tbaPath = self.settings.taobao_assistant_install_path
+        return sqlalchemy.engine.url.URL('firebird', username='SYSDBA', password='masterkey',
+                                         database = tbaPath + '/users/' + tbaUser + '/APPTRADE.DAT',
+                                         query={'charset': 'utf-8'})
+    
+    def fdbConnect(self):
+        self.engine = create_engine(self.fdbUrl(), poolclass=NullPool)
+        self.connection = engine.connect()
+        AutoMapBase.prepare(self.engine, reflect=True)
+        global TaobaoTrade, TaobaoTradeEx, TaobaoOrder, fbdSession
+        TaobaoTrade = AutoMapBase.classes.trade
+        TaobaoTradeEx = AutoMapBase.classes.tradeex
+        TaobaoOrder = AutoMapBase.classes.orders
+        fbdSession = sessionmaker(self.engine)()
+    
+    def fdbDisconnect(self):
+        #self.connection.close()
+        #self.engine.dispose()
+        fbdSession.close()
+        
 
 _translate = QCoreApplication.translate
 
 def taobaoAssistantWorkbenchName():
     return 'Workbench.exe'
 
-def taobaoAssistantWorkbenchPath(path):
-    return '{}/{}'.format(path, taobaoAssistantWorkbenchName())
+def taobaoAssistantWorkbench():
+    return '{}/{}'.format(Settings.instance().taobao_assistant_install_path, taobaoAssistantWorkbenchName())
 
 def taobaoAssistantWorkbenchIsRunning():
     process = QProcess()
@@ -73,8 +126,8 @@ def taobaoAssistantWorkbenchIsRunning():
     tasklist = process.readAllStandardOutput().data().decode('utf-8')
     return tasklist.find(taobaoAssistantWorkbenchName()) != -1
 
-def taobaoAssistantInstallPathCheck(path):
-    return QFile.exists(taobaoAssistantWorkbenchPath(path))
+def taobaoAssistantInstallPathCheck():
+    return QFile.exists(taobaoAssistantWorkbench())
 
 class TaobaoAssistantSettingDialog(QDialog):
     def __init__(self, parent=None):
@@ -119,6 +172,8 @@ class TaobaoOrderListReviewDialog(QDialog):
         self.ui.searchPushButton.clicked.connect(self.advancedSearch)
         self.ui.clearPushButton.clicked.connect(self.advancedSearchClear)
         
+        TaobaoAssistantFdb.instance()
+        
         self.statusFilter = 3
         self.fuzzySearch = ''
         self.pageInfoUpdate()
@@ -147,9 +202,16 @@ class TaobaoOrderListReviewDialog(QDialog):
         else:
             self.ui.webView.setHtml(_translate('OrderListReview', 'Loading, wait a monent ...'))
             QTimer.singleShot(100, self.waitSellerSendGoods)
+            
+    def closeEvent(self, event):
+        TaobaoAssistantFdb.instance().fdbDisconnect()
+        super(TaobaoOrderListReviewDialog, self).closeEvent(event)
         
-    def queryFilter(self):
-        query = fbdSession.query(TaobaoTrade)
+    def queryFilter(self, count = False):
+        if not count:
+            query = fbdSession.query(TaobaoTrade)
+        else:
+            query = fbdSession.query(func.count(TaobaoTrade.tid))
         if self.statusFilter != -1:
             query = query.filter(TaobaoTrade.status == self.statusFilter)
         value = self.fuzzySearch
@@ -167,7 +229,8 @@ class TaobaoOrderListReviewDialog(QDialog):
     def pageInfoUpdate(self):
         self.offsetOfPage = 0
         self.numOfPage = 10
-        self.totalPages = ceil(self.queryFilter().count() / self.numOfPage)
+        self.totalCount = self.queryFilter(True).scalar()
+        self.totalPages = ceil(self.totalCount / self.numOfPage)
     
     def pageButtonStateUpdate(self):
         if self.totalPages == 0 or self.totalPages == 1:
@@ -263,9 +326,9 @@ class TaobaoOrderListReviewDialog(QDialog):
     def setHtml(self):
         self.pageButtonStateUpdate()
         if self.totalPages > 0:
-            self.ui.pageNumLabel.setText('{0} / {1}'.format(self.offsetOfPage + 1, self.totalPages))
+            self.ui.pageNumLabel.setText('{} / {} - ({})'.format(self.offsetOfPage + 1, self.totalPages, self.totalCount))
         else:
-            self.ui.pageNumLabel.setText('0 / 0')
+            self.ui.pageNumLabel.setText('0 / 0 - (0)')
         tradeList = []
         for trade in self.queryFilter().order_by(desc(TaobaoTrade.created)).offset(self.offsetOfPage * self.numOfPage).limit(self.numOfPage):
             orders = []
@@ -282,13 +345,7 @@ class TaobaoOrderListReviewDialog(QDialog):
                     discount_fee = order.discount_fee,
                     status = self.orderStatus(order.status),
                 ))
-            logisticsOrderList = []
-            for logistics in fbdSession.query(TaobaoTradeEx).filter_by(tid = trade.tid):
-                logisticsOrderList.append(dict(
-                    out_sid = logistics.out_sid,
-                    company_code = logistics.company_code,
-                    company_name = logistics.company_name,
-                ))
+            logistics = fbdSession.query(TaobaoTradeEx).filter_by(tid = trade.tid).one()
             tradeList.append(dict(
                 tid = trade.tid,
                 alipay_no = trade.alipay_no,
@@ -301,7 +358,11 @@ class TaobaoOrderListReviewDialog(QDialog):
                 buyer_message = trade.buyer_message,
                 status = trade.status,
                 orders = orders,
-                logisticsOrderList = logisticsOrderList,
+                logistics = dict(
+                    out_sid = logistics.out_sid,
+                    company_code = logistics.company_code,
+                    company_name = logistics.company_name,
+                ),
                 receiver_name = trade.receiver_name,
                 receiver_phone = trade.receiver_phone,
                 receiver_mobile = trade.receiver_mobile,
@@ -314,3 +375,53 @@ class TaobaoOrderListReviewDialog(QDialog):
         env = Environment(loader=FileSystemLoader('templates'))
         template = env.get_template('taobaoorderlist.html')
         self.ui.webView.setHtml(template.render(tradeList = tradeList))
+        
+class TaobaoOrderLogisticsUpdateDialog(QDialog):
+    def __init__(self, parent=None):
+        super(TaobaoOrderLogisticsUpdateDialog, self).__init__(parent)
+        self.ui = Ui_TaobaoOrderLogisticsUpdateDialog()
+        self.ui.setupUi(self)
+        self.ui.buttonBox.accepted.connect(self.logisticsUpdateAccept)
+        self.ui.buttonBox.rejected.connect(self.logisticsUpdateReject)
+        
+        TaobaoAssistantFdb.instance()
+        
+        totalCount = 0
+        count = 0
+        for tid, pay_time, receiver_name in fbdSession.query(TaobaoTrade.tid, TaobaoTrade.pay_time, TaobaoTrade.receiver_name).filter(TaobaoTrade.status == 3):
+            totalCount += 1
+            taobaoTradeEx = fbdSession.query(TaobaoTradeEx).filter_by(tid = tid).one()
+            aliOrderModel = session.query(AliOrderModel.gmtCreate, AliOrderModel.logisticsOrderList).filter(AliOrderModel.toFullName == receiver_name).order_by(desc(AliOrderModel.gmtCreate)).first()
+            if not taobaoTradeEx.company_code and aliOrderModel != None:
+                gmtCreate = aliOrderModel[0]
+                timedelta = gmtCreate - pay_time
+                if timedelta.days < 0 or timedelta.days > 5:
+                    continue
+                logisticsOrderList = aliOrderModel[1]
+                if not logisticsOrderList:
+                    continue
+                logistics = json.loads(logisticsOrderList)[0]
+                taobaoTradeEx.company_code, taobaoTradeEx.company_name, taobaoTradeEx.out_sid = logistics['companyNo'], logistics['companyName'], logistics['logisticsBillNo']
+                count += 1
+        
+        self.ui.qunatityLineEdit.setText('{} / {}'.format(count, totalCount))
+        if count == 0:
+            self.ui.buttonBox.setStandardButtons(QDialogButtonBox.Cancel)
+            self.ui.tbaUpdateLabel.setHidden(True)
+        else:
+            self.ui.aliUpdateLabel.setHidden(True)
+        
+    def closeEvent(self, event):
+        self.logisticsUpdateReject()
+        super(TaobaoOrderLogisticsUpdateDialog, self).closeEvent(event)
+        
+    def logisticsUpdateAccept(self):
+        fbdSession.commit()
+        TaobaoAssistantFdb.instance().fdbDisconnect()
+        QProcess.startDetached(taobaoAssistantWorkbench(), list())
+    
+    def logisticsUpdateReject(self):
+        if fbdSession.dirty:
+            fbdSession.rollback()
+        TaobaoAssistantFdb.instance().fdbDisconnect()
+    

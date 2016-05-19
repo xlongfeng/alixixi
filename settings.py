@@ -138,7 +138,9 @@ class Settings(QSettings):
     @access_token_expires_in.setter
     def access_token_expires_in(self, value):
         self.setValue('access_token_expires_in', value)
-        
+    
+    taobao_assistant_install_path_changed = pyqtSignal(str)
+    
     @pyqtProperty(str)
     def taobao_assistant_install_path(self):
         return self.value('taobao_assistant_install_path', '')
@@ -146,3 +148,4 @@ class Settings(QSettings):
     @taobao_assistant_install_path.setter
     def taobao_assistant_install_path(self, value):
         self.setValue('taobao_assistant_install_path', value)
+        self.taobao_assistant_install_path_changed.emit(value)
