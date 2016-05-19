@@ -1,0 +1,8 @@
+<!DOCTYPE RCC><RCC version="1.0">
+<qresource prefix="/">
+	<file>js/exporting.js</file>
+	<file>js/highcharts.js</file>
+	<file>js/jquery.min.js</file>
+</qresource>
+</RCC>
+

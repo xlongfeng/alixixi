@@ -5,16 +5,22 @@ TEMPLATE = app
 SOURCES += \
     alixixi.pyw \
     cnalibabaopen.py \
+    orderlist.py \
     settings.py \
-    taobaoassistant.py \
-    orderlist.py
+    taobaoassistant.py
+    
 
 FORMS += \
     alixixi.ui \
     authorizedialog.ui \
-    taobaoassistantsettingdialog.ui \
-    taobaoorderlogisticsupdatedialog.ui \
     orderlistgetdialog.ui \
-    orderlistreviewdialog.ui
+    orderlistreviewdialog.ui \
+    salesreportingdialog.ui \
+    taobaoassistantsettingdialog.ui \
+    taobaoorderlogisticsupdatedialog.ui
+    
 	
 TRANSLATIONS += alixixi_zh_CN.ts
+
+RESOURCES += \
+    alixixi.qrc

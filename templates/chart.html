@@ -4,7 +4,7 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 		<title>Highcharts Example</title>
 
-		<script type="text/javascript" src="jquery.min.js"></script>
+		<script type="text/javascript" src="js/jquery.min.js"></script>
 		<style type="text/css">
 ${demo.css}
 		</style>
@@ -27,6 +27,9 @@ $(function () {
             title: {
                 text: '金额 (元)'
             }
+        },
+        exporting: {
+            enabled: false
         },
         plotOptions: {
             line: {
@@ -51,10 +54,9 @@ $(function () {
 		</script>
 	</head>
 	<body>
-<script src="highcharts.js"></script>
-<script src="exporting.js"></script>
+<script src="js/highcharts.js"></script>
+<script src="js/exporting.js"></script>
 
-<h1>hhhhh</h1>
 <div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
 
 	</body>

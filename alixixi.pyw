@@ -47,6 +47,8 @@ from PyQt5.QtWidgets import (QApplication, QComboBox, QDialog, QMainWindow,
                              QGridLayout, QLabel, QLineEdit, QMessageBox,
                              QPushButton)
 
+import alixixi_rc
+
 from ui_authorizedialog import Ui_AuthorizeDialog
 from ui_orderlistgetdialog import Ui_OrderListGetDialog
 from ui_alixixi import Ui_Alixixi
@@ -54,6 +56,7 @@ from settings import Settings
 from cnalibabaopen import CnAlibabaOpen
 from orderlist import *
 from taobaoassistant import *
+from sales import *
 
 _translate = QCoreApplication.translate
 
@@ -241,7 +244,8 @@ class Alixixi(QMainWindow):
         dialog.exec()
         
     def saleReportReview(self):
-        pass
+        dialog = SalesReportingDialog(self)
+        dialog.exec()
         
     def tbAssistantOpen(self):
         if not taobaoAssistantInstallPathCheck():
