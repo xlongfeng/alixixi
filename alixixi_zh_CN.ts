@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS><TS version="2.0" language="zh_CN" sourcelanguage="">
+<!DOCTYPE TS>
+<TS version="2.1" language="zh_CN">
 <context>
     <name>Alixixi</name>
     <message>
@@ -494,8 +495,8 @@
     </message>
     <message>
         <location filename="taobaoorderlogisticsupdatedialog.ui" line="90"/>
-        <source>No matchedes logistic information, Ali order need to be updated first.</source>
-        <translation>没有找到对应的物流信息，请先更新阿里订单.</translation>
+        <source>No matchedes logistic information, Ali / Taobao order need to be updated.</source>
+        <translation>没有找到对应的物流信息，请先更新阿里 / 淘宝订单.</translation>
     </message>
     <message>
         <location filename="taobaoassistant.py" line="405"/>

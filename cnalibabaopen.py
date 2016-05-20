@@ -158,12 +158,12 @@ class CnAlibabaOpen(QObject):
         url.setQuery(query)
         url = QUrl(url.toEncoded().toPercentEncoding(':/?&=%').data().decode('utf-8'))
         self.request.setUrl(url)
-        self.accessManager.get(self.request)
+        self.reply = self.accessManager.get(self.request)
+        self.reply.error.connect(self.replyError)
 
     def finished(self, reply):
         response = reply.readAll()
         if len(response) == 0:
-            self.openApiResponseException.emit('A network communication error occurred during the open api request')
             return
         
         jsonDecode = json.loads(response.data().decode('utf-8'))
@@ -173,4 +173,7 @@ class CnAlibabaOpen(QObject):
             self.openApiResponse.emit(jsonDecode)
 
     def sslErrors(self, reply, errors):
-        pass
+        self.openApiResponseException.emit(str(errors))
+    
+    def replyError(self, code):
+        self.openApiResponseException.emit('A network communication error occurred during the open api request: error code {}'.format(code))

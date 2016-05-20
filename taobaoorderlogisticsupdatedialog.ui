@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>640</width>
+    <width>814</width>
     <height>480</height>
    </rect>
   </property>
@@ -87,7 +87,7 @@
      <item>
       <widget class="QLabel" name="aliUpdateLabel">
        <property name="text">
-        <string>No matchedes logistic information, Ali order need to be updated first.</string>
+        <string>No matchedes logistic information, Ali / Taobao order need to be updated.</string>
        </property>
        <property name="alignment">
         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
