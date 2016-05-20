@@ -40,6 +40,7 @@
 
 
 from PyQt5.QtCore import QSettings, pyqtSignal, pyqtProperty
+from datetime import datetime, timedelta
     
 class Settings(QSettings):
     pInstance = None
@@ -149,3 +150,11 @@ class Settings(QSettings):
     def taobao_assistant_install_path(self, value):
         self.setValue('taobao_assistant_install_path', value)
         self.taobao_assistant_install_path_changed.emit(value)
+    
+    @pyqtProperty(str)
+    def ali_order_last_update_time(self):
+        return self.value('ali_order_last_update_time', datetime.today() - timedelta(days = 1))
+    
+    @ali_order_last_update_time.setter
+    def ali_order_last_update_time(self, value):
+        self.setValue('ali_order_last_update_time', value)

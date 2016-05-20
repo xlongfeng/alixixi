@@ -50,6 +50,7 @@ from PyQt5.QtWebKitWidgets import QWebPage
 
 import json
 from math import ceil
+from datetime import datetime
 from jinja2 import Environment, FileSystemLoader
 from sqlalchemy import desc, or_, func
 
@@ -124,6 +125,7 @@ class OrderListGetDialog(QDialog):
         else:
             # task done
             session.commit()
+            self.settings.ali_order_last_update_time = datetime.today()
             self.ui.buttonBox.setStandardButtons(QDialogButtonBox.Open | QDialogButtonBox.Close)
         
     def orderDetailGetRequest(self):

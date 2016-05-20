@@ -39,6 +39,8 @@
 ##
 #############################################################################
 
+from datetime import datetime
+from math import ceil
 
 from PyQt5.QtCore import (Qt, QCoreApplication, QTranslator, QDate,
                           QDateTime, QTimer, QProcess)
@@ -276,6 +278,14 @@ class Alixixi(QMainWindow):
             QMessageBox.warning(self, _translate('Alixixi', 'Taobao Order'),
                                 _translate('Alixixi', 'Please close the taobao assistant, and try again'))
         else:
+            delta = datetime.today() - self.settings.ali_order_last_update_time
+            expire = ceil(delta.total_seconds() / 3600)
+            if expire > 1:
+                button = QMessageBox.question(self, _translate('Alixixi', 'Ali Order'),
+                        _translate('Alixixi', 'Ali order without updated more than {} hours, automatically update today\'s order?').format(expire))
+                if button == QMessageBox.Yes:
+                    self.todayOrderListGet()
+                    
             dialog = TaobaoOrderLogisticsUpdateDialog(self)
             dialog.exec()
         

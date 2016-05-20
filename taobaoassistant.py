@@ -44,7 +44,8 @@ from PyQt5.QtCore import (Qt, QObject, QCoreApplication, QDate, QDateTime,
                           QTimer, QProcess, QUrl)
 from PyQt5.QtCore import QFile, QProcess,QRegExp
 from PyQt5.QtWidgets import (QDialog, QMessageBox, QFileDialog, QSpacerItem,
-                             QSizePolicy, QPushButton, QDialogButtonBox)
+                             QSizePolicy, QPushButton, QDialogButtonBox,
+                             QHeaderView, QTableWidgetItem)
 from PyQt5.QtGui import QDesktopServices, QRegExpValidator
 from PyQt5.QtWebKit import QWebSettings
 from PyQt5.QtWebKitWidgets import QWebPage
@@ -391,8 +392,20 @@ class TaobaoOrderLogisticsUpdateDialog(QDialog):
         super(TaobaoOrderLogisticsUpdateDialog, self).__init__(parent)
         self.ui = Ui_TaobaoOrderLogisticsUpdateDialog()
         self.ui.setupUi(self)
+        
         self.ui.buttonBox.accepted.connect(self.logisticsUpdateAccept)
         self.ui.buttonBox.rejected.connect(self.logisticsUpdateReject)
+        
+        self.ui.tableWidget.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
+        self.ui.tableWidget.setColumnCount(5)
+        self.ui.tableWidget.setHorizontalHeaderLabels([
+            _translate('TaobaoOrderLogisticsUpdateDialog', 'Order ID'),
+            _translate('TaobaoOrderLogisticsUpdateDialog', 'Logistics Company'),
+            _translate('TaobaoOrderLogisticsUpdateDialog', 'Logistics Number'),
+            _translate('TaobaoOrderLogisticsUpdateDialog', 'Pay Time'),
+            _translate('TaobaoOrderLogisticsUpdateDialog', 'Send Time'),
+        ])
+        table = self.ui.tableWidget
         
         TaobaoAssistantFdb.instance()
         
@@ -402,22 +415,35 @@ class TaobaoOrderLogisticsUpdateDialog(QDialog):
             TaobaoTrade.tid,
             TaobaoTrade.pay_time,
             TaobaoTrade.receiver_name).filter(TaobaoTrade.status == 3):
+            row = totalCount
+            table.insertRow(row)
             totalCount += 1
             taobaoTradeEx = fbdSession.query(TaobaoTradeEx).filter_by(tid = tid).one()
             aliOrderModel = session.query(AliOrderModel.gmtCreate, AliOrderModel.logisticsOrderList) \
                 .filter(AliOrderModel.toFullName == receiver_name).order_by(desc(AliOrderModel.gmtCreate)).first()
+            table.setItem(row, 0, QTableWidgetItem(str(tid)))
+            table.setItem(row, 3, QTableWidgetItem(str(pay_time)))
             if not taobaoTradeEx.company_code and aliOrderModel and aliOrderModel[1]:
-                # first logistic information
+                # get first logistic information
                 gmtCreate = aliOrderModel[0]
                 logistics = json.loads(aliOrderModel[1])[0]
                 timedelta = gmtCreate - pay_time
                 usedSid = fbdSession.query(TaobaoTradeEx).filter_by(
                     out_sid = logistics['logisticsBillNo']).one_or_none()
+                # taobao pay time must be in front of ali order create
+                # and the days should not be exceed 5 days
+                # and the logistic number must have not been used
                 if timedelta.days < 0 or timedelta.days > 5 or usedSid:
                     continue
                 taobaoTradeEx.company_code, taobaoTradeEx.company_name, taobaoTradeEx.out_sid = \
                 logistics['companyNo'], logistics['companyName'], logistics['logisticsBillNo']
+                table.setItem(row, 1, QTableWidgetItem(logistics['companyName']))
+                table.setItem(row, 2, QTableWidgetItem(logistics['logisticsBillNo']))
+                table.setItem(row, 4, QTableWidgetItem(logistics['gmtSend']))
                 count += 1
+            else:
+                table.setItem(row, 1, QTableWidgetItem(taobaoTradeEx.company_name))
+                table.setItem(row, 2, QTableWidgetItem(taobaoTradeEx.out_sid))
         
         self.ui.qunatityLineEdit.setText('{} / {}'.format(count, totalCount))
         if count == 0:
