@@ -1,2 +1,2 @@
-pyinstaller.exe -n ∞¢¿Ô–«–« -w -i alixixi.ico alixixi.pyw
+pyinstaller.exe -n ∞¢¿Ô–«–« -w -i images/alixixi.ico alixixi.pyw
 pause

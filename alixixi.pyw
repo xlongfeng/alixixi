@@ -300,7 +300,7 @@ if __name__ == '__main__':
     import sys
 
     app = QApplication(sys.argv)
-    app.setWindowIcon(QIcon('alixixi.ico'))
+    app.setWindowIcon(QIcon(':/images/alixixi.ico'))
     translator = QTranslator(app)
     translator.load('alixixi_zh_CN')
     app.installTranslator(translator)
