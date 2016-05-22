@@ -1970,7 +1970,7 @@ button.btn:hover,button.small-btn:hover,button.long-btn:hover,button.short-btn:h
                       <td class="price">{{ order.price }}</td>
                       <td class="num">{{ order.num }}</td>
                       <td class="discount"><ul><li>限时促销:省 {{ order.discount_fee }} 元</li></ul></td>
-                      <td class="order-price" rowspan="1">{{ order.payment }}<li>(快递 : 0.00 )</li></td>
+                      <td class="order-price" rowspan="1">{{ order.payment }}<li>(快递 : {{ trade.post_fee }} )</li></td>
                     </tr>
                     {% endfor %}
                     <tr class="order-ft">

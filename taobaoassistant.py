@@ -46,7 +46,7 @@ from PyQt5.QtCore import QFile, QProcess,QRegExp
 from PyQt5.QtWidgets import (QDialog, QMessageBox, QFileDialog, QSpacerItem,
                              QSizePolicy, QPushButton, QDialogButtonBox,
                              QHeaderView, QTableWidgetItem)
-from PyQt5.QtGui import QDesktopServices, QRegExpValidator
+from PyQt5.QtGui import QDesktopServices, QRegExpValidator, QBrush, QColor
 from PyQt5.QtWebKit import QWebSettings
 from PyQt5.QtWebKitWidgets import QWebPage
 
@@ -368,6 +368,7 @@ class TaobaoOrderListReviewDialog(QDialog):
                 buyer_email = trade.buyer_email,
                 buyer_message = trade.buyer_message,
                 status = trade.status,
+                post_fee = trade.post_fee,
                 orders = orders,
                 logistics = dict(
                     out_sid = logistics.out_sid,
@@ -423,7 +424,13 @@ class TaobaoOrderLogisticsUpdateDialog(QDialog):
                 .filter(AliOrderModel.toFullName == receiver_name).order_by(desc(AliOrderModel.gmtCreate)).first()
             table.setItem(row, 0, QTableWidgetItem(str(tid)))
             table.setItem(row, 3, QTableWidgetItem(str(pay_time)))
-            if not taobaoTradeEx.company_code and aliOrderModel and aliOrderModel[1]:
+            if taobaoTradeEx.company_code:
+                table.setItem(row, 1, QTableWidgetItem(taobaoTradeEx.company_name))
+                table.setItem(row, 2, QTableWidgetItem(taobaoTradeEx.out_sid))
+                if aliOrderModel and aliOrderModel[1]:
+                    logistics = json.loads(aliOrderModel[1])[0]
+                    table.setItem(row, 4, QTableWidgetItem(logistics['gmtSend']))
+            elif aliOrderModel and aliOrderModel[1]:
                 # get first logistic information
                 gmtCreate = aliOrderModel[0]
                 logistics = json.loads(aliOrderModel[1])[0]
@@ -440,10 +447,14 @@ class TaobaoOrderLogisticsUpdateDialog(QDialog):
                 table.setItem(row, 1, QTableWidgetItem(logistics['companyName']))
                 table.setItem(row, 2, QTableWidgetItem(logistics['logisticsBillNo']))
                 table.setItem(row, 4, QTableWidgetItem(logistics['gmtSend']))
+                table.item(row, 0).setForeground(QBrush(QColor('#f50')))
+                table.item(row, 1).setForeground(QBrush(QColor('#f50')))
+                table.item(row, 2).setForeground(QBrush(QColor('#f50')))
+                table.item(row, 3).setForeground(QBrush(QColor('#f50')))
+                table.item(row, 4).setForeground(QBrush(QColor('#f50')))
                 count += 1
             else:
-                table.setItem(row, 1, QTableWidgetItem(taobaoTradeEx.company_name))
-                table.setItem(row, 2, QTableWidgetItem(taobaoTradeEx.out_sid))
+                pass
         
         self.ui.qunatityLineEdit.setText('{} / {}'.format(count, totalCount))
         if count == 0:
