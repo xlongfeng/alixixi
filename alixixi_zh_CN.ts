@@ -499,29 +499,44 @@
         <translation>没有找到对应的物流信息，请先更新阿里 / 淘宝订单.</translation>
     </message>
     <message>
-        <location filename="taobaoassistant.py" line="405"/>
-        <source>Order ID</source>
-        <translation>订单号</translation>
-    </message>
-    <message>
-        <location filename="taobaoassistant.py" line="405"/>
+        <location filename="taobaoassistant.py" line="407"/>
         <source>Logistics Company</source>
         <translation>物流公司</translation>
     </message>
     <message>
-        <location filename="taobaoassistant.py" line="405"/>
+        <location filename="taobaoassistant.py" line="407"/>
         <source>Logistics Number</source>
         <translation>运单号码</translation>
     </message>
     <message>
-        <location filename="taobaoassistant.py" line="405"/>
+        <location filename="taobaoassistant.py" line="407"/>
         <source>Pay Time</source>
         <translation>付款时间</translation>
     </message>
     <message>
-        <location filename="taobaoassistant.py" line="405"/>
+        <location filename="taobaoassistant.py" line="407"/>
         <source>Send Time</source>
         <translation>发货时间</translation>
+    </message>
+    <message>
+        <location filename="taobaoassistant.py" line="407"/>
+        <source>Taobao Order ID</source>
+        <translation>淘宝订单号</translation>
+    </message>
+    <message>
+        <location filename="taobaoassistant.py" line="407"/>
+        <source>Buyer Name</source>
+        <translation>姓名</translation>
+    </message>
+    <message>
+        <location filename="taobaoassistant.py" line="407"/>
+        <source>Buyer Phone</source>
+        <translation>电话</translation>
+    </message>
+    <message>
+        <location filename="taobaoassistant.py" line="407"/>
+        <source>Ali Order ID</source>
+        <translation>阿里订单号</translation>
     </message>
 </context>
 </TS>
