@@ -79,14 +79,34 @@
      <item>
       <widget class="QPushButton" name="searchPushButton">
        <property name="text">
-        <string>Search</string>
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset resource="alixixi.qrc">
+         <normaloff>:/images/search.ico</normaloff>:/images/search.ico</iconset>
+       </property>
+       <property name="iconSize">
+        <size>
+         <width>32</width>
+         <height>16</height>
+        </size>
        </property>
       </widget>
      </item>
      <item>
       <widget class="QPushButton" name="clearPushButton">
        <property name="text">
-        <string>Clear</string>
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset resource="alixixi.qrc">
+         <normaloff>:/images/cross.ico</normaloff>:/images/cross.ico</iconset>
+       </property>
+       <property name="iconSize">
+        <size>
+         <width>32</width>
+         <height>16</height>
+        </size>
        </property>
       </widget>
      </item>
@@ -113,6 +133,8 @@
    <header>QtWebKitWidgets/QWebView</header>
   </customwidget>
  </customwidgets>
- <resources/>
+ <resources>
+  <include location="alixixi.qrc"/>
+ </resources>
  <connections/>
 </ui>

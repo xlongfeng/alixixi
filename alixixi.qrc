@@ -1,6 +1,10 @@
 <!DOCTYPE RCC><RCC version="1.0">
 <qresource prefix="/">
 	<file>images/alixixi.ico</file>
+  <file>images/cross.ico</file>
+  <file>images/search.ico</file>
+  <file>images/skip_back.ico</file>
+  <file>images/skip_forward.ico</file>
 	<file>js/exporting.js</file>
 	<file>js/highcharts.js</file>
 	<file>js/jquery.min.js</file>
