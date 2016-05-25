@@ -164,6 +164,7 @@ class CnAlibabaOpen(QObject):
     def finished(self, reply):
         response = reply.readAll()
         if len(response) == 0:
+            self.openApiResponseException.emit('A network communication error occurred during the open api request: response length is 0')
             return
         
         jsonDecode = json.loads(response.data().decode('utf-8'))
