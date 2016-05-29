@@ -448,7 +448,7 @@ class TaobaoOrderLogisticsUpdateDialog(QDialog):
                     if timedelta.days < 0 or timedelta.days > 5 or usedSid:
                         continue
                     taobaoTradeEx.company_code, taobaoTradeEx.company_name, taobaoTradeEx.out_sid = \
-                    logistics['companyNo'], logistics['companyName'], logistics['logisticsBillNo']
+                    self.logisticsCompanyNoTranslate(logistics['companyNo']), logistics['companyName'], logistics['logisticsBillNo']
                     table.setItem(row, 5, QTableWidgetItem(logistics['companyName']))
                     table.setItem(row, 6, QTableWidgetItem(logistics['logisticsBillNo']))
                     table.setItem(row, 4, QTableWidgetItem(logistics['gmtSend']))
@@ -470,7 +470,13 @@ class TaobaoOrderLogisticsUpdateDialog(QDialog):
             self.ui.tbaUpdateLabel.setHidden(True)
         else:
             self.ui.aliUpdateLabel.setHidden(True)
-        
+    
+    def logisticsCompanyNoTranslate(self, companyNo):
+        taobaoLogisticsCompanyNo = {
+            'SFEXPRESS': 'SF',
+        }
+        return taobaoLogisticsCompanyNo.get(companyNo, companyNo)
+    
     def closeEvent(self, event):
         self.logisticsUpdateReject()
         super(TaobaoOrderLogisticsUpdateDialog, self).closeEvent(event)
