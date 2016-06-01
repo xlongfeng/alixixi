@@ -41,6 +41,7 @@
 
 from datetime import datetime
 from math import ceil
+from dateutil.relativedelta import relativedelta
 
 from PyQt5.QtCore import (Qt, QCoreApplication, QTranslator, QDate,
                           QDateTime, QTimer, QProcess)
@@ -129,11 +130,11 @@ class Alixixi(QMainWindow):
         if len(loginId) > 0:
             self.ui.loginIdLineEdit.setText(self.settings.resource_owner)
         
-        self.createStartTime = QDate.currentDate()
+        self.createStartTime = self.settings.ali_order_last_update_time.date()
         self.createEndTime = QDate.currentDate()
         
-        self.ui.createStartTimeDateEdit.setDate(QDate.currentDate())
-        self.ui.createEndTimeDateEdit.setDate(QDate.currentDate())
+        self.ui.createStartTimeDateEdit.setDate(self.createStartTime)
+        self.ui.createEndTimeDateEdit.setDate(self.createEndTime)
         self.ui.aliOrderUpdatePushButton.clicked.connect(self.aliOrderListUpdate)
         self.ui.aliOrderReviewPushButton.clicked.connect(self.aliOrderListReview)
         
@@ -230,9 +231,9 @@ class Alixixi(QMainWindow):
             QMessageBox.warning(self, _translate('Alixixi', 'Ali Order Query'),
                                 _translate('Alixixi', 'Date range error, start time later than the end of time'))
             return
-        if self.createStartTime.addDays(30) < self.createEndTime:
+        if self.createStartTime.addMonths(1) < self.createEndTime:
             QMessageBox.warning(self, _translate('Alixixi', 'Ali Order Query'),
-                                _translate('Alixixi', 'Date range error, time range is too long, must be less than 30 days'))
+                                _translate('Alixixi', 'Date range error, time range is too long, must be less than 1 month'))
             return        
         self.aliOrderListGetRequest()
         
