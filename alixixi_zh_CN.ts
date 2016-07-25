@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS>
-<TS version="2.1" language="zh_CN">
+<!DOCTYPE TS><TS version="2.0" language="zh_CN" sourcelanguage="">
 <context>
     <name>Alixixi</name>
     <message>
@@ -14,12 +13,12 @@
         <translation>会员名</translation>
     </message>
     <message>
-        <location filename="alixixi.pyw" line="155"/>
+        <location filename="alixixi.pyw" line="170"/>
         <source>Authorize</source>
         <translation>登陆</translation>
     </message>
     <message>
-        <location filename="alixixi.pyw" line="235"/>
+        <location filename="alixixi.pyw" line="251"/>
         <source>Ali Order Query</source>
         <translation>阿里订单查询</translation>
     </message>
@@ -36,45 +35,45 @@
     <message>
         <location filename="alixixi.pyw" line="156"/>
         <source>Re Authorize</source>
-        <translation>更新授权</translation>
+        <translation type="obsolete">更新授权</translation>
     </message>
     <message>
-        <location filename="alixixi.pyw" line="151"/>
+        <location filename="alixixi.pyw" line="166"/>
         <source>File</source>
         <translation>文件</translation>
     </message>
     <message>
-        <location filename="alixixi.pyw" line="152"/>
+        <location filename="alixixi.pyw" line="167"/>
         <source>Close</source>
         <translation>退出</translation>
     </message>
     <message>
-        <location filename="alixixi.pyw" line="154"/>
+        <location filename="alixixi.pyw" line="169"/>
         <source>Setting</source>
         <translation>设置</translation>
     </message>
     <message>
-        <location filename="alixixi.pyw" line="285"/>
+        <location filename="alixixi.pyw" line="303"/>
         <source>Ali Order</source>
         <translation>阿里订单</translation>
     </message>
     <message>
-        <location filename="alixixi.pyw" line="162"/>
+        <location filename="alixixi.pyw" line="176"/>
         <source>The Last 2 Days</source>
         <translation>最近 2 天</translation>
     </message>
     <message>
-        <location filename="alixixi.pyw" line="163"/>
+        <location filename="alixixi.pyw" line="177"/>
         <source>The Last 3 Days</source>
         <translation>最近 3 天</translation>
     </message>
     <message>
-        <location filename="alixixi.pyw" line="164"/>
+        <location filename="alixixi.pyw" line="178"/>
         <source>The Last 5 Days</source>
         <translation>最近 5 天</translation>
     </message>
     <message>
-        <location filename="alixixi.pyw" line="231"/>
+        <location filename="alixixi.pyw" line="247"/>
         <source>Date range error, start time later than the end of time</source>
         <translation>日期范围错误，开始时间比结束时间晚</translation>
     </message>
@@ -84,37 +83,37 @@
         <translation type="obsolete">日期范围错误，时间范围过长，必需小于30天</translation>
     </message>
     <message>
-        <location filename="alixixi.pyw" line="157"/>
+        <location filename="alixixi.pyw" line="171"/>
         <source>Taobao Assistant</source>
         <translation>淘宝助理</translation>
     </message>
     <message>
-        <location filename="alixixi.pyw" line="160"/>
+        <location filename="alixixi.pyw" line="174"/>
         <source>Update</source>
         <translation>更新</translation>
     </message>
     <message>
-        <location filename="alixixi.pyw" line="161"/>
+        <location filename="alixixi.pyw" line="175"/>
         <source>Today</source>
         <translation>今天</translation>
     </message>
     <message>
-        <location filename="alixixi.pyw" line="165"/>
+        <location filename="alixixi.pyw" line="179"/>
         <source>The Last Week</source>
         <translation>最近 1 周</translation>
     </message>
     <message>
-        <location filename="alixixi.pyw" line="166"/>
+        <location filename="alixixi.pyw" line="180"/>
         <source>The Last 2 Weeks</source>
         <translation>最近 2 周</translation>
     </message>
     <message>
-        <location filename="alixixi.pyw" line="167"/>
+        <location filename="alixixi.pyw" line="181"/>
         <source>The Last Month</source>
         <translation>最近 1 月</translation>
     </message>
     <message>
-        <location filename="alixixi.pyw" line="168"/>
+        <location filename="alixixi.pyw" line="182"/>
         <source>Review</source>
         <translation>查看</translation>
     </message>
@@ -124,32 +123,32 @@
         <translation>更新物流信息</translation>
     </message>
     <message>
-        <location filename="alixixi.pyw" line="279"/>
+        <location filename="alixixi.pyw" line="297"/>
         <source>Taobao Order</source>
         <translation>淘宝订单</translation>
     </message>
     <message>
-        <location filename="alixixi.pyw" line="276"/>
+        <location filename="alixixi.pyw" line="294"/>
         <source>Taobao assistant installation path set is not correct</source>
         <translation>淘宝助理安装路径设置不正确</translation>
     </message>
     <message>
-        <location filename="alixixi.pyw" line="258"/>
+        <location filename="alixixi.pyw" line="276"/>
         <source>Taobao assistant has been running</source>
         <translation>淘宝助理已经运行</translation>
     </message>
     <message>
-        <location filename="alixixi.pyw" line="279"/>
+        <location filename="alixixi.pyw" line="297"/>
         <source>Please close the taobao assistant, and try again</source>
         <translation>请先关闭淘宝助理，再重试</translation>
     </message>
     <message>
-        <location filename="alixixi.pyw" line="170"/>
+        <location filename="alixixi.pyw" line="184"/>
         <source>Sales</source>
         <translation>销售</translation>
     </message>
     <message>
-        <location filename="alixixi.pyw" line="171"/>
+        <location filename="alixixi.pyw" line="185"/>
         <source>Reporting</source>
         <translation>报表</translation>
     </message>
@@ -159,12 +158,12 @@
         <translation>打开淘宝助理</translation>
     </message>
     <message>
-        <location filename="alixixi.pyw" line="285"/>
+        <location filename="alixixi.pyw" line="303"/>
         <source>Ali order without updated more than {} hours, automatically update today&apos;s order?</source>
         <translation>阿里订单已经超过 {} 小时没有更新，是否自动更新今天的订单？</translation>
     </message>
     <message>
-        <location filename="alixixi.pyw" line="235"/>
+        <location filename="alixixi.pyw" line="251"/>
         <source>Date range error, time range is too long, must be less than 1 month</source>
         <translation>日期范围错误，时间范围过长，必需小于1个月</translation>
     </message>
@@ -190,12 +189,12 @@
 <context>
     <name>OrderListGetDialog</name>
     <message>
-        <location filename="orderlist.py" line="199"/>
+        <location filename="orderlist.py" line="201"/>
         <source>Ali Order List</source>
         <translation>阿里订单</translation>
     </message>
     <message>
-        <location filename="orderlist.py" line="199"/>
+        <location filename="orderlist.py" line="201"/>
         <source>Empty order list</source>
         <translation>无新订单</translation>
     </message>
@@ -347,7 +346,7 @@
     </message>
 </context>
 <context>
-    <name>ReAuthorizeDialog</name>
+    <name>RefreshAccessTokenDialog</name>
     <message>
         <location filename="alixixi.pyw" line="69"/>
         <source>Refresh Access Token</source>
@@ -379,17 +378,17 @@
     <message>
         <location filename="salesreportingdialog.ui" line="54"/>
         <source>Next</source>
-        <translation>下一个</translation>
+        <translation type="obsolete">下一个</translation>
     </message>
     <message>
-        <location filename="salesreportingdialog.ui" line="62"/>
+        <location filename="salesreportingdialog.ui" line="55"/>
         <source>about:blank</source>
         <translation>about:blank</translation>
     </message>
     <message>
         <location filename="salesreportingdialog.ui" line="70"/>
         <source>Prev</source>
-        <translation>上一个</translation>
+        <translation type="obsolete">上一个</translation>
     </message>
 </context>
 <context>

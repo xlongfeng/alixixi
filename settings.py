@@ -135,7 +135,7 @@ class Settings(QSettings):
         
     @pyqtProperty(str)
     def access_token_expires_in(self):
-        return self.value('access_token_expires_in', '')
+        return self.value('access_token_expires_in', datetime.now() + timedelta(days=-2))
     
     @access_token_expires_in.setter
     def access_token_expires_in(self, value):

@@ -101,6 +101,7 @@ class OrderListGetDialog(QDialog):
         self.count = 0
         self.page = 1
         self.orderModelId = ''
+        self.taskDone = False
         QTimer.singleShot(100, self.orderListGetRequest)
         
     def closeEvent(self, event):
@@ -125,6 +126,7 @@ class OrderListGetDialog(QDialog):
         else:
             # task done
             session.commit()
+            self.taskDone = True
             self.settings.ali_order_last_update_time = datetime.today()
             self.ui.buttonBox.setStandardButtons(QDialogButtonBox.Open | QDialogButtonBox.Close)
         

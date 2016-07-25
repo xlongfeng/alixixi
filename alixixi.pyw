@@ -63,10 +63,10 @@ from sales import *
 
 _translate = QCoreApplication.translate
 
-class ReAuthorizeDialog(QDialog):
+class RefreshAccessTokenDialog(QDialog):
     def __init__(self, parent=None):
-        super(ReAuthorizeDialog, self).__init__(parent)
-        self.setWindowTitle(_translate("ReAuthorizeDialog", "Refresh Access Token"))
+        super(RefreshAccessTokenDialog, self).__init__(parent)
+        self.setWindowTitle(_translate("RefreshAccessTokenDialog", "Refresh Access Token"))
         self.resize(240, 96)
         self.settings = Settings.instance()
         self.cnAlibabaOpen = CnAlibabaOpen.instance()
@@ -79,11 +79,12 @@ class ReAuthorizeDialog(QDialog):
     def responseAccessToken(self, response):
         if 'access_token' in response:
             self.settings.access_token = response['access_token']
-            self.settings.access_token_expires_in = QDateTime.currentDateTime().addSecs(int(response['expires_in']))
+            self.settings.access_token_expires_in = datetime.now() + timedelta(seconds=int(response['expires_in']))
+            self.cnAlibabaOpen.openApiResponse.disconnect(self.responseAccessToken)
             self.accept()
         else:
             print(response.get('error') + ': ' + response.get('error_description'))
-    
+
 class AuthorizeDialog(QDialog):
     def __init__(self, parent=None):
         super(AuthorizeDialog, self).__init__(parent)
@@ -109,12 +110,28 @@ class AuthorizeDialog(QDialog):
             self.settings.refresh_token = response.get('refresh_token')
             self.settings.refresh_token_timeout = response.get('refresh_token_timeout')
             self.settings.resource_owner = response.get('resource_owner')
-            self.settings.access_token_expires_in = QDateTime.currentDateTime().addSecs(int(response['expires_in']))
+            self.settings.access_token_expires_in = datetime.now() + timedelta(seconds=int(response['expires_in']))
             self.accept()
         else:
             print(response.get('error') + ': ' + response.get('error_description'))
             self.reject()
-    
+
+def refreshAccessToken(func):
+    def failed(*args, **kwargs):
+        pass
+        
+    def wrapper(*args, **kwargs):
+        settings = Settings.instance()
+        access_token_expires_in = settings.access_token_expires_in
+        if access_token_expires_in < datetime.now() + timedelta(hours=2):
+            loginId = settings.resource_owner
+            if len(loginId) > 0:
+                dialog = RefreshAccessTokenDialog()
+                if dialog.exec() == QDialog.Rejected:
+                    return failed(*args, **kwargs)
+        return func(*args, **kwargs)
+    return wrapper
+
 class Alixixi(QMainWindow):
     def __init__(self, parent=None):
         super(Alixixi, self).__init__(parent)
@@ -135,17 +152,15 @@ class Alixixi(QMainWindow):
         
         self.ui.createStartTimeDateEdit.setDate(self.createStartTime)
         self.ui.createEndTimeDateEdit.setDate(self.createEndTime)
-        self.ui.aliOrderUpdatePushButton.clicked.connect(self.aliOrderListUpdate)
-        self.ui.aliOrderReviewPushButton.clicked.connect(self.aliOrderListReview)
+        self.ui.aliOrderUpdatePushButton.pressed.connect(self.aliOrderListUpdate)
+        self.ui.aliOrderReviewPushButton.pressed.connect(self.aliOrderListReview)
         
-        self.ui.tbAssistantOpenPushButton.clicked.connect(self.tbAssistantOpen)
-        self.ui.tbOrderReviewPushButton.clicked.connect(self.tbOrderListReview)
-        self.ui.tbOrderLogisticsUpdatePushButton.clicked.connect(self.tbOrderListLogisticsUpdate)
+        self.ui.tbAssistantOpenPushButton.pressed.connect(self.tbAssistantOpen)
+        self.ui.tbOrderReviewPushButton.pressed.connect(self.tbOrderListReview)
+        self.ui.tbOrderLogisticsUpdatePushButton.pressed.connect(self.tbOrderListLogisticsUpdate)
         
         self.addMenus()
-        
-        QTimer.singleShot(1000, self.refreshAccessToken)
-        
+    
     def addMenus(self):
         menuBar = self.menuBar()
         fileMenu = menuBar.addMenu(_translate('Alixixi', 'File'))
@@ -153,7 +168,6 @@ class Alixixi(QMainWindow):
         
         setttingsMenu = menuBar.addMenu(_translate('Alixixi', 'Setting'))
         setttingsMenu.addAction(_translate('Alixixi', 'Authorize'), self.authorizeRequest)
-        setttingsMenu.addAction(_translate('Alixixi', 'Re Authorize'), self.reAuthorizeRequest)
         setttingsMenu.addAction(_translate('Alixixi', 'Taobao Assistant'), self.taobaoAssistantSetting)
         
         aliOrderMenu = menuBar.addMenu(_translate('Alixixi', 'Ali Order'))
@@ -177,53 +191,55 @@ class Alixixi(QMainWindow):
         QDesktopServices.openUrl(self.cnAlibabaOpen.openApiAuthorizeRequest())
         dialog = AuthorizeDialog(self)
         dialog.exec()
-        
-    def reAuthorizeRequest(self):
-        loginId = self.settings.resource_owner
-        if len(loginId) > 0:
-            dialog = ReAuthorizeDialog(self)
-            dialog.exec()
-            
+    
     def taobaoAssistantSetting(self):
         dialog = TaobaoAssistantSettingDialog(self)
         if dialog.exec() == QDialog.Accepted:
             dialog.save()
-        
+    
+    @refreshAccessToken
     def todayOrderListGet(self):
         self.createStartTime = QDate.currentDate()
         self.createEndTime = QDate.currentDate()
         self.aliOrderListGetRequest()
-        
+    
+    @refreshAccessToken
     def last2DaysOrderListGet(self):
         self.createStartTime = QDate.currentDate().addDays(-1)
         self.createEndTime = QDate.currentDate()
         self.aliOrderListGetRequest()
-
+    
+    @refreshAccessToken
     def last3DaysOrderListGet(self):
         self.createStartTime = QDate.currentDate().addDays(-2)
         self.createEndTime = QDate.currentDate()
         self.aliOrderListGetRequest()
-        
+    
+    @refreshAccessToken
     def last5DaysOrderListGet(self):
         self.createStartTime = QDate.currentDate().addDays(-4)
         self.createEndTime = QDate.currentDate()
         self.aliOrderListGetRequest()
-        
+    
+    @refreshAccessToken
     def lastWeekOrderListGet(self):
         self.createStartTime = QDate.currentDate().addDays(-6)
         self.createEndTime = QDate.currentDate()
         self.aliOrderListGetRequest()
-        
+    
+    @refreshAccessToken
     def last2WeeksOrderListGet(self):
         self.createStartTime = QDate.currentDate().addDays(-13)
         self.createEndTime = QDate.currentDate()
         self.aliOrderListGetRequest()
-        
+    
+    @refreshAccessToken
     def lastMonthOrderListGet(self):
         self.createStartTime = QDate.currentDate().addDays(-30)
         self.createEndTime = QDate.currentDate()
         self.aliOrderListGetRequest()
-        
+    
+    @refreshAccessToken
     def aliOrderListUpdate(self):
         self.createStartTime = self.ui.createStartTimeDateEdit.date()
         self.createEndTime = self.ui.createEndTimeDateEdit.date()
@@ -236,20 +252,22 @@ class Alixixi(QMainWindow):
                                 _translate('Alixixi', 'Date range error, time range is too long, must be less than 1 month'))
             return        
         self.aliOrderListGetRequest()
-        
+    
     def aliOrderListGetRequest(self):
         dialog = OrderListGetDialog(self.createStartTime, self.createEndTime, self)
         if dialog.exec() == QDialog.Accepted:
             self.aliOrderListReview()
-        
+        if dialog.taskDone:
+            self.ui.createStartTimeDateEdit.setDate(self.createEndTime)
+    
     def aliOrderListReview(self):
         dialog = OrderListReviewDialog(self)
         dialog.exec()
-        
+    
     def saleReportReview(self):
         dialog = SalesReportingDialog(self)
         dialog.exec()
-        
+    
     def tbAssistantOpen(self):
         if not taobaoAssistantInstallPathCheck():
             QMessageBox.warning(self, _translate('Alixixi', 'Taobao Order'),
@@ -259,7 +277,7 @@ class Alixixi(QMainWindow):
                                 _translate('Alixixi', 'Taobao assistant has been running'))
         else:
             taobaoAssistantWorkbenchLaunch()
-        
+    
     def tbOrderListReview(self):
         if not taobaoAssistantInstallPathCheck():
             QMessageBox.warning(self, _translate('Alixixi', 'Taobao Order'),
@@ -270,7 +288,7 @@ class Alixixi(QMainWindow):
         else:
             dialog = TaobaoOrderListReviewDialog(self)
             dialog.exec()
-        
+    
     def tbOrderListLogisticsUpdate(self):
         if not taobaoAssistantInstallPathCheck():
             QMessageBox.warning(self, _translate('Alixixi', 'Taobao Order'),
@@ -289,12 +307,6 @@ class Alixixi(QMainWindow):
                     
             dialog = TaobaoOrderLogisticsUpdateDialog(self)
             dialog.exec()
-        
-    def refreshAccessToken(self):
-        access_token_expires_in = self.settings.access_token_expires_in
-        if type(access_token_expires_in) == QDateTime:
-            if access_token_expires_in < QDateTime.currentDateTime().addSecs(60 * 60 * 2):
-                self.reAuthorizeRequest()
 
 if __name__ == '__main__':
 
