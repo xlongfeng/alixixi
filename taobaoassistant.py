@@ -121,15 +121,33 @@ def taobaoAssistantWorkbench():
     return '{}/{}'.format(Settings.instance().taobao_assistant_install_path,
                           taobaoAssistantWorkbenchName())
 
-def taobaoAssistantWorkbenchIsRunning():
-    process = QProcess()
-    process.start('tasklist')
-    process.waitForFinished()
-    tasklist = process.readAllStandardOutput()
-    return tasklist.indexOf(taobaoAssistantWorkbenchName()) != -1
+def taobaoAssistantWorkbenchIsRunning(func):
+    def warning(*args, **kwargs):
+        QMessageBox.warning(None, _translate('TaobaoAssistant', 'Taobao Order'),
+                    _translate('Alixixi', 'Please close the taobao assistant, and try again'))
+    
+    def wapper(*args, **kwargs):
+        process = QProcess()
+        process.start('tasklist')
+        process.waitForFinished()
+        tasklist = process.readAllStandardOutput()
+        if tasklist.indexOf(taobaoAssistantWorkbenchName()) != -1:
+            return warning(*args, **kwargs)
+        else:
+            return func(*args, **kwargs)
+    return wapper
 
-def taobaoAssistantInstallPathCheck():
-    return QFile.exists(taobaoAssistantWorkbench())
+def taobaoAssistantInstallPathCheck(func):
+    def warning(*args, **kwargs):
+        QMessageBox.warning(None, _translate('TaobaoAssistant', 'Taobao Order'),
+                    _translate('TaobaoAssistant', 'Taobao assistant installation path is not correct'))
+    
+    def wapper(*args, **kwargs):
+        if not QFile.exists(taobaoAssistantWorkbench()):
+            return warning(*args, **kwargs)
+        else:
+            return func(*args, **kwargs)
+    return wapper
 
 def taobaoAssistantInstallPathVerify(path):
     return QFile.exists('{}/{}'.format(path, taobaoAssistantWorkbenchName()))
@@ -182,7 +200,7 @@ class TaobaoOrderListReviewDialog(QDialog):
         
         TaobaoAssistantFdb.instance()
         
-        self.statusFilter = 3
+        self.statusFilter = -1
         self.fuzzySearch = ''
         self.pageInfoUpdate()
         
@@ -193,17 +211,23 @@ class TaobaoOrderListReviewDialog(QDialog):
         self.ui.webView.page().setLinkDelegationPolicy(QWebPage.DelegateAllLinks)
         self.ui.webView.linkClicked.connect(self.linkClicked)
         
-        self.waitSellerSendGoodsButton = QPushButton(_translate('OrderListReview', 'Wait Seller Send Goods'))
+        self.waitSellerSendGoodsButton = QPushButton(
+            _translate('OrderListReview', 'Wait Seller Send Goods ({})').format(self.countByStatus(3)))
         self.waitSellerSendGoodsButton.clicked.connect(self.waitSellerSendGoods)
         self.ui.customFilterHorizontalLayout.addWidget(self.waitSellerSendGoodsButton)
-        self.waitBuyerPayButton = QPushButton(_translate('OrderListReview', 'Wait Buyer Pay'))
+        self.waitBuyerPayButton = QPushButton(
+            _translate('OrderListReview', 'Wait Buyer Pay ({})').format(self.countByStatus(2)))
         self.waitBuyerPayButton.clicked.connect(self.waitBuyerPay)
         self.ui.customFilterHorizontalLayout.addWidget(self.waitBuyerPayButton)
-        self.allOrdersButton = QPushButton(_translate('OrderListReview', 'All Orders'))
+        self.allOrdersButton = QPushButton(
+            _translate('OrderListReview', 'All Orders ({})').format(self.countByStatus(-1)))
         self.allOrdersButton.clicked.connect(self.allOrders)
         self.ui.customFilterHorizontalLayout.addWidget(self.allOrdersButton)
         spacerItem = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
         self.ui.customFilterHorizontalLayout.addItem(spacerItem)
+        
+        self.statusFilter = 3
+        self.pageInfoUpdate()
         
         if self.totalPages == 0:
             self.setHtml()
@@ -233,6 +257,10 @@ class TaobaoOrderListReviewDialog(QDialog):
                                     TaobaoTrade.receiver_phone.like('%%%s%%' % value)))
             
         return query
+    
+    def countByStatus(self, status):
+        self.statusFilter = status
+        return self.queryFilter(True).scalar()
     
     def pageInfoUpdate(self):
         self.offsetOfPage = 0

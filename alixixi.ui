@@ -38,7 +38,48 @@
       <property name="currentIndex">
        <number>0</number>
       </property>
-      <widget class="QWidget" name="tab">
+      <widget class="QWidget" name="tab_taobao">
+       <attribute name="title">
+        <string>Taobao Order</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="verticalLayout_2">
+        <item>
+         <widget class="QPushButton" name="tbAssistantOpenPushButton">
+          <property name="text">
+           <string>Open Taobao Assistant</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="tbOrderLogisticsUpdatePushButton">
+          <property name="text">
+           <string>Update logistics information</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="tbOrderReviewPushButton">
+          <property name="text">
+           <string>Review</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <spacer name="verticalSpacer">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>107</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="tab_ali">
        <attribute name="title">
         <string>Ali Order</string>
        </attribute>
@@ -97,47 +138,6 @@
            <string>Review</string>
           </property>
          </widget>
-        </item>
-       </layout>
-      </widget>
-      <widget class="QWidget" name="tab_2">
-       <attribute name="title">
-        <string>Taobao Order</string>
-       </attribute>
-       <layout class="QVBoxLayout" name="verticalLayout_2">
-        <item>
-         <widget class="QPushButton" name="tbAssistantOpenPushButton">
-          <property name="text">
-           <string>Open Taobao Assistant</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QPushButton" name="tbOrderReviewPushButton">
-          <property name="text">
-           <string>Review</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QPushButton" name="tbOrderLogisticsUpdatePushButton">
-          <property name="text">
-           <string>Update logistics information</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <spacer name="verticalSpacer">
-          <property name="orientation">
-           <enum>Qt::Vertical</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>20</width>
-            <height>107</height>
-           </size>
-          </property>
-         </spacer>
         </item>
        </layout>
       </widget>

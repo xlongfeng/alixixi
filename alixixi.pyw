@@ -40,7 +40,6 @@
 #############################################################################
 
 from datetime import datetime
-from math import ceil
 from dateutil.relativedelta import relativedelta
 
 from PyQt5.QtCore import (Qt, QCoreApplication, QTranslator, QDate,
@@ -119,7 +118,7 @@ class AuthorizeDialog(QDialog):
 def refreshAccessToken(func):
     def failed(*args, **kwargs):
         pass
-        
+    
     def wrapper(*args, **kwargs):
         settings = Settings.instance()
         access_token_expires_in = settings.access_token_expires_in
@@ -156,8 +155,8 @@ class Alixixi(QMainWindow):
         self.ui.aliOrderReviewPushButton.pressed.connect(self.aliOrderListReview)
         
         self.ui.tbAssistantOpenPushButton.pressed.connect(self.tbAssistantOpen)
-        self.ui.tbOrderReviewPushButton.pressed.connect(self.tbOrderListReview)
         self.ui.tbOrderLogisticsUpdatePushButton.pressed.connect(self.tbOrderListLogisticsUpdate)
+        self.ui.tbOrderReviewPushButton.pressed.connect(self.tbOrderListReview)
         
         self.addMenus()
     
@@ -259,6 +258,7 @@ class Alixixi(QMainWindow):
             self.aliOrderListReview()
         if dialog.taskDone:
             self.ui.createStartTimeDateEdit.setDate(self.createEndTime)
+            self.ui.createEndTimeDateEdit.setDate(QDate.currentDate())
     
     def aliOrderListReview(self):
         dialog = OrderListReviewDialog(self)
@@ -268,45 +268,29 @@ class Alixixi(QMainWindow):
         dialog = SalesReportingDialog(self)
         dialog.exec()
     
+    @taobaoAssistantInstallPathCheck
+    @taobaoAssistantWorkbenchIsRunning
     def tbAssistantOpen(self):
-        if not taobaoAssistantInstallPathCheck():
-            QMessageBox.warning(self, _translate('Alixixi', 'Taobao Order'),
-                                _translate('Alixixi', 'Taobao assistant installation path set is not correct'))
-        elif taobaoAssistantWorkbenchIsRunning():
-            QMessageBox.warning(self, _translate('Alixixi', 'Taobao Order'),
-                                _translate('Alixixi', 'Taobao assistant has been running'))
-        else:
-            taobaoAssistantWorkbenchLaunch()
+        taobaoAssistantWorkbenchLaunch()
     
-    def tbOrderListReview(self):
-        if not taobaoAssistantInstallPathCheck():
-            QMessageBox.warning(self, _translate('Alixixi', 'Taobao Order'),
-                                _translate('Alixixi', 'Taobao assistant installation path set is not correct'))
-        elif taobaoAssistantWorkbenchIsRunning():
-            QMessageBox.warning(self, _translate('Alixixi', 'Taobao Order'),
-                                _translate('Alixixi', 'Please close the taobao assistant, and try again'))
-        else:
-            dialog = TaobaoOrderListReviewDialog(self)
-            dialog.exec()
-    
+    @taobaoAssistantInstallPathCheck
+    @taobaoAssistantWorkbenchIsRunning
     def tbOrderListLogisticsUpdate(self):
-        if not taobaoAssistantInstallPathCheck():
-            QMessageBox.warning(self, _translate('Alixixi', 'Taobao Order'),
-                                _translate('Alixixi', 'Taobao assistant installation path set is not correct'))
-        elif taobaoAssistantWorkbenchIsRunning():
-            QMessageBox.warning(self, _translate('Alixixi', 'Taobao Order'),
-                                _translate('Alixixi', 'Please close the taobao assistant, and try again'))
-        else:
-            delta = datetime.today() - self.settings.ali_order_last_update_time
-            expire = ceil(delta.total_seconds() / 3600)
-            if expire > 1:
-                button = QMessageBox.question(self, _translate('Alixixi', 'Ali Order'),
-                        _translate('Alixixi', 'Ali order without updated more than {} hours, automatically update today\'s order?').format(expire))
-                if button == QMessageBox.Yes:
-                    self.todayOrderListGet()
-                    
-            dialog = TaobaoOrderLogisticsUpdateDialog(self)
-            dialog.exec()
+        delta = datetime.today() - self.settings.ali_order_last_update_time
+        if delta.total_seconds() > 30:
+            button = QMessageBox.question(self, _translate('Alixixi', 'Ali Order'),
+                    _translate('Alixixi', 'Automatically update ali order?'))
+            if button == QMessageBox.Yes:
+                self.aliOrderListUpdate()
+                
+        dialog = TaobaoOrderLogisticsUpdateDialog(self)
+        dialog.exec()
+    
+    @taobaoAssistantInstallPathCheck
+    @taobaoAssistantWorkbenchIsRunning
+    def tbOrderListReview(self):
+        dialog = TaobaoOrderListReviewDialog(self)
+        dialog.exec()
 
 if __name__ == '__main__':
 
