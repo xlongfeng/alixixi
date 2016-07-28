@@ -62,6 +62,7 @@ from sqlalchemy.ext.automap import automap_base
 from sqlalchemy.pool import NullPool
 
 from ui_taobaoassistantsettingdialog import Ui_TaobaoAssistantSettingDialog
+from ui_taobaoorderdetaildialog import Ui_TaobaoOrderDetailDialog
 from ui_taobaoorderlogisticsupdatedialog import Ui_TaobaoOrderLogisticsUpdateDialog
 from ui_orderlistreviewdialog import Ui_OrderListReviewDialog
 from settings import Settings
@@ -76,6 +77,7 @@ fbdSession = None
 
 class TaobaoAssistantFdb(QObject):
     pInstance = None
+    refCount = 0
     
     @classmethod
     def instance(cls):
@@ -86,8 +88,13 @@ class TaobaoAssistantFdb(QObject):
     def __init__(self, parent=None):
         super(TaobaoAssistantFdb, self).__init__(parent)
         self.settings = Settings.instance()
-        self.settings.taobao_assistant_install_path_changed.connect(self.fdbConnect)
-        self.fdbConnect()
+        self.engine = create_engine(self.fdbUrl(), poolclass=NullPool)
+        self.connection = engine.connect()
+        AutoMapBase.prepare(self.engine, reflect=True)
+        global TaobaoTrade, TaobaoTradeEx, TaobaoOrder
+        TaobaoTrade = AutoMapBase.classes.trade
+        TaobaoTradeEx = AutoMapBase.classes.tradeex
+        TaobaoOrder = AutoMapBase.classes.orders
     
     def fdbUrl(self):
         tbaUser = self.settings.resource_owner
@@ -96,21 +103,26 @@ class TaobaoAssistantFdb(QObject):
                                          database = tbaPath + '/users/' + tbaUser + '/APPTRADE.DAT',
                                          query={'charset': 'utf-8'})
     
-    def fdbConnect(self):
-        self.engine = create_engine(self.fdbUrl(), poolclass=NullPool)
-        self.connection = engine.connect()
-        AutoMapBase.prepare(self.engine, reflect=True)
-        global TaobaoTrade, TaobaoTradeEx, TaobaoOrder, fbdSession
-        TaobaoTrade = AutoMapBase.classes.trade
-        TaobaoTradeEx = AutoMapBase.classes.tradeex
-        TaobaoOrder = AutoMapBase.classes.orders
+    def __connect(self):
+        global fbdSession
         fbdSession = sessionmaker(self.engine)()
     
-    def fdbDisconnect(self):
+    def __disconnect(self):
         #self.connection.close()
         #self.engine.dispose()
         fbdSession.close()
         
+    def fdbConnect(self):
+        self.refCount += 1
+        if self.refCount == 1:
+            self.__connect()
+        
+    def fdbDisconnect(self):
+        if self.refCount > 0:
+            self.refCount -= 1
+            if self.refCount == 0:
+                self.__disconnect()
+    
 
 _translate = QCoreApplication.translate
 
@@ -178,8 +190,27 @@ class TaobaoAssistantSettingDialog(QDialog):
             
     def save(self):
         self.settings.taobao_assistant_install_path = self.ui.installPathLineEdit.text()
-        
-        
+    
+def orderStatusTranslate(status):
+    translate = {
+        0: _translate('TaobaoAssistant', '0'),
+        1: _translate('TaobaoAssistant', '1'),
+        2: _translate('TaobaoAssistant', 'WAIT_BUYER_PAY'),
+        3: _translate('TaobaoAssistant', 'WAIT_SELLER_SEND_GOODS'),
+        4: _translate('TaobaoAssistant', 'WAIT_BUYER_CONFIRM_GOODS'),
+        5: _translate('TaobaoAssistant', '5'),
+        6: _translate('TaobaoAssistant', 'WAIT_BUYER_RATE_GOODS'),
+        7: _translate('TaobaoAssistant', 'TRADE_FINISHED'),
+        8: _translate('TaobaoAssistant', 'UNKNOWN_STATUS'),
+    }
+    return translate[status]
+
+def logisticsCompanyNoTranslate(companyNo):
+    taobaoLogisticsCompanyNo = {
+        'SFEXPRESS': 'SF',
+    }
+    return taobaoLogisticsCompanyNo.get(companyNo, companyNo)
+
 class TaobaoOrderListReviewDialog(QDialog):
     def __init__(self, parent=None):
         super(TaobaoOrderListReviewDialog, self).__init__(parent)
@@ -198,7 +229,7 @@ class TaobaoOrderListReviewDialog(QDialog):
         self.ui.searchPushButton.clicked.connect(self.advancedSearch)
         self.ui.clearPushButton.clicked.connect(self.advancedSearchClear)
         
-        TaobaoAssistantFdb.instance()
+        TaobaoAssistantFdb.instance().fdbConnect()
         
         self.statusFilter = -1
         self.fuzzySearch = ''
@@ -347,21 +378,7 @@ class TaobaoOrderListReviewDialog(QDialog):
         
     def linkClicked(self, url):
         QDesktopServices.openUrl(url)
-        
-    def orderStatus(self, status):
-        translate = {
-            0: _translate('TaobaoOrderListReview', '0'),
-            1: _translate('TaobaoOrderListReview', '1'),
-            2: _translate('TaobaoOrderListReview', 'WAIT_BUYER_PAY'),
-            3: _translate('TaobaoOrderListReview', 'WAIT_SELLER_SEND_GOODS'),
-            4: _translate('TaobaoOrderListReview', 'WAIT_BUYER_CONFIRM_GOODS'),
-            5: _translate('TaobaoOrderListReview', '5'),
-            6: _translate('TaobaoOrderListReview', 'WAIT_BUYER_RATE_GOODS'),
-            7: _translate('TaobaoOrderListReview', 'TRADE_FINISHED'),
-            8: _translate('TaobaoOrderListReview', 'UNKNOWN_STATUS'),
-        }
-        return translate[status]
-        
+    
     def setHtml(self):
         self.pageButtonStateUpdate()
         if self.totalPages > 0:
@@ -382,7 +399,7 @@ class TaobaoOrderListReviewDialog(QDialog):
                     total_fee = order.total_fee,
                     payment = order.payment,
                     discount_fee = order.discount_fee,
-                    status = self.orderStatus(order.status),
+                    status = orderStatusTranslate(order.status),
                 ))
             logistics = fbdSession.query(TaobaoTradeEx).filter_by(tid = trade.tid).one()
             tradeList.append(dict(
@@ -416,6 +433,117 @@ class TaobaoOrderListReviewDialog(QDialog):
         template = env.get_template('taobaoorderlist.html')
         self.ui.webView.setHtml(template.render(tradeList = tradeList))
         
+class TaobaoOrderDetailDialog(QDialog):
+    def __init__(self, tid, parent=None):
+        super(TaobaoOrderDetailDialog, self).__init__(parent)
+        self.ui = Ui_TaobaoOrderDetailDialog()
+        self.ui.setupUi(self)
+        self.resize(1060, 640)
+        self.tid = tid
+        TaobaoAssistantFdb.instance().fdbConnect()
+        QTimer.singleShot(100, self.loading)
+        
+    def closeEvent(self, event):
+        TaobaoAssistantFdb.instance().fdbDisconnect()
+        super(TaobaoOrderDetailDialog, self).closeEvent(event)
+    
+    def loading(self):
+        toFullName, payTime = self.loadingTaobaoOrder()
+        model = session.query(AliOrderModel) \
+            .filter(AliOrderModel.toFullName == toFullName) \
+            .order_by(desc(AliOrderModel.gmtCreate)).first()
+        if model:
+            gmtCreate = model.gmtCreate
+            if model.logisticsOrderList:
+                # get first logistic information
+                logistics = json.loads(model.logisticsOrderList)[0]
+                timedelta = gmtCreate - payTime
+                # taobao pay time must be in front of ali order create
+                # and the days should not be exceed 5 days
+                if timedelta.days < 0 or timedelta.days > 5:
+                    return
+            orderList = []
+            orderList.append(dict(
+                carriage = model.carriage,
+                gmtCreate = model.gmtCreate,
+                orderId = model.orderId,
+                status = model.status,
+                sumProductPayment = model.sumProductPayment,
+                sumPayment = model.sumPayment,
+                orderEntries = json.loads(model.orderEntries),
+                logisticsOrderList = json.loads(model.logisticsOrderList) if model.logisticsOrderList else None,
+                toArea = model.toArea,
+                toFullName = model.toFullName,
+                toPhone = model.toPhone,
+                toMobile = model.toMobile,
+            ))
+            
+            env = Environment(loader=FileSystemLoader('templates'))
+            template = env.get_template('orderlist.html')
+            self.ui.alibabaWebView.setHtml(template.render(orderList = orderList))
+    
+    def loadingTaobaoOrder(self):
+        trade = fbdSession.query(TaobaoTrade).filter_by(tid = self.tid).one()
+        tradeList = []
+        orders = []
+        for order in fbdSession.query(TaobaoOrder).filter_by(tid = trade.tid):
+            orders.append(dict(
+                oid = order.oid,
+                propertites = order.sku_properties_name.split(';') if order.sku_properties_name else [],
+                num = order.num,
+                title = order.title,
+                price = order.price,
+                refund_status = order.refund_status,
+                total_fee = order.total_fee,
+                payment = order.payment,
+                discount_fee = order.discount_fee,
+                status = orderStatusTranslate(order.status),
+            ))
+        logistics = fbdSession.query(TaobaoTradeEx).filter_by(tid = trade.tid).one()
+        tradeList.append(dict(
+            tid = trade.tid,
+            alipay_no = trade.alipay_no,
+            created = trade.created,
+            pay_time = trade.pay_time,
+            payment = trade.payment,
+            buyer_nick = trade.buyer_nick,
+            buyer_alipay_no = trade.buyer_alipay_no,
+            buyer_email = trade.buyer_email,
+            buyer_message = trade.buyer_message,
+            status = trade.status,
+            post_fee = trade.post_fee,
+            orders = orders,
+            logistics = dict(
+                out_sid = logistics.out_sid,
+                company_code = logistics.company_code,
+                company_name = logistics.company_name,
+                ),
+            receiver_name = trade.receiver_name,
+            receiver_phone = trade.receiver_phone,
+            receiver_mobile = trade.receiver_mobile,
+            receiver_state = trade.receiver_state,
+            receiver_city = trade.receiver_city,
+            receiver_district = trade.receiver_district,
+            receiver_address = trade.receiver_address,
+            receiver_zip = trade.receiver_zip,
+        ))
+        
+        env = Environment(loader=FileSystemLoader('templates'))
+        template = env.get_template('taobaoorderlist.html')
+        self.ui.taobaoWebView.setHtml(template.render(tradeList = tradeList))
+        return trade.receiver_name, trade.pay_time
+
+class TradeExWidgetItem(QTableWidgetItem):
+    def __init__(self, text):
+        super(TradeExWidgetItem, self).__init__(text)
+        self.tradeEx = None
+        self.companyNo = None
+        self.companyName = None
+        self.logisticsBillNo = None
+        
+    def isChecked(self):
+        return self.checkState() == Qt.Checked
+
 class TaobaoOrderLogisticsUpdateDialog(QDialog):
     def __init__(self, parent=None):
         super(TaobaoOrderLogisticsUpdateDialog, self).__init__(parent)
@@ -426,44 +554,37 @@ class TaobaoOrderLogisticsUpdateDialog(QDialog):
         self.ui.buttonBox.accepted.connect(self.logisticsUpdateAccept)
         self.ui.buttonBox.rejected.connect(self.logisticsUpdateReject)
         
-        self.ui.tableWidget.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
-        self.ui.tableWidget.setColumnCount(8)
-        self.ui.tableWidget.setHorizontalHeaderLabels([
+        table = self.ui.tableWidget
+        table.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
+        table.setColumnCount(5)
+        table.setHorizontalHeaderLabels([
             _translate('TaobaoOrderLogisticsUpdateDialog', 'Taobao Order ID'),
             _translate('TaobaoOrderLogisticsUpdateDialog', 'Buyer Name'),
             _translate('TaobaoOrderLogisticsUpdateDialog', 'Buyer Phone'),
-            _translate('TaobaoOrderLogisticsUpdateDialog', 'Pay Time'),
-            _translate('TaobaoOrderLogisticsUpdateDialog', 'Send Time'),
             _translate('TaobaoOrderLogisticsUpdateDialog', 'Logistics Company'),
             _translate('TaobaoOrderLogisticsUpdateDialog', 'Logistics Number'),
-            _translate('TaobaoOrderLogisticsUpdateDialog', 'Ali Order ID'),
         ])
-        table = self.ui.tableWidget
         
-        TaobaoAssistantFdb.instance()
+        TaobaoAssistantFdb.instance().fdbConnect()
         
-        totalCount = 0
-        count = 0
+        self.totalCount = 0
+        self.validCount = 0
         for trade in fbdSession.query(TaobaoTrade).filter(TaobaoTrade.status == 3):
-            row = totalCount
+            row = self.totalCount
             table.insertRow(row)
-            totalCount += 1
+            self.totalCount += 1
+            tidItem = TradeExWidgetItem(str(trade.tid))
+            table.setItem(row, 0, tidItem)
+            table.setItem(row, 1, QTableWidgetItem(trade.receiver_name))
+            table.setItem(row, 2, QTableWidgetItem(trade.receiver_mobile if trade.receiver_mobile else trade.receiver_phone))
             taobaoTradeEx = fbdSession.query(TaobaoTradeEx).filter_by(tid = trade.tid).one()
             aliOrderModel = session.query(AliOrderModel) \
                 .filter(AliOrderModel.toFullName == trade.receiver_name).order_by(desc(AliOrderModel.gmtCreate)).first()
-            table.setItem(row, 0, QTableWidgetItem(str(trade.tid)))
-            table.setItem(row, 1, QTableWidgetItem(trade.receiver_name))
-            table.setItem(row, 2, QTableWidgetItem(trade.receiver_mobile if trade.receiver_mobile else trade.receiver_phone))
-            table.setItem(row, 3, QTableWidgetItem(str(trade.pay_time)))
             if taobaoTradeEx.company_code:
-                table.setItem(row, 5, QTableWidgetItem(taobaoTradeEx.company_name))
-                table.setItem(row, 6, QTableWidgetItem(taobaoTradeEx.out_sid))
-                if aliOrderModel and aliOrderModel[1]:
-                    logistics = json.loads(aliOrderModel[1])[0]
-                    table.setItem(row, 4, QTableWidgetItem(logistics['gmtSend']))
+                table.setItem(row, 3, QTableWidgetItem(taobaoTradeEx.company_name))
+                table.setItem(row, 4, QTableWidgetItem(taobaoTradeEx.out_sid))
             elif aliOrderModel:
                 gmtCreate = aliOrderModel.gmtCreate
-                table.setItem(row, 7, QTableWidgetItem(aliOrderModel.orderId))
                 if aliOrderModel.logisticsOrderList:
                     # get first logistic information
                     logistics = json.loads(aliOrderModel.logisticsOrderList)[0]
@@ -475,47 +596,110 @@ class TaobaoOrderLogisticsUpdateDialog(QDialog):
                     # and the logistic number must have not been used
                     if timedelta.days < 0 or timedelta.days > 5 or usedSid:
                         continue
-                    taobaoTradeEx.company_code, taobaoTradeEx.company_name, taobaoTradeEx.out_sid = \
-                    self.logisticsCompanyNoTranslate(logistics['companyNo']), logistics['companyName'], logistics['logisticsBillNo']
-                    table.setItem(row, 5, QTableWidgetItem(logistics['companyName']))
-                    table.setItem(row, 6, QTableWidgetItem(logistics['logisticsBillNo']))
-                    table.setItem(row, 4, QTableWidgetItem(logistics['gmtSend']))
-                    table.item(row, 0).setForeground(QBrush(QColor('#f50')))
-                    table.item(row, 1).setForeground(QBrush(QColor('#f50')))
-                    table.item(row, 2).setForeground(QBrush(QColor('#f50')))
-                    table.item(row, 3).setForeground(QBrush(QColor('#f50')))
-                    table.item(row, 4).setForeground(QBrush(QColor('#f50')))
-                    table.item(row, 5).setForeground(QBrush(QColor('#f50')))
-                    table.item(row, 6).setForeground(QBrush(QColor('#f50')))
-                    table.item(row, 7).setForeground(QBrush(QColor('#f50')))
-                    count += 1
-            else:
-                pass
+                    
+                    tidItem.tradeEx, tidItem.companyNo, tidItem.companyName, tidItem.logisticsBillNo = \
+                        taobaoTradeEx, logistics['companyNo'], logistics['companyName'], logistics['logisticsBillNo']
+                    table.setItem(row, 3, QTableWidgetItem(logistics['companyName']))
+                    table.setItem(row, 4, QTableWidgetItem(logistics['logisticsBillNo']))
+                    if self.orderVerify(trade, aliOrderModel):
+                        tidItem.setCheckState(Qt.Checked)
+                        table.item(row, 0).setForeground(QBrush(QColor('#00f')))
+                        table.item(row, 1).setForeground(QBrush(QColor('#00f')))
+                        table.item(row, 2).setForeground(QBrush(QColor('#00f')))
+                        table.item(row, 3).setForeground(QBrush(QColor('#00f')))
+                        table.item(row, 4).setForeground(QBrush(QColor('#00f')))
+                        self.validCount += 1
+                    else:
+                        tidItem.setCheckState(Qt.Unchecked)
+                        table.item(row, 0).setForeground(QBrush(QColor('#f50')))
+                        table.item(row, 1).setForeground(QBrush(QColor('#f50')))
+                        table.item(row, 2).setForeground(QBrush(QColor('#f50')))
+                        table.item(row, 3).setForeground(QBrush(QColor('#f50')))
+                        table.item(row, 4).setForeground(QBrush(QColor('#f50')))
         
-        self.ui.qunatityLineEdit.setText('{} / {}'.format(count, totalCount))
-        if count == 0:
+        table.cellChanged.connect(self.orderCheckStateChanged)
+        table.cellDoubleClicked.connect(self.orderDetailVeiw)
+        self.updateState()
+        
+    def updateState(self):
+        self.ui.qunatityLineEdit.setText('{} / {}'.format(self.validCount, self.totalCount))
+        if self.validCount == 0:
             self.ui.buttonBox.setStandardButtons(QDialogButtonBox.Cancel)
             self.ui.tbaUpdateLabel.setHidden(True)
         else:
+            self.ui.buttonBox.setStandardButtons(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
             self.ui.aliUpdateLabel.setHidden(True)
     
-    def logisticsCompanyNoTranslate(self, companyNo):
-        taobaoLogisticsCompanyNo = {
-            'SFEXPRESS': 'SF',
-        }
-        return taobaoLogisticsCompanyNo.get(companyNo, companyNo)
+    def orderVerify(self, trade, aliOrderModel):
+        taobaoOrderDetail = []
+        for order in fbdSession.query(TaobaoOrder).filter_by(tid = trade.tid):
+            propertites = order.sku_properties_name.split(';') if order.sku_properties_name else []
+            propertitySet = set()
+            for propertity in propertites:
+                attr = propertity.split(':')[1].split('[')[0]
+                propertitySet.add(attr)
+            taobaoOrderDetail.append(dict(
+                propertites = propertitySet,
+                quantity = order.num,
+                skipped = False
+            ))
+        aliOrderDetail = []
+        for order in json.loads(aliOrderModel.orderEntries):
+            propertitySet = set()
+            for spec in order['specInfo']:
+                propertitySet.add(spec['specValue'])
+            aliOrderDetail.append(dict(
+                propertites = propertitySet,
+                quantity = int(order['quantity']),
+                skipped = False
+            ))
+        for taobaoOrder in taobaoOrderDetail:
+            found = False
+            for aliOrder in aliOrderDetail:
+                if aliOrder['skipped']:
+                    continue
+                if taobaoOrder['propertites'] != aliOrder['propertites']:
+                        if 'XXL' in aliOrder['propertites']:
+                            aliOrderPropertites = aliOrder['propertites'].copy()
+                            aliOrderPropertites.remove('XXL')
+                            aliOrderPropertites.add('2XL')
+                            if taobaoOrder['propertites'] != aliOrderPropertites:
+                                continue
+                        else:
+                            continue
+                if taobaoOrder['quantity'] == aliOrder['quantity']:
+                    aliOrder['skipped'] = True
+                    found = True
+            if not found:
+                return False
+        return True
     
     def closeEvent(self, event):
         self.logisticsUpdateReject()
         super(TaobaoOrderLogisticsUpdateDialog, self).closeEvent(event)
         
     def logisticsUpdateAccept(self):
+        table = self.ui.tableWidget
+        for row in range(table.rowCount()):
+            item = table.item(row, 0)
+            if item.isChecked():
+                item.tradeEx.company_code, item.tradeEx.company_name, item.tradeEx.out_sid = \
+                    logisticsCompanyNoTranslate(item.companyNo), item.companyName, item.logisticsBillNo
         fbdSession.commit()
         TaobaoAssistantFdb.instance().fdbDisconnect()
         taobaoAssistantWorkbenchLaunch()
     
     def logisticsUpdateReject(self):
-        if fbdSession.dirty:
-            fbdSession.rollback()
         TaobaoAssistantFdb.instance().fdbDisconnect()
+        
+    def orderCheckStateChanged(self, row, column):
+        if column == 0:
+            if self.ui.tableWidget.item(row, 0).isChecked():
+                self.validCount += 1
+            else:
+                self.validCount -= 1
+            self.updateState()
     
+    def orderDetailVeiw(self, row, column):
+        tid = int(self.ui.tableWidget.item(row, 0).text())
+        TaobaoOrderDetailDialog(tid, self).exec()

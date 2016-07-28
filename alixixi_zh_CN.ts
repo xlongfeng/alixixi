@@ -139,7 +139,7 @@
         <translation type="obsolete">淘宝助理已经运行</translation>
     </message>
     <message>
-        <location filename="taobaoassistant.py" line="126"/>
+        <location filename="taobaoassistant.py" line="138"/>
         <source>Please close the taobao assistant, and try again</source>
         <translation>请先关闭淘宝助理，再重试</translation>
     </message>
@@ -283,7 +283,7 @@
         <translation>签收失败</translation>
     </message>
     <message>
-        <location filename="taobaoassistant.py" line="236"/>
+        <location filename="taobaoassistant.py" line="267"/>
         <source>Loading, wait a monent ...</source>
         <translation>正在载入，请稍后 ...</translation>
     </message>
@@ -303,17 +303,17 @@
         <translation type="obsolete">所有订单</translation>
     </message>
     <message>
-        <location filename="taobaoassistant.py" line="215"/>
+        <location filename="taobaoassistant.py" line="246"/>
         <source>Wait Seller Send Goods ({})</source>
         <translation>等待发货 ({})</translation>
     </message>
     <message>
-        <location filename="taobaoassistant.py" line="219"/>
+        <location filename="taobaoassistant.py" line="250"/>
         <source>Wait Buyer Pay ({})</source>
         <translation>等待付款 ({})</translation>
     </message>
     <message>
-        <location filename="taobaoassistant.py" line="223"/>
+        <location filename="taobaoassistant.py" line="254"/>
         <source>All Orders ({})</source>
         <translation>所有订单 ({})</translation>
     </message>
@@ -415,14 +415,59 @@
 <context>
     <name>TaobaoAssistant</name>
     <message>
-        <location filename="taobaoassistant.py" line="142"/>
+        <location filename="taobaoassistant.py" line="154"/>
         <source>Taobao Order</source>
         <translation>淘宝订单</translation>
     </message>
     <message>
-        <location filename="taobaoassistant.py" line="142"/>
+        <location filename="taobaoassistant.py" line="154"/>
         <source>Taobao assistant installation path is not correct</source>
         <translation>淘宝助理安装路径设置不正确</translation>
+    </message>
+    <message>
+        <location filename="taobaoassistant.py" line="196"/>
+        <source>0</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="taobaoassistant.py" line="197"/>
+        <source>1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="taobaoassistant.py" line="198"/>
+        <source>WAIT_BUYER_PAY</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="taobaoassistant.py" line="199"/>
+        <source>WAIT_SELLER_SEND_GOODS</source>
+        <translation>待发货</translation>
+    </message>
+    <message>
+        <location filename="taobaoassistant.py" line="200"/>
+        <source>WAIT_BUYER_CONFIRM_GOODS</source>
+        <translation>已发货</translation>
+    </message>
+    <message>
+        <location filename="taobaoassistant.py" line="201"/>
+        <source>5</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="taobaoassistant.py" line="202"/>
+        <source>WAIT_BUYER_RATE_GOODS</source>
+        <translation>待评价</translation>
+    </message>
+    <message>
+        <location filename="taobaoassistant.py" line="203"/>
+        <source>TRADE_FINISHED</source>
+        <translation>交易成功</translation>
+    </message>
+    <message>
+        <location filename="taobaoassistant.py" line="204"/>
+        <source>UNKNOWN_STATUS</source>
+        <translation>未知状态</translation>
     </message>
 </context>
 <context>
@@ -443,68 +488,89 @@
         <translation>浏览</translation>
     </message>
     <message>
-        <location filename="taobaoassistant.py" line="174"/>
+        <location filename="taobaoassistant.py" line="186"/>
         <source>Taobao assistant install path</source>
         <translation>淘宝助理安装路径</translation>
     </message>
     <message>
-        <location filename="taobaoassistant.py" line="174"/>
+        <location filename="taobaoassistant.py" line="186"/>
         <source>The selected path is not correct</source>
         <translation>选择的路径不正确</translation>
     </message>
 </context>
 <context>
+    <name>TaobaoOrdeDetailDialog</name>
+    <message>
+        <location filename="taobaoorderdetaildialog.ui" line="24"/>
+        <source>Taobao Order</source>
+        <translation type="obsolete">淘宝订单</translation>
+    </message>
+    <message>
+        <location filename="taobaoorderdetaildialog.ui" line="47"/>
+        <source>about:blank</source>
+        <translation type="obsolete">about:blank</translation>
+    </message>
+</context>
+<context>
+    <name>TaobaoOrderDetailDialog</name>
+    <message>
+        <location filename="taobaoorderdetaildialog.ui" line="14"/>
+        <source>Taobao Order Detail</source>
+        <translation>淘宝订单详细信息</translation>
+    </message>
+    <message>
+        <location filename="taobaoorderdetaildialog.ui" line="24"/>
+        <source>Taobao Order</source>
+        <translation>淘宝订单</translation>
+    </message>
+    <message>
+        <location filename="taobaoorderdetaildialog.ui" line="47"/>
+        <source>about:blank</source>
+        <translation>about:blank</translation>
+    </message>
+    <message>
+        <location filename="taobaoorderdetaildialog.ui" line="40"/>
+        <source>Alibaba Order</source>
+        <translation>阿里订单</translation>
+    </message>
+</context>
+<context>
     <name>TaobaoOrderListReview</name>
     <message>
-        <location filename="taobaoassistant.py" line="357"/>
-        <source>0</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="taobaoassistant.py" line="358"/>
-        <source>1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="taobaoassistant.py" line="359"/>
-        <source>WAIT_BUYER_PAY</source>
-        <translation>待付款</translation>
-    </message>
-    <message>
         <location filename="taobaoassistant.py" line="360"/>
-        <source>WAIT_SELLER_SEND_GOODS</source>
-        <translation>待发货</translation>
+        <source>WAIT_BUYER_PAY</source>
+        <translation type="obsolete">待付款</translation>
     </message>
     <message>
         <location filename="taobaoassistant.py" line="361"/>
-        <source>WAIT_BUYER_CONFIRM_GOODS</source>
-        <translation>已发货</translation>
+        <source>WAIT_SELLER_SEND_GOODS</source>
+        <translation type="obsolete">待发货</translation>
     </message>
     <message>
         <location filename="taobaoassistant.py" line="362"/>
-        <source>5</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="taobaoassistant.py" line="363"/>
-        <source>WAIT_BUYER_RATE_GOODS</source>
-        <translation>待评价</translation>
+        <source>WAIT_BUYER_CONFIRM_GOODS</source>
+        <translation type="obsolete">已发货</translation>
     </message>
     <message>
         <location filename="taobaoassistant.py" line="364"/>
-        <source>TRADE_FINISHED</source>
-        <translation>交易成功</translation>
+        <source>WAIT_BUYER_RATE_GOODS</source>
+        <translation type="obsolete">待评价</translation>
     </message>
     <message>
         <location filename="taobaoassistant.py" line="365"/>
+        <source>TRADE_FINISHED</source>
+        <translation type="obsolete">交易成功</translation>
+    </message>
+    <message>
+        <location filename="taobaoassistant.py" line="366"/>
         <source>UNKNOWN_STATUS</source>
-        <translation>未知状态</translation>
+        <translation type="obsolete">未知状态</translation>
     </message>
 </context>
 <context>
     <name>TaobaoOrderListReviewDialog</name>
     <message>
-        <location filename="taobaoassistant.py" line="188"/>
+        <location filename="taobaoassistant.py" line="219"/>
         <source>Taobao Order List</source>
         <translation>淘宝订单</translation>
     </message>
@@ -514,67 +580,67 @@
     <message>
         <location filename="taobaoorderlogisticsupdatedialog.ui" line="14"/>
         <source>Taobao Logistics Update</source>
-        <translation>淘宝物流更新</translation>
+        <translation type="unfinished">更新淘宝物流信息</translation>
     </message>
     <message>
-        <location filename="taobaoorderlogisticsupdatedialog.ui" line="57"/>
+        <location filename="taobaoorderlogisticsupdatedialog.ui" line="60"/>
         <source>orders logistics information will be updated.</source>
         <translation>条订单物流信息可以更新.</translation>
     </message>
     <message>
-        <location filename="taobaoorderlogisticsupdatedialog.ui" line="80"/>
+        <location filename="taobaoorderlogisticsupdatedialog.ui" line="83"/>
         <source>Continue update to taobao assistant?</source>
         <translation>继续更新到淘宝助理?</translation>
     </message>
     <message>
-        <location filename="taobaoorderlogisticsupdatedialog.ui" line="44"/>
+        <location filename="taobaoorderlogisticsupdatedialog.ui" line="47"/>
         <source>Ready for Send / Wait for Send</source>
         <translation>可发货 / 待发货</translation>
     </message>
     <message>
-        <location filename="taobaoorderlogisticsupdatedialog.ui" line="90"/>
+        <location filename="taobaoorderlogisticsupdatedialog.ui" line="93"/>
         <source>No matchedes logistic information, Ali / Taobao order need to be updated.</source>
         <translation>没有找到对应的物流信息，请先更新阿里 / 淘宝订单.</translation>
     </message>
     <message>
-        <location filename="taobaoassistant.py" line="435"/>
+        <location filename="taobaoassistant.py" line="564"/>
         <source>Logistics Company</source>
         <translation>物流公司</translation>
     </message>
     <message>
-        <location filename="taobaoassistant.py" line="435"/>
+        <location filename="taobaoassistant.py" line="564"/>
         <source>Logistics Number</source>
         <translation>运单号码</translation>
     </message>
     <message>
         <location filename="taobaoassistant.py" line="435"/>
         <source>Pay Time</source>
-        <translation>付款时间</translation>
+        <translation type="obsolete">付款时间</translation>
     </message>
     <message>
         <location filename="taobaoassistant.py" line="435"/>
         <source>Send Time</source>
-        <translation>发货时间</translation>
+        <translation type="obsolete">发货时间</translation>
     </message>
     <message>
-        <location filename="taobaoassistant.py" line="435"/>
+        <location filename="taobaoassistant.py" line="564"/>
         <source>Taobao Order ID</source>
         <translation>淘宝订单号</translation>
     </message>
     <message>
-        <location filename="taobaoassistant.py" line="435"/>
+        <location filename="taobaoassistant.py" line="564"/>
         <source>Buyer Name</source>
         <translation>姓名</translation>
     </message>
     <message>
-        <location filename="taobaoassistant.py" line="435"/>
+        <location filename="taobaoassistant.py" line="564"/>
         <source>Buyer Phone</source>
         <translation>电话</translation>
     </message>
     <message>
         <location filename="taobaoassistant.py" line="435"/>
-        <source>Ali Order ID</source>
-        <translation>阿里订单号</translation>
+        <source>Alibaba Product</source>
+        <translation type="obsolete">阿里订单号</translation>
     </message>
 </context>
 </TS>
