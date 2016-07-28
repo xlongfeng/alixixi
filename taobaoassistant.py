@@ -260,10 +260,10 @@ class TaobaoOrderListReviewDialog(QDialog):
         self.statusFilter = 3
         self.pageInfoUpdate()
         
+        self.ui.webView.setHtml(_translate('OrderListReview', 'Loading, wait a monent ...'))
         if self.totalPages == 0:
-            self.setHtml()
+            QTimer.singleShot(100, self.allOrders)
         else:
-            self.ui.webView.setHtml(_translate('OrderListReview', 'Loading, wait a monent ...'))
             QTimer.singleShot(100, self.waitSellerSendGoods)
             
     def closeEvent(self, event):

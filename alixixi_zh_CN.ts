@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS>
-<TS version="2.1" language="zh_CN">
+<!DOCTYPE TS><TS version="2.0" language="zh_CN" sourcelanguage="">
 <context>
     <name>Alixixi</name>
     <message>
@@ -14,24 +13,24 @@
         <translation>会员名</translation>
     </message>
     <message>
-        <location filename="alixixi.pyw" line="169"/>
+        <location filename="alixixi.pyw" line="163"/>
         <source>Authorize</source>
         <translation>登陆</translation>
     </message>
     <message>
-        <location filename="alixixi.pyw" line="250"/>
-        <source>Ali Order Query</source>
-        <translation>阿里订单查询</translation>
+        <location filename="alixixi.pyw" line="245"/>
+        <source>Ali Order</source>
+        <translation>阿里订单</translation>
     </message>
     <message>
         <location filename="alixixi.ui" line="90"/>
         <source>Date Range</source>
-        <translation>日期范围</translation>
+        <translation type="obsolete">日期范围</translation>
     </message>
     <message>
         <location filename="alixixi.ui" line="112"/>
         <source>to</source>
-        <translation>到</translation>
+        <translation type="obsolete">到</translation>
     </message>
     <message>
         <location filename="alixixi.pyw" line="156"/>
@@ -39,44 +38,39 @@
         <translation type="obsolete">更新授权</translation>
     </message>
     <message>
-        <location filename="alixixi.pyw" line="165"/>
+        <location filename="alixixi.pyw" line="159"/>
         <source>File</source>
         <translation>文件</translation>
     </message>
     <message>
-        <location filename="alixixi.pyw" line="166"/>
+        <location filename="alixixi.pyw" line="160"/>
         <source>Close</source>
         <translation>退出</translation>
     </message>
     <message>
-        <location filename="alixixi.pyw" line="168"/>
+        <location filename="alixixi.pyw" line="162"/>
         <source>Setting</source>
         <translation>设置</translation>
     </message>
     <message>
-        <location filename="alixixi.pyw" line="281"/>
-        <source>Ali Order</source>
-        <translation>阿里订单</translation>
-    </message>
-    <message>
-        <location filename="alixixi.pyw" line="175"/>
+        <location filename="alixixi.pyw" line="169"/>
         <source>The Last 2 Days</source>
         <translation>最近 2 天</translation>
     </message>
     <message>
-        <location filename="alixixi.pyw" line="176"/>
+        <location filename="alixixi.pyw" line="170"/>
         <source>The Last 3 Days</source>
         <translation>最近 3 天</translation>
     </message>
     <message>
-        <location filename="alixixi.pyw" line="177"/>
+        <location filename="alixixi.pyw" line="171"/>
         <source>The Last 5 Days</source>
         <translation>最近 5 天</translation>
     </message>
     <message>
         <location filename="alixixi.pyw" line="246"/>
         <source>Date range error, start time later than the end of time</source>
-        <translation>日期范围错误，开始时间比结束时间晚</translation>
+        <translation type="obsolete">日期范围错误，开始时间比结束时间晚</translation>
     </message>
     <message>
         <location filename="alixixi.pyw" line="234"/>
@@ -84,49 +78,49 @@
         <translation type="obsolete">日期范围错误，时间范围过长，必需小于30天</translation>
     </message>
     <message>
-        <location filename="alixixi.pyw" line="170"/>
+        <location filename="alixixi.pyw" line="164"/>
         <source>Taobao Assistant</source>
         <translation>淘宝助理</translation>
     </message>
     <message>
-        <location filename="alixixi.pyw" line="173"/>
+        <location filename="alixixi.pyw" line="167"/>
         <source>Update</source>
         <translation>更新</translation>
     </message>
     <message>
-        <location filename="alixixi.pyw" line="174"/>
+        <location filename="alixixi.pyw" line="168"/>
         <source>Today</source>
         <translation>今天</translation>
     </message>
     <message>
-        <location filename="alixixi.pyw" line="178"/>
+        <location filename="alixixi.pyw" line="172"/>
         <source>The Last Week</source>
         <translation>最近 1 周</translation>
     </message>
     <message>
-        <location filename="alixixi.pyw" line="179"/>
+        <location filename="alixixi.pyw" line="173"/>
         <source>The Last 2 Weeks</source>
         <translation>最近 2 周</translation>
     </message>
     <message>
-        <location filename="alixixi.pyw" line="180"/>
+        <location filename="alixixi.pyw" line="174"/>
         <source>The Last Month</source>
         <translation>最近 1 月</translation>
     </message>
     <message>
-        <location filename="alixixi.pyw" line="181"/>
+        <location filename="alixixi.pyw" line="176"/>
         <source>Review</source>
         <translation>查看</translation>
     </message>
     <message>
-        <location filename="alixixi.ui" line="56"/>
+        <location filename="alixixi.ui" line="52"/>
         <source>Update logistics information</source>
         <translation>更新物流信息</translation>
     </message>
     <message>
         <location filename="alixixi.ui" line="43"/>
         <source>Taobao Order</source>
-        <translation>淘宝订单</translation>
+        <translation type="obsolete">淘宝订单</translation>
     </message>
     <message>
         <location filename="alixixi.pyw" line="294"/>
@@ -144,17 +138,17 @@
         <translation>请先关闭淘宝助理，再重试</translation>
     </message>
     <message>
-        <location filename="alixixi.pyw" line="183"/>
+        <location filename="alixixi.pyw" line="178"/>
         <source>Sales</source>
         <translation>销售</translation>
     </message>
     <message>
-        <location filename="alixixi.pyw" line="184"/>
+        <location filename="alixixi.pyw" line="179"/>
         <source>Reporting</source>
         <translation>报表</translation>
     </message>
     <message>
-        <location filename="alixixi.ui" line="49"/>
+        <location filename="alixixi.ui" line="45"/>
         <source>Open Taobao Assistant</source>
         <translation>打开淘宝助理</translation>
     </message>
@@ -166,12 +160,32 @@
     <message>
         <location filename="alixixi.pyw" line="250"/>
         <source>Date range error, time range is too long, must be less than 1 month</source>
-        <translation>日期范围错误，时间范围过长，必需小于1个月</translation>
+        <translation type="obsolete">日期范围错误，时间范围过长，必需小于1个月</translation>
     </message>
     <message>
-        <location filename="alixixi.pyw" line="281"/>
+        <location filename="alixixi.pyw" line="245"/>
         <source>Automatically update ali order?</source>
         <translation>自动更新阿里订单？</translation>
+    </message>
+    <message>
+        <location filename="alixixi.pyw" line="175"/>
+        <source>Custom Date Range</source>
+        <translation>自定义日期</translation>
+    </message>
+    <message>
+        <location filename="alixixi.ui" line="59"/>
+        <source>Review Taobao Order</source>
+        <translation>查看淘宝订单</translation>
+    </message>
+    <message>
+        <location filename="alixixi.ui" line="73"/>
+        <source>Review Alibaba Order</source>
+        <translation>查看阿里订单</translation>
+    </message>
+    <message>
+        <location filename="alixixi.ui" line="39"/>
+        <source>Order</source>
+        <translation>订单</translation>
     </message>
 </context>
 <context>
@@ -195,12 +209,12 @@
 <context>
     <name>OrderListGetDialog</name>
     <message>
-        <location filename="orderlist.py" line="201"/>
+        <location filename="orderlist.py" line="237"/>
         <source>Ali Order List</source>
         <translation>阿里订单</translation>
     </message>
     <message>
-        <location filename="orderlist.py" line="201"/>
+        <location filename="orderlist.py" line="237"/>
         <source>Empty order list</source>
         <translation>无新订单</translation>
     </message>
@@ -210,80 +224,95 @@
         <translation>日期范围</translation>
     </message>
     <message>
-        <location filename="orderlistgetdialog.ui" line="50"/>
+        <location filename="orderlistgetdialog.ui" line="47"/>
         <source>to</source>
         <translation>到</translation>
     </message>
     <message>
-        <location filename="orderlistgetdialog.ui" line="75"/>
+        <location filename="orderlistgetdialog.ui" line="69"/>
         <source>Order Quantity</source>
         <translation>订单数量</translation>
+    </message>
+    <message>
+        <location filename="orderlist.py" line="140"/>
+        <source>Ali Order Query</source>
+        <translation>阿里订单</translation>
+    </message>
+    <message>
+        <location filename="orderlist.py" line="136"/>
+        <source>Date range error, start time later than the end of time</source>
+        <translation>日期范围错误，开始时间比结束时间晚</translation>
+    </message>
+    <message>
+        <location filename="orderlist.py" line="140"/>
+        <source>Date range error, time range is too long, must be less than 1 month</source>
+        <translation>日期范围错误，时间范围过长，必需小于1个月</translation>
     </message>
 </context>
 <context>
     <name>OrderListReview</name>
     <message>
-        <location filename="orderlist.py" line="66"/>
+        <location filename="orderlist.py" line="67"/>
         <source>CANCEL</source>
         <translation>交易关闭</translation>
     </message>
     <message>
-        <location filename="orderlist.py" line="67"/>
+        <location filename="orderlist.py" line="68"/>
         <source>SUCCESS</source>
         <translation>交易成功</translation>
     </message>
     <message>
-        <location filename="orderlist.py" line="68"/>
+        <location filename="orderlist.py" line="69"/>
         <source>WAIT_BUYER_PAY</source>
         <translation>等待买家付款</translation>
     </message>
     <message>
-        <location filename="orderlist.py" line="69"/>
+        <location filename="orderlist.py" line="70"/>
         <source>WAIT_SELLER_SEND</source>
         <translation>等待卖家发货</translation>
     </message>
     <message>
-        <location filename="orderlist.py" line="70"/>
+        <location filename="orderlist.py" line="71"/>
         <source>WAIT_BUYER_RECEIVE</source>
         <translation>等待买家确认收货</translation>
     </message>
     <message>
-        <location filename="orderlist.py" line="71"/>
+        <location filename="orderlist.py" line="72"/>
         <source>WAIT_SELLER_ACT</source>
         <translation>分阶段等待卖家操作</translation>
     </message>
     <message>
-        <location filename="orderlist.py" line="72"/>
+        <location filename="orderlist.py" line="73"/>
         <source>WAIT_BUYER_CONFIRM_ACTION</source>
         <translation>分阶段等待买家确认卖家操作</translation>
     </message>
     <message>
-        <location filename="orderlist.py" line="73"/>
+        <location filename="orderlist.py" line="74"/>
         <source>WAIT_SELLER_PUSH</source>
         <translation>分阶段等待卖家推进</translation>
     </message>
     <message>
-        <location filename="orderlist.py" line="74"/>
+        <location filename="orderlist.py" line="75"/>
         <source>WAIT_LOGISTICS_TAKE_IN</source>
         <translation>等待物流公司揽件</translation>
     </message>
     <message>
-        <location filename="orderlist.py" line="75"/>
+        <location filename="orderlist.py" line="76"/>
         <source>WAIT_BUYER_SIGN</source>
         <translation>等待买家签收</translation>
     </message>
     <message>
-        <location filename="orderlist.py" line="76"/>
+        <location filename="orderlist.py" line="77"/>
         <source>SIGN_IN_SUCCESS</source>
         <translation>买家已签收</translation>
     </message>
     <message>
-        <location filename="orderlist.py" line="77"/>
+        <location filename="orderlist.py" line="78"/>
         <source>SIGN_IN_FAILED</source>
         <translation>签收失败</translation>
     </message>
     <message>
-        <location filename="taobaoassistant.py" line="267"/>
+        <location filename="taobaoassistant.py" line="264"/>
         <source>Loading, wait a monent ...</source>
         <translation>正在载入，请稍后 ...</translation>
     </message>
@@ -580,7 +609,7 @@
     <message>
         <location filename="taobaoorderlogisticsupdatedialog.ui" line="14"/>
         <source>Taobao Logistics Update</source>
-        <translation type="unfinished">更新淘宝物流信息</translation>
+        <translation>更新淘宝物流信息</translation>
     </message>
     <message>
         <location filename="taobaoorderlogisticsupdatedialog.ui" line="60"/>

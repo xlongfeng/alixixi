@@ -51,6 +51,7 @@ from PyQt5.QtWebKitWidgets import QWebPage
 import json
 from math import ceil
 from datetime import datetime
+from enum import Enum
 from jinja2 import Environment, FileSystemLoader
 from sqlalchemy import desc, or_, func
 
@@ -77,7 +78,9 @@ def translates():
     _translate('OrderListReview', 'SIGN_IN_FAILED')
 
 class OrderListGetDialog(QDialog):
-    def __init__(self, createStartTime, createEndTime, parent=None):
+    Mode = Enum('Mode', 'auto custom defined')
+    
+    def __init__(self, createStartTime, createEndTime, mode=Mode.defined, parent=None):
         super(OrderListGetDialog, self).__init__(parent)
         self.ui = Ui_OrderListGetDialog()
         self.ui.setupUi(self)
@@ -87,27 +90,57 @@ class OrderListGetDialog(QDialog):
         self.ui.progressBar.setValue(0)
         self.ui.buttonBox.rejected.connect(self.orderListGetRequestAbort)
         
+        self.mode = mode
+        
         self.settings = Settings(self)
         self.cnAlibabaOpen = CnAlibabaOpen.instance()
         self.cnAlibabaOpen.openApiResponse.connect(self.orderListGetReponse)
         self.cnAlibabaOpen.openApiResponse.connect(self.orderDetailGetResponse)
         
-        # prepare to get order list
+        if self.mode != self.Mode.custom:
+            self.ui.createStartTimeDateEdit.setReadOnly(True)
+            self.ui.createEndTimeDateEdit.setReadOnly(True)
+            if self.validateDateRange():
+                QTimer.singleShot(100, self.prepareOrderListGet)
+        else:
+            self.ui.buttonBox.setStandardButtons(QDialogButtonBox.Apply | QDialogButtonBox.Cancel)
+            self.ui.buttonBox.clicked.connect(self.applyOrderListGet)
+    
+    def closeEvent(self, event):
+        self.orderListGetRequestAbort()
+        super(OrderListGetDialog, self).closeEvent(event)
+    
+    def prepareOrderListGet(self):
         self.orderList = dict()
         self.orderDetailIdList = []
-        self.createStartTime = createStartTime.toString('yyyyMMdd00000000+0800')
-        self.createEndTime = createEndTime.toString('yyyyMMdd23595900+0800')
+        self.createStartTime = self.ui.createStartTimeDateEdit.date().toString('yyyyMMdd00000000+0800')
+        self.createEndTime = self.ui.createEndTimeDateEdit.date().toString('yyyyMMdd23595900+0800')
         self.totalCount = 0
         self.count = 0
         self.page = 1
         self.orderModelId = ''
         self.taskDone = False
-        QTimer.singleShot(100, self.orderListGetRequest)
-        
-    def closeEvent(self, event):
-        self.orderListGetRequestAbort()
-        super(OrderListGetDialog, self).closeEvent(event)
-        
+        self.ui.buttonBox.setStandardButtons(QDialogButtonBox.Cancel)
+        self.orderListGetRequest()
+    
+    def applyOrderListGet(self, button):
+        if self.ui.buttonBox.standardButton(button) == QDialogButtonBox.Apply:
+            if self.validateDateRange():
+                self.prepareOrderListGet()
+            
+    def validateDateRange(self):
+        createStartTime = self.ui.createStartTimeDateEdit.date()
+        createEndTime = self.ui.createEndTimeDateEdit.date()
+        if createStartTime > createEndTime:
+            QMessageBox.warning(self, _translate('OrderListGetDialog', 'Ali Order Query'),
+                                _translate('OrderListGetDialog', 'Date range error, start time later than the end of time'))
+            return False
+        if createStartTime.addMonths(1) < createEndTime:
+            QMessageBox.warning(self, _translate('OrderListGetDialog', 'Ali Order Query'),
+                                _translate('OrderListGetDialog', 'Date range error, time range is too long, must be less than 1 month'))
+            return False
+        return True
+    
     def orderListGetRequestAbort(self):
         if session.dirty:
             session.rollback()
@@ -127,8 +160,11 @@ class OrderListGetDialog(QDialog):
             # task done
             session.commit()
             self.taskDone = True
-            self.settings.ali_order_last_update_time = datetime.today()
-            self.ui.buttonBox.setStandardButtons(QDialogButtonBox.Open | QDialogButtonBox.Close)
+            if self.mode == self.Mode.auto:
+                self.settings.ali_order_last_update_time = datetime.today()
+                self.accept()
+            else:
+                self.ui.buttonBox.setStandardButtons(QDialogButtonBox.Open | QDialogButtonBox.Close)
         
     def orderDetailGetRequest(self):
         param = dict()

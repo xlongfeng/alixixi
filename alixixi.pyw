@@ -146,12 +146,6 @@ class Alixixi(QMainWindow):
         if len(loginId) > 0:
             self.ui.loginIdLineEdit.setText(self.settings.resource_owner)
         
-        self.createStartTime = self.settings.ali_order_last_update_time.date()
-        self.createEndTime = QDate.currentDate()
-        
-        self.ui.createStartTimeDateEdit.setDate(self.createStartTime)
-        self.ui.createEndTimeDateEdit.setDate(self.createEndTime)
-        self.ui.aliOrderUpdatePushButton.pressed.connect(self.aliOrderListUpdate)
         self.ui.aliOrderReviewPushButton.pressed.connect(self.aliOrderListReview)
         
         self.ui.tbAssistantOpenPushButton.pressed.connect(self.tbAssistantOpen)
@@ -178,6 +172,7 @@ class Alixixi(QMainWindow):
         aliOrderUpdateMenu.addAction(_translate('Alixixi', 'The Last Week'), self.lastWeekOrderListGet)
         aliOrderUpdateMenu.addAction(_translate('Alixixi', 'The Last 2 Weeks'), self.last2WeeksOrderListGet)
         aliOrderUpdateMenu.addAction(_translate('Alixixi', 'The Last Month'), self.lastMonthOrderListGet)
+        aliOrderUpdateMenu.addAction(_translate('Alixixi', 'Custom Date Range'), self.customDateRangeOrderListGet)
         aliOrderMenu.addAction(_translate('Alixixi', 'Review'), self.aliOrderListReview)
         
         salePerformanceMenu = menuBar.addMenu(_translate('Alixixi', 'Sales'))
@@ -196,69 +191,38 @@ class Alixixi(QMainWindow):
         if dialog.exec() == QDialog.Accepted:
             dialog.save()
     
-    @refreshAccessToken
     def todayOrderListGet(self):
-        self.createStartTime = QDate.currentDate()
-        self.createEndTime = QDate.currentDate()
         self.aliOrderListGetRequest()
     
-    @refreshAccessToken
     def last2DaysOrderListGet(self):
-        self.createStartTime = QDate.currentDate().addDays(-1)
-        self.createEndTime = QDate.currentDate()
-        self.aliOrderListGetRequest()
+        self.aliOrderListGetRequest(QDate.currentDate().addDays(-1))
     
-    @refreshAccessToken
     def last3DaysOrderListGet(self):
-        self.createStartTime = QDate.currentDate().addDays(-2)
-        self.createEndTime = QDate.currentDate()
-        self.aliOrderListGetRequest()
+        self.aliOrderListGetRequest(QDate.currentDate().addDays(-2))
     
-    @refreshAccessToken
     def last5DaysOrderListGet(self):
-        self.createStartTime = QDate.currentDate().addDays(-4)
-        self.createEndTime = QDate.currentDate()
-        self.aliOrderListGetRequest()
+        self.aliOrderListGetRequest(QDate.currentDate().addDays(-4))
     
-    @refreshAccessToken
     def lastWeekOrderListGet(self):
-        self.createStartTime = QDate.currentDate().addDays(-6)
-        self.createEndTime = QDate.currentDate()
-        self.aliOrderListGetRequest()
+        self.aliOrderListGetRequest(QDate.currentDate().addDays(-6))
     
-    @refreshAccessToken
     def last2WeeksOrderListGet(self):
-        self.createStartTime = QDate.currentDate().addDays(-13)
-        self.createEndTime = QDate.currentDate()
-        self.aliOrderListGetRequest()
+        self.aliOrderListGetRequest(QDate.currentDate().addDays(-13))
     
-    @refreshAccessToken
     def lastMonthOrderListGet(self):
-        self.createStartTime = QDate.currentDate().addDays(-30)
-        self.createEndTime = QDate.currentDate()
-        self.aliOrderListGetRequest()
+        self.aliOrderListGetRequest(QDate.currentDate().addDays(-30))
     
     @refreshAccessToken
-    def aliOrderListUpdate(self):
-        self.createStartTime = self.ui.createStartTimeDateEdit.date()
-        self.createEndTime = self.ui.createEndTimeDateEdit.date()
-        if self.createStartTime > self.createEndTime:
-            QMessageBox.warning(self, _translate('Alixixi', 'Ali Order Query'),
-                                _translate('Alixixi', 'Date range error, start time later than the end of time'))
-            return
-        if self.createStartTime.addMonths(1) < self.createEndTime:
-            QMessageBox.warning(self, _translate('Alixixi', 'Ali Order Query'),
-                                _translate('Alixixi', 'Date range error, time range is too long, must be less than 1 month'))
-            return        
-        self.aliOrderListGetRequest()
+    def customDateRangeOrderListGet(self):
+        dialog = OrderListGetDialog(QDate(self.settings.ali_order_last_update_time.date()), \
+                                    QDate.currentDate(), OrderListGetDialog.Mode.custom)
+        dialog.exec()
     
-    def aliOrderListGetRequest(self):
-        dialog = OrderListGetDialog(self.createStartTime, self.createEndTime, self)
+    @refreshAccessToken
+    def aliOrderListGetRequest(self, createStartTime = QDate.currentDate(), createEndTime = QDate.currentDate()):
+        dialog = OrderListGetDialog(createStartTime, createEndTime)
         if dialog.exec() == QDialog.Accepted:
             self.aliOrderListReview()
-        if dialog.taskDone:
-            self.ui.createStartTimeDateEdit.setDate(self.createEndTime)
-            self.ui.createEndTimeDateEdit.setDate(QDate.currentDate())
     
     def aliOrderListReview(self):
         dialog = OrderListReviewDialog(self)
@@ -281,8 +245,9 @@ class Alixixi(QMainWindow):
             button = QMessageBox.question(self, _translate('Alixixi', 'Ali Order'),
                     _translate('Alixixi', 'Automatically update ali order?'))
             if button == QMessageBox.Yes:
-                self.aliOrderListUpdate()
-                
+                dialog = OrderListGetDialog(QDate(self.settings.ali_order_last_update_time.date()), \
+                                            QDate.currentDate(), OrderListGetDialog.Mode.auto)
+                dialog.exec()
         dialog = TaobaoOrderLogisticsUpdateDialog(self)
         dialog.exec()
     
