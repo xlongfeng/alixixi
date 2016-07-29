@@ -146,11 +146,11 @@ class Alixixi(QMainWindow):
         if len(loginId) > 0:
             self.ui.loginIdLineEdit.setText(self.settings.resource_owner)
         
-        self.ui.aliOrderReviewPushButton.pressed.connect(self.aliOrderListReview)
+        self.ui.aliOrderReviewPushButton.released.connect(self.aliOrderListReview)
         
-        self.ui.tbAssistantOpenPushButton.pressed.connect(self.tbAssistantOpen)
-        self.ui.tbOrderLogisticsUpdatePushButton.pressed.connect(self.tbOrderListLogisticsUpdate)
-        self.ui.tbOrderReviewPushButton.pressed.connect(self.tbOrderListReview)
+        self.ui.tbAssistantOpenPushButton.released.connect(self.tbAssistantOpen)
+        self.ui.tbOrderLogisticsUpdatePushButton.released.connect(self.tbOrderListLogisticsUpdate)
+        self.ui.tbOrderReviewPushButton.released.connect(self.tbOrderListReview)
         
         self.addMenus()
     
@@ -224,7 +224,19 @@ class Alixixi(QMainWindow):
         if dialog.exec() == QDialog.Accepted:
             self.aliOrderListReview()
     
+    @refreshAccessToken
+    def aliOrderListAutoUpdate(self, second):
+        delta = datetime.today() - self.settings.ali_order_last_update_time
+        if delta.total_seconds() > second:
+            button = QMessageBox.question(self, _translate('Alixixi', 'Ali Order'),
+                                          _translate('Alixixi', 'Automatically update ali order?'))
+            if button == QMessageBox.Yes:
+                dialog = OrderListGetDialog(QDate(self.settings.ali_order_last_update_time.date()), \
+                                            QDate.currentDate(), OrderListGetDialog.Mode.auto)
+                dialog.exec()
+    
     def aliOrderListReview(self):
+        self.aliOrderListAutoUpdate(60 * 60)
         dialog = OrderListReviewDialog(self)
         dialog.exec()
     
@@ -240,14 +252,7 @@ class Alixixi(QMainWindow):
     @taobaoAssistantInstallPathCheck
     @taobaoAssistantWorkbenchIsRunning
     def tbOrderListLogisticsUpdate(self):
-        delta = datetime.today() - self.settings.ali_order_last_update_time
-        if delta.total_seconds() > 30:
-            button = QMessageBox.question(self, _translate('Alixixi', 'Ali Order'),
-                    _translate('Alixixi', 'Automatically update ali order?'))
-            if button == QMessageBox.Yes:
-                dialog = OrderListGetDialog(QDate(self.settings.ali_order_last_update_time.date()), \
-                                            QDate.currentDate(), OrderListGetDialog.Mode.auto)
-                dialog.exec()
+        self.aliOrderListAutoUpdate(30)
         dialog = TaobaoOrderLogisticsUpdateDialog(self)
         dialog.exec()
     

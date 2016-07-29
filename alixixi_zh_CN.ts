@@ -18,7 +18,7 @@
         <translation>登陆</translation>
     </message>
     <message>
-        <location filename="alixixi.pyw" line="245"/>
+        <location filename="alixixi.pyw" line="231"/>
         <source>Ali Order</source>
         <translation>阿里订单</translation>
     </message>
@@ -163,7 +163,7 @@
         <translation type="obsolete">日期范围错误，时间范围过长，必需小于1个月</translation>
     </message>
     <message>
-        <location filename="alixixi.pyw" line="245"/>
+        <location filename="alixixi.pyw" line="231"/>
         <source>Automatically update ali order?</source>
         <translation>自动更新阿里订单？</translation>
     </message>
