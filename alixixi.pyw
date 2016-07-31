@@ -39,7 +39,7 @@
 ##
 #############################################################################
 
-from datetime import datetime
+from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
 
 from PyQt5.QtCore import (Qt, QCoreApplication, QTranslator, QDate,

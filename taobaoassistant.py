@@ -670,6 +670,7 @@ class TaobaoOrderLogisticsUpdateDialog(QDialog):
                 if taobaoOrder['quantity'] == aliOrder['quantity']:
                     aliOrder['skipped'] = True
                     found = True
+                    break
             if not found:
                 return False
         return True
