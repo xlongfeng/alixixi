@@ -646,6 +646,8 @@ class TaobaoOrderLogisticsUpdateDialog(QDialog):
         aliOrderDetail = []
         for order in json.loads(aliOrderModel.orderEntries):
             propertitySet = set()
+            if 'specInfo' not in order:
+                continue
             for spec in order['specInfo']:
                 propertitySet.add(spec['specValue'])
             aliOrderDetail.append(dict(
