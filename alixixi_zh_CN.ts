@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS><TS version="2.0" language="zh_CN" sourcelanguage="">
+<!DOCTYPE TS>
+<TS version="2.1" language="zh_CN">
 <context>
     <name>Alixixi</name>
     <message>
@@ -466,7 +467,7 @@
     <message>
         <location filename="taobaoassistant.py" line="198"/>
         <source>WAIT_BUYER_PAY</source>
-        <translation type="unfinished"></translation>
+        <translation>待付款</translation>
     </message>
     <message>
         <location filename="taobaoassistant.py" line="199"/>

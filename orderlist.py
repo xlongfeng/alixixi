@@ -257,9 +257,13 @@ class OrderListGetDialog(QDialog):
         if 'logisticsOrderList' in orderModel:
             logisticsOrderList = []
             for logisticsOrderModel in orderModel['logisticsOrderList']:
+                if 'companyName' in logisticsOrderModel['logisticsCompany']:
+                    companyName = logisticsOrderModel['logisticsCompany']['companyName']
+                else:
+                    companyName = ''
                 logisticsOrderList.append({
                     'logisticsOrderNo': logisticsOrderModel['logisticsOrderNo'],
-                    'companyName': logisticsOrderModel['logisticsCompany']['companyName'],
+                    'companyName': companyName,
                     'companyNo': logisticsOrderModel['logisticsCompany']['companyNo'],
                     'logisticsBillNo': logisticsOrderModel['logisticsBillNo'],
                     'gmtSend': str(aliTimeToDateTime(logisticsOrderModel['gmtSend']))
