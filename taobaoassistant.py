@@ -438,6 +438,8 @@ class TaobaoOrderDetailDialog(QDialog):
         super(TaobaoOrderDetailDialog, self).__init__(parent)
         self.ui = Ui_TaobaoOrderDetailDialog()
         self.ui.setupUi(self)
+        self.ui.alibabaWebView.page().setLinkDelegationPolicy(QWebPage.DelegateAllLinks)
+        self.ui.alibabaWebView.linkClicked.connect(self.linkClicked)
         self.resize(1060, 640)
         self.tid = tid
         TaobaoAssistantFdb.instance().fdbConnect()
@@ -446,6 +448,9 @@ class TaobaoOrderDetailDialog(QDialog):
     def closeEvent(self, event):
         TaobaoAssistantFdb.instance().fdbDisconnect()
         super(TaobaoOrderDetailDialog, self).closeEvent(event)
+        
+    def linkClicked(self, url):
+        QDesktopServices.openUrl(url)
     
     def loading(self):
         toFullName, payTime = self.loadingTaobaoOrder()
