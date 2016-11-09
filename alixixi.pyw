@@ -40,7 +40,6 @@
 #############################################################################
 
 from datetime import datetime, timedelta
-from dateutil.relativedelta import relativedelta
 
 from PyQt5.QtCore import (Qt, QCoreApplication, QTranslator, QDate,
                           QDateTime, QTimer, QProcess)
@@ -82,7 +81,7 @@ class RefreshAccessTokenDialog(QDialog):
             self.cnAlibabaOpen.openApiResponse.disconnect(self.responseAccessToken)
             self.accept()
         else:
-            print(response.get('error') + ': ' + response.get('error_description'))
+            QMessageBox.warning(self, 'Open Api Response Exception', response.get('error') + ': ' + response.get('error_description'))
 
 class AuthorizeDialog(QDialog):
     def __init__(self, parent=None):
@@ -112,7 +111,7 @@ class AuthorizeDialog(QDialog):
             self.settings.access_token_expires_in = datetime.now() + timedelta(seconds=int(response['expires_in']))
             self.accept()
         else:
-            print(response.get('error') + ': ' + response.get('error_description'))
+            QMessageBox.warning(self, 'Open Api Response Exception', response.get('error') + ': ' + response.get('error_description'))
             self.reject()
 
 def refreshAccessToken(func):
@@ -231,8 +230,11 @@ class Alixixi(QMainWindow):
             button = QMessageBox.question(self, _translate('Alixixi', 'Ali Order'),
                                           _translate('Alixixi', 'Automatically update ali order?'))
             if button == QMessageBox.Yes:
-                dialog = OrderListGetDialog(QDate(self.settings.ali_order_last_update_time.date()), \
-                                            QDate.currentDate(), OrderListGetDialog.Mode.auto)
+                createStartTime = QDate(self.settings.ali_order_last_update_time.date())
+                createEndTime = QDate.currentDate()
+                if createStartTime.addMonths(1) < createEndTime:
+                    createStartTime = createEndTime.addDays(-28)
+                dialog = OrderListGetDialog(createStartTime, createEndTime, OrderListGetDialog.Mode.auto)
                 dialog.exec()
     
     def aliOrderListReview(self):

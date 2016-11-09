@@ -41,8 +41,7 @@
 
 from PyQt5.QtCore import QSettings, pyqtSignal, pyqtProperty
 from datetime import datetime, timedelta
-from dateutil.relativedelta import relativedelta
-    
+
 class Settings(QSettings):
     pInstance = None
 
@@ -154,7 +153,7 @@ class Settings(QSettings):
     
     @pyqtProperty(str)
     def ali_order_last_update_time(self):
-        return self.value('ali_order_last_update_time', datetime.today() - relativedelta(months = 1))
+        return self.value('ali_order_last_update_time', datetime.today() - timedelta(days = 15))
     
     @ali_order_last_update_time.setter
     def ali_order_last_update_time(self, value):
