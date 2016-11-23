@@ -54,6 +54,7 @@ from datetime import datetime
 from enum import Enum
 from jinja2 import Environment, FileSystemLoader
 from sqlalchemy import desc, or_, func
+from sqlalchemy.orm import exc
 
 from ui_orderlistgetdialog import Ui_OrderListGetDialog
 from ui_orderlistreviewdialog import Ui_OrderListReviewDialog
@@ -207,11 +208,15 @@ class OrderListGetDialog(QDialog):
                 orderEntries.append(orderEntry)
             
             # add a new one or update an exist one
-            model = session.query(AliOrderModel).filter_by(orderId = orderId).one_or_none()
-            new = False
-            if not model:
+            
+            try:
+                model = session.query(AliOrderModel).filter_by(orderId = orderId).one()
+            except exc.NoResultFound:
                 model = AliOrderModel()
                 new = True
+            else:
+                new = False
+
             model.carriage = ccyUnitConvert(orderModel['carriage'])
             model.gmtCreate = aliTimeToDateTime(orderModel['gmtCreate'])
             model.orderId = orderId
@@ -219,6 +224,7 @@ class OrderListGetDialog(QDialog):
             model.sumProductPayment = ccyUnitConvert(orderModel['sumProductPayment'])
             model.sumPayment = ccyUnitConvert(orderModel['sumPayment'])
             model.orderEntries = json.dumps(orderEntries)
+            
             if new:
                 session.add(model)
         

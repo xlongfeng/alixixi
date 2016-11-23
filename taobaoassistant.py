@@ -56,7 +56,7 @@ from jinja2 import Environment, FileSystemLoader
 from sqlalchemy import Column, ForeignKey, \
      Integer, Float, String, DateTime, \
      create_engine, desc, or_, func
-from sqlalchemy.orm import relationship, sessionmaker
+from sqlalchemy.orm import relationship, sessionmaker, exc
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.ext.automap import automap_base
 from sqlalchemy.pool import NullPool
@@ -593,13 +593,17 @@ class TaobaoOrderLogisticsUpdateDialog(QDialog):
                 if aliOrderModel.logisticsOrderList:
                     # get first logistic information
                     logistics = json.loads(aliOrderModel.logisticsOrderList)[0]
-                    timedelta = gmtCreate - trade.pay_time
-                    usedSid = fbdSession.query(TaobaoTradeEx).filter_by(
-                        out_sid = logistics['logisticsBillNo']).one_or_none()
-                    # taobao pay time must be in front of ali order create
-                    # and the days should not be exceed 5 days
-                    # and the logistic number must have not been used
-                    if timedelta.days < 0 or timedelta.days > 5 or usedSid:
+                    try:
+                        usedSid = fbdSession.query(TaobaoTradeEx).filter_by(
+                            out_sid = logistics['logisticsBillNo']).one()
+                    except exc.NoResultFound:
+                        timedelta = gmtCreate - trade.pay_time
+                        # taobao pay time must be in front of ali order create
+                        # and the days should not be exceed 5 days
+                        # and the logistic number must have not been used
+                        if timedelta.days < 0 or timedelta.days > 5:
+                            continue
+                    else:
                         continue
                     
                     tidItem.tradeEx, tidItem.companyNo, tidItem.companyName, tidItem.logisticsBillNo = \
