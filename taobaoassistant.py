@@ -640,12 +640,15 @@ class TaobaoOrderLogisticsUpdateDialog(QDialog):
             self.ui.aliUpdateLabel.setHidden(True)
     
     def orderVerify(self, trade, aliOrderModel):
+        def attrSplit(attr):
+            return attr.split('[')[0].split('［')[0].split('(')[0].split('（')[0]
+        
         taobaoOrderDetail = []
         for order in fbdSession.query(TaobaoOrder).filter_by(tid = trade.tid):
             propertites = order.sku_properties_name.split(';') if order.sku_properties_name else []
             propertitySet = set()
             for propertity in propertites:
-                attr = propertity.split(':')[1].split('[')[0]
+                attr = attrSplit(propertity.split(':')[1])
                 propertitySet.add(attr)
             taobaoOrderDetail.append(dict(
                 propertites = propertitySet,
@@ -658,26 +661,30 @@ class TaobaoOrderLogisticsUpdateDialog(QDialog):
             if 'specInfo' not in order:
                 continue
             for spec in order['specInfo']:
-                propertitySet.add(spec['specValue'])
+                propertitySet.add(attrSplit(spec['specValue']))
             aliOrderDetail.append(dict(
                 propertites = propertitySet,
                 quantity = int(order['quantity']),
                 skipped = False
             ))
+        
+        similarWords = {
+            '2XL': {'XXL'},
+            '3XL': {'XXXL'},
+            'XXL': {'2XL'},
+            'XXXL': {'3XL'},
+        }
         for taobaoOrder in taobaoOrderDetail:
             found = False
             for aliOrder in aliOrderDetail:
                 if aliOrder['skipped']:
                     continue
-                if taobaoOrder['propertites'] != aliOrder['propertites']:
-                        if 'XXL' in aliOrder['propertites']:
-                            aliOrderPropertites = aliOrder['propertites'].copy()
-                            aliOrderPropertites.remove('XXL')
-                            aliOrderPropertites.add('2XL')
-                            if taobaoOrder['propertites'] != aliOrderPropertites:
-                                continue
-                        else:
-                            continue
+                aliOrderPropertites = aliOrder['propertites'].copy()
+                for key in similarWords.keys():
+                    if key in aliOrderPropertites:
+                        aliOrderPropertites.update(similarWords[key])
+                if not taobaoOrder['propertites'] <= aliOrderPropertites:
+                    continue
                 if taobaoOrder['quantity'] == aliOrder['quantity']:
                     aliOrder['skipped'] = True
                     found = True
