@@ -14,12 +14,12 @@
         <translation>会员名</translation>
     </message>
     <message>
-        <location filename="alixixi.pyw" line="163"/>
+        <location filename="alixixi.pyw" line="162"/>
         <source>Authorize</source>
         <translation>登陆</translation>
     </message>
     <message>
-        <location filename="alixixi.pyw" line="231"/>
+        <location filename="alixixi.pyw" line="236"/>
         <source>Ali Order</source>
         <translation>阿里订单</translation>
     </message>
@@ -39,17 +39,17 @@
         <translation type="obsolete">更新授权</translation>
     </message>
     <message>
-        <location filename="alixixi.pyw" line="159"/>
+        <location filename="alixixi.pyw" line="158"/>
         <source>File</source>
         <translation>文件</translation>
     </message>
     <message>
-        <location filename="alixixi.pyw" line="160"/>
+        <location filename="alixixi.pyw" line="159"/>
         <source>Close</source>
         <translation>退出</translation>
     </message>
     <message>
-        <location filename="alixixi.pyw" line="162"/>
+        <location filename="alixixi.pyw" line="161"/>
         <source>Setting</source>
         <translation>设置</translation>
     </message>
@@ -164,7 +164,7 @@
         <translation type="obsolete">日期范围错误，时间范围过长，必需小于1个月</translation>
     </message>
     <message>
-        <location filename="alixixi.pyw" line="231"/>
+        <location filename="alixixi.pyw" line="236"/>
         <source>Automatically update ali order?</source>
         <translation>自动更新阿里订单？</translation>
     </message>
@@ -188,6 +188,11 @@
         <source>Order</source>
         <translation>订单</translation>
     </message>
+    <message>
+        <location filename="alixixi.pyw" line="163"/>
+        <source>Proxy</source>
+        <translation>代理</translation>
+    </message>
 </context>
 <context>
     <name>AuthorizeDialog</name>
@@ -210,12 +215,12 @@
 <context>
     <name>OrderListGetDialog</name>
     <message>
-        <location filename="orderlist.py" line="237"/>
+        <location filename="orderlist.py" line="243"/>
         <source>Ali Order List</source>
         <translation>阿里订单</translation>
     </message>
     <message>
-        <location filename="orderlist.py" line="237"/>
+        <location filename="orderlist.py" line="243"/>
         <source>Empty order list</source>
         <translation>无新订单</translation>
     </message>
@@ -235,17 +240,17 @@
         <translation>订单数量</translation>
     </message>
     <message>
-        <location filename="orderlist.py" line="140"/>
+        <location filename="orderlist.py" line="141"/>
         <source>Ali Order Query</source>
         <translation>阿里订单</translation>
     </message>
     <message>
-        <location filename="orderlist.py" line="136"/>
+        <location filename="orderlist.py" line="137"/>
         <source>Date range error, start time later than the end of time</source>
         <translation>日期范围错误，开始时间比结束时间晚</translation>
     </message>
     <message>
-        <location filename="orderlist.py" line="140"/>
+        <location filename="orderlist.py" line="141"/>
         <source>Date range error, time range is too long, must be less than 1 month</source>
         <translation>日期范围错误，时间范围过长，必需小于1个月</translation>
     </message>
@@ -253,62 +258,62 @@
 <context>
     <name>OrderListReview</name>
     <message>
-        <location filename="orderlist.py" line="67"/>
+        <location filename="orderlist.py" line="68"/>
         <source>CANCEL</source>
         <translation>交易关闭</translation>
     </message>
     <message>
-        <location filename="orderlist.py" line="68"/>
+        <location filename="orderlist.py" line="69"/>
         <source>SUCCESS</source>
         <translation>交易成功</translation>
     </message>
     <message>
-        <location filename="orderlist.py" line="69"/>
+        <location filename="orderlist.py" line="70"/>
         <source>WAIT_BUYER_PAY</source>
         <translation>等待买家付款</translation>
     </message>
     <message>
-        <location filename="orderlist.py" line="70"/>
+        <location filename="orderlist.py" line="71"/>
         <source>WAIT_SELLER_SEND</source>
         <translation>等待卖家发货</translation>
     </message>
     <message>
-        <location filename="orderlist.py" line="71"/>
+        <location filename="orderlist.py" line="72"/>
         <source>WAIT_BUYER_RECEIVE</source>
         <translation>等待买家确认收货</translation>
     </message>
     <message>
-        <location filename="orderlist.py" line="72"/>
+        <location filename="orderlist.py" line="73"/>
         <source>WAIT_SELLER_ACT</source>
         <translation>分阶段等待卖家操作</translation>
     </message>
     <message>
-        <location filename="orderlist.py" line="73"/>
+        <location filename="orderlist.py" line="74"/>
         <source>WAIT_BUYER_CONFIRM_ACTION</source>
         <translation>分阶段等待买家确认卖家操作</translation>
     </message>
     <message>
-        <location filename="orderlist.py" line="74"/>
+        <location filename="orderlist.py" line="75"/>
         <source>WAIT_SELLER_PUSH</source>
         <translation>分阶段等待卖家推进</translation>
     </message>
     <message>
-        <location filename="orderlist.py" line="75"/>
+        <location filename="orderlist.py" line="76"/>
         <source>WAIT_LOGISTICS_TAKE_IN</source>
         <translation>等待物流公司揽件</translation>
     </message>
     <message>
-        <location filename="orderlist.py" line="76"/>
+        <location filename="orderlist.py" line="77"/>
         <source>WAIT_BUYER_SIGN</source>
         <translation>等待买家签收</translation>
     </message>
     <message>
-        <location filename="orderlist.py" line="77"/>
+        <location filename="orderlist.py" line="78"/>
         <source>SIGN_IN_SUCCESS</source>
         <translation>买家已签收</translation>
     </message>
     <message>
-        <location filename="orderlist.py" line="78"/>
+        <location filename="orderlist.py" line="79"/>
         <source>SIGN_IN_FAILED</source>
         <translation>签收失败</translation>
     </message>
@@ -397,9 +402,42 @@
     </message>
 </context>
 <context>
+    <name>ProxySettingDialog</name>
+    <message>
+        <location filename="proxysettingdialog.ui" line="14"/>
+        <source>Proxy Setting</source>
+        <translation>代理设置</translation>
+    </message>
+    <message>
+        <location filename="proxysettingdialog.ui" line="20"/>
+        <source>Proxy</source>
+        <translation>代理</translation>
+    </message>
+    <message>
+        <location filename="proxysettingdialog.ui" line="32"/>
+        <source>HTTP Proxy</source>
+        <translation>地址</translation>
+    </message>
+    <message>
+        <location filename="proxysettingdialog.ui" line="42"/>
+        <source>HTTP Proxy Port</source>
+        <translation>端口</translation>
+    </message>
+    <message>
+        <location filename="proxysettingdialog.ui" line="52"/>
+        <source>Username</source>
+        <translation>用户名</translation>
+    </message>
+    <message>
+        <location filename="proxysettingdialog.ui" line="62"/>
+        <source>Password</source>
+        <translation>密码</translation>
+    </message>
+</context>
+<context>
     <name>RefreshAccessTokenDialog</name>
     <message>
-        <location filename="alixixi.pyw" line="68"/>
+        <location filename="alixixi.pyw" line="67"/>
         <source>Refresh Access Token</source>
         <translation>更新访问令牌</translation>
     </message>
@@ -429,17 +467,17 @@
     <message>
         <location filename="salesreportingdialog.ui" line="54"/>
         <source>Next</source>
-        <translation type="obsolete">下一个</translation>
+        <translation type="unfinished">下一个</translation>
     </message>
     <message>
-        <location filename="salesreportingdialog.ui" line="55"/>
+        <location filename="salesreportingdialog.ui" line="62"/>
         <source>about:blank</source>
         <translation>about:blank</translation>
     </message>
     <message>
         <location filename="salesreportingdialog.ui" line="70"/>
         <source>Prev</source>
-        <translation type="obsolete">上一个</translation>
+        <translation type="unfinished">上一个</translation>
     </message>
 </context>
 <context>
@@ -633,12 +671,12 @@
         <translation>没有找到对应的物流信息，请先更新阿里 / 淘宝订单.</translation>
     </message>
     <message>
-        <location filename="taobaoassistant.py" line="564"/>
+        <location filename="taobaoassistant.py" line="569"/>
         <source>Logistics Company</source>
         <translation>物流公司</translation>
     </message>
     <message>
-        <location filename="taobaoassistant.py" line="564"/>
+        <location filename="taobaoassistant.py" line="569"/>
         <source>Logistics Number</source>
         <translation>运单号码</translation>
     </message>
@@ -653,17 +691,17 @@
         <translation type="obsolete">发货时间</translation>
     </message>
     <message>
-        <location filename="taobaoassistant.py" line="564"/>
+        <location filename="taobaoassistant.py" line="569"/>
         <source>Taobao Order ID</source>
         <translation>淘宝订单号</translation>
     </message>
     <message>
-        <location filename="taobaoassistant.py" line="564"/>
+        <location filename="taobaoassistant.py" line="569"/>
         <source>Buyer Name</source>
         <translation>姓名</translation>
     </message>
     <message>
-        <location filename="taobaoassistant.py" line="564"/>
+        <location filename="taobaoassistant.py" line="569"/>
         <source>Buyer Phone</source>
         <translation>电话</translation>
     </message>

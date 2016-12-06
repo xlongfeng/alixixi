@@ -158,3 +158,43 @@ class Settings(QSettings):
     @ali_order_last_update_time.setter
     def ali_order_last_update_time(self, value):
         self.setValue('ali_order_last_update_time', value)
+    
+    @pyqtProperty(bool)
+    def http_proxy_enabled(self):
+        return self.value('http_proxy_enabled', False, bool)
+    
+    @http_proxy_enabled.setter
+    def http_proxy_enabled(self, value):
+        self.setValue('http_proxy_enabled', value)
+    
+    @pyqtProperty(str)
+    def http_proxy(self):
+        return self.value('http_proxy', '')
+    
+    @http_proxy.setter
+    def http_proxy(self, value):
+        self.setValue('http_proxy', value)
+    
+    @pyqtProperty(str)
+    def http_proxy_port(self):
+        return self.value('http_proxy_port', '')
+    
+    @http_proxy_port.setter
+    def http_proxy_port(self, value):
+        self.setValue('http_proxy_port', value)
+        
+    @pyqtProperty(str)
+    def http_proxy_username(self):
+        return self.value('http_proxy_username', '')
+    
+    @http_proxy_username.setter
+    def http_proxy_username(self, value):
+        self.setValue('http_proxy_username', value)
+    
+    @pyqtProperty(str)
+    def http_proxy_password(self):
+        return self.value('http_proxy_password', '')
+    
+    @http_proxy_password.setter
+    def http_proxy_password(self, value):
+        self.setValue('http_proxy_password', value)

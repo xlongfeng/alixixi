@@ -54,7 +54,7 @@ from ui_authorizedialog import Ui_AuthorizeDialog
 from ui_orderlistgetdialog import Ui_OrderListGetDialog
 from ui_alixixi import Ui_Alixixi
 from settings import Settings
-from cnalibabaopen import CnAlibabaOpen
+from cnalibabaopen import CnAlibabaOpen, CnAlibabaProxySettingDialog
 from orderlist import *
 from taobaoassistant import *
 from sales import *
@@ -160,6 +160,7 @@ class Alixixi(QMainWindow):
         
         setttingsMenu = menuBar.addMenu(_translate('Alixixi', 'Setting'))
         setttingsMenu.addAction(_translate('Alixixi', 'Authorize'), self.authorizeRequest)
+        setttingsMenu.addAction(_translate('Alixixi', 'Proxy'), self.proxySetting)
         setttingsMenu.addAction(_translate('Alixixi', 'Taobao Assistant'), self.taobaoAssistantSetting)
         
         aliOrderMenu = menuBar.addMenu(_translate('Alixixi', 'Ali Order'))
@@ -184,6 +185,11 @@ class Alixixi(QMainWindow):
         QDesktopServices.openUrl(self.cnAlibabaOpen.openApiAuthorizeRequest())
         dialog = AuthorizeDialog(self)
         dialog.exec()
+        
+    def proxySetting(self):
+        dialog = CnAlibabaProxySettingDialog(self)
+        if dialog.exec() == QDialog.Accepted:
+            dialog.save()
     
     def taobaoAssistantSetting(self):
         dialog = TaobaoAssistantSettingDialog(self)

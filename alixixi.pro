@@ -15,6 +15,7 @@ FORMS += \
     authorizedialog.ui \
     orderlistgetdialog.ui \
     orderlistreviewdialog.ui \
+    proxysettingdialog.ui \
     salesreportingdialog.ui \
     taobaoassistantsettingdialog.ui \
     taobaoorderdetaildialog.ui \

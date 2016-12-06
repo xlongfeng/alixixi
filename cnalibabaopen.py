@@ -40,9 +40,15 @@
 
 
 from PyQt5.QtCore import QObject, pyqtSignal, QUrl, QUrlQuery
-from PyQt5.QtNetwork import QNetworkAccessManager, QNetworkReply, QNetworkRequest
+from PyQt5.QtNetwork import (QNetworkAccessManager, QNetworkReply,
+                             QNetworkRequest, QNetworkProxy)
+from PyQt5.QtWidgets import QDialog
+from PyQt5.QtGui import QValidator, QIntValidator
 
 import hmac, hashlib, json
+
+from settings import Settings
+from ui_proxysettingdialog import Ui_ProxySettingDialog
 
 class CnAlibabaOpen(QObject):
     pInstance = None
@@ -61,9 +67,12 @@ class CnAlibabaOpen(QObject):
     
     def __init__(self, parent=None):
         super(CnAlibabaOpen, self).__init__(parent)
-
+        
+        self.settings = Settings.instance()
+        
         self.request = QNetworkRequest()
         self.accessManager = QNetworkAccessManager(self)
+        self.accessManager.setProxy(QNetworkProxy(QNetworkProxy.HttpProxy, '127.0.0.1', 8087))
         self.accessManager.finished.connect(self.finished)
         self.accessManager.sslErrors.connect(self.sslErrors)
         
@@ -72,7 +81,19 @@ class CnAlibabaOpen(QObject):
         if cls.pInstance is None:
             cls.pInstance = cls()
         return cls.pInstance
+    
+    def get(self):
+        if self.settings.http_proxy_enabled:
+            self.accessManager.setProxy(QNetworkProxy(QNetworkProxy.HttpProxy,
+                                                      self.settings.http_proxy,
+                                                      int(self.settings.http_proxy_port),
+                                                      self.settings.http_proxy_username,
+                                                      self.settings.http_proxy_password))
+        else:
+            self.accessManager.setProxy(QNetworkProxy(QNetworkProxy.NoProxy))
         
+        return self.accessManager.get(self.request)
+    
     def openApiVersion(self, openApiName):
         return '2/' if openApiName in self.openApiVersion2 else '1/'
             
@@ -109,7 +130,7 @@ class CnAlibabaOpen(QObject):
             query.addQueryItem(key, openApiParam.get(key))
         url.setQuery(query)
         self.request.setUrl(url)
-        self.accessManager.get(self.request)
+        self.get()
         
         
     def accessTokenRequest(self, openApiParam = dict()):
@@ -123,7 +144,7 @@ class CnAlibabaOpen(QObject):
             query.addQueryItem(key, openApiParam.get(key))
         url.setQuery(query)
         self.request.setUrl(url)
-        self.accessManager.get(self.request)
+        self.get()
         
     def refreshTokenRequest(self, openApiParam = dict()):
         url = QUrl(
@@ -135,7 +156,7 @@ class CnAlibabaOpen(QObject):
             query.addQueryItem(key, openApiParam.get(key))
         url.setQuery(query)
         self.request.setUrl(url)
-        self.accessManager.get(self.request)
+        self.get()
         
     def openApiSignature(self, openApiName, openApiParam):
         urlPath = self.openApiProtocol + self.openApiVersion(openApiName) + self.openApiNamespace + openApiName + '/' + self.appKey
@@ -158,7 +179,7 @@ class CnAlibabaOpen(QObject):
         url.setQuery(query)
         url = QUrl(url.toEncoded().toPercentEncoding(':/?&=%').data().decode('utf-8'))
         self.request.setUrl(url)
-        self.reply = self.accessManager.get(self.request)
+        self.reply = self.get()
         self.reply.error.connect(self.replyError)
 
     def finished(self, reply):
@@ -178,3 +199,24 @@ class CnAlibabaOpen(QObject):
     
     def replyError(self, code):
         self.openApiResponseException.emit('A network communication error occurred during the open api request: error code {}'.format(code))
+
+
+class CnAlibabaProxySettingDialog(QDialog):
+    def __init__(self, parent=None):
+        super(CnAlibabaProxySettingDialog, self).__init__(parent)
+        self.ui = Ui_ProxySettingDialog()
+        self.ui.setupUi(self)
+        self.ui.httpProxyPortLineEdit.setValidator(QIntValidator(0, 65535, self))
+        self.settings = Settings.instance()
+        self.ui.proxyGroupBox.setChecked(self.settings.http_proxy_enabled)
+        self.ui.httpProxyLineEdit.setText(self.settings.http_proxy)
+        self.ui.httpProxyPortLineEdit.setText(self.settings.http_proxy_port)
+        self.ui.usernameLineEdit.setText(self.settings.http_proxy_username)
+        self.ui.passwordLineEdit.setText(self.settings.http_proxy_password)
+    
+    def save(self):
+        self.settings.http_proxy_enabled = self.ui.proxyGroupBox.isChecked()
+        self.settings.http_proxy = self.ui.httpProxyLineEdit.text()
+        self.settings.http_proxy_port = self.ui.httpProxyPortLineEdit.text()
+        self.settings.http_proxy_username = self.ui.usernameLineEdit.text()
+        self.settings.http_proxy_password = self.ui.passwordLineEdit.text()
