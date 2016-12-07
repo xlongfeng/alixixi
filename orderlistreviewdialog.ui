@@ -18,6 +18,9 @@
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
       <widget class="QPushButton" name="firstPagePushButton">
+       <property name="focusPolicy">
+        <enum>Qt::NoFocus</enum>
+       </property>
        <property name="text">
         <string>First Page</string>
        </property>
@@ -25,6 +28,9 @@
      </item>
      <item>
       <widget class="QPushButton" name="prevPagePushButton">
+       <property name="focusPolicy">
+        <enum>Qt::NoFocus</enum>
+       </property>
        <property name="text">
         <string>Prev Page</string>
        </property>
@@ -32,6 +38,9 @@
      </item>
      <item>
       <widget class="QPushButton" name="nextPagePushButton">
+       <property name="focusPolicy">
+        <enum>Qt::NoFocus</enum>
+       </property>
        <property name="text">
         <string>Next Page</string>
        </property>
@@ -39,6 +48,9 @@
      </item>
      <item>
       <widget class="QPushButton" name="lastPagePushButton">
+       <property name="focusPolicy">
+        <enum>Qt::NoFocus</enum>
+       </property>
        <property name="text">
         <string>Last Page</string>
        </property>
@@ -77,36 +89,19 @@
       <widget class="QLineEdit" name="searchLineEdit"/>
      </item>
      <item>
-      <widget class="QPushButton" name="searchPushButton">
-       <property name="text">
-        <string/>
-       </property>
-       <property name="icon">
-        <iconset resource="alixixi.qrc">
-         <normaloff>:/images/search.ico</normaloff>:/images/search.ico</iconset>
-       </property>
-       <property name="iconSize">
-        <size>
-         <width>32</width>
-         <height>16</height>
-        </size>
-       </property>
-      </widget>
-     </item>
-     <item>
       <widget class="QPushButton" name="clearPushButton">
+       <property name="focusPolicy">
+        <enum>Qt::NoFocus</enum>
+       </property>
        <property name="text">
         <string/>
        </property>
        <property name="icon">
         <iconset resource="alixixi.qrc">
-         <normaloff>:/images/cross.ico</normaloff>:/images/cross.ico</iconset>
+         <normaloff>:/images/dustbin.png</normaloff>:/images/dustbin.png</iconset>
        </property>
-       <property name="iconSize">
-        <size>
-         <width>32</width>
-         <height>16</height>
-        </size>
+       <property name="flat">
+        <bool>true</bool>
        </property>
       </widget>
      </item>

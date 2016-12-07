@@ -290,7 +290,7 @@ class OrderListReviewDialog(QDialog):
         self.ui.nextPagePushButton.clicked.connect(self.nextPage)
         self.ui.lastPagePushButton.clicked.connect(self.lastPage)
         
-        self.ui.searchPushButton.clicked.connect(self.advancedSearch)
+        self.ui.searchLineEdit.returnPressed.connect(self.advancedSearch)
         self.ui.clearPushButton.clicked.connect(self.advancedSearchClear)
         
         self.fuzzySearch = ''
@@ -372,12 +372,16 @@ class OrderListReviewDialog(QDialog):
             self.setHtml()
     
     def advancedSearch(self):
-        self.fuzzySearch = self.ui.searchLineEdit.text().strip()
+        search = self.ui.searchLineEdit.text().strip()
+        if search == self.fuzzySearch:
+            return
+        self.fuzzySearch = search
         self.pageInfoUpdate()
         self.setHtml()
         
     def advancedSearchClear(self):
         self.ui.searchLineEdit.setText('')
+        self.advancedSearch()
         
     def linkClicked(self, url):
         QDesktopServices.openUrl(url)

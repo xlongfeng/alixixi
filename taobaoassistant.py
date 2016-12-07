@@ -226,7 +226,7 @@ class TaobaoOrderListReviewDialog(QDialog):
         self.ui.nextPagePushButton.clicked.connect(self.nextPage)
         self.ui.lastPagePushButton.clicked.connect(self.lastPage)
         
-        self.ui.searchPushButton.clicked.connect(self.advancedSearch)
+        self.ui.searchLineEdit.returnPressed.connect(self.advancedSearch)
         self.ui.clearPushButton.clicked.connect(self.advancedSearchClear)
         
         TaobaoAssistantFdb.instance().fdbConnect()
@@ -244,14 +244,17 @@ class TaobaoOrderListReviewDialog(QDialog):
         
         self.waitSellerSendGoodsButton = QPushButton(
             _translate('OrderListReview', 'Wait Seller Send Goods ({})').format(self.countByStatus(3)))
+        self.waitSellerSendGoodsButton.setFocusPolicy(Qt.NoFocus)
         self.waitSellerSendGoodsButton.clicked.connect(self.waitSellerSendGoods)
         self.ui.customFilterHorizontalLayout.addWidget(self.waitSellerSendGoodsButton)
         self.waitBuyerPayButton = QPushButton(
             _translate('OrderListReview', 'Wait Buyer Pay ({})').format(self.countByStatus(2)))
+        self.waitBuyerPayButton.setFocusPolicy(Qt.NoFocus)
         self.waitBuyerPayButton.clicked.connect(self.waitBuyerPay)
         self.ui.customFilterHorizontalLayout.addWidget(self.waitBuyerPayButton)
         self.allOrdersButton = QPushButton(
             _translate('OrderListReview', 'All Orders ({})').format(self.countByStatus(-1)))
+        self.allOrdersButton.setFocusPolicy(Qt.NoFocus)
         self.allOrdersButton.clicked.connect(self.allOrders)
         self.ui.customFilterHorizontalLayout.addWidget(self.allOrdersButton)
         spacerItem = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
@@ -342,15 +345,20 @@ class TaobaoOrderListReviewDialog(QDialog):
             self.setHtml()
     
     def advancedSearch(self):
-        self.fuzzySearch = self.ui.searchLineEdit.text().strip()
+        search = self.ui.searchLineEdit.text().strip()
+        if search == self.fuzzySearch:
+            return
+        self.fuzzySearch = search
         self.pageInfoUpdate()
         self.setHtml()
         
     def advancedSearchClear(self):
         self.ui.searchLineEdit.setText('')
+        self.advancedSearch()
         
     def waitSellerSendGoods(self):
         self.fuzzySearch = ''
+        self.ui.searchLineEdit.setText('')
         self.waitSellerSendGoodsButton.setStyleSheet('color: #f50; font: bold')
         self.waitBuyerPayButton.setStyleSheet('')
         self.allOrdersButton.setStyleSheet('')
@@ -360,6 +368,7 @@ class TaobaoOrderListReviewDialog(QDialog):
     
     def waitBuyerPay(self):
         self.fuzzySearch = ''
+        self.ui.searchLineEdit.setText('')
         self.waitSellerSendGoodsButton.setStyleSheet('')
         self.waitBuyerPayButton.setStyleSheet('color: #f50; font: bold')
         self.allOrdersButton.setStyleSheet('')
@@ -369,6 +378,7 @@ class TaobaoOrderListReviewDialog(QDialog):
     
     def allOrders(self):
         self.fuzzySearch = ''
+        self.ui.searchLineEdit.setText('')
         self.waitSellerSendGoodsButton.setStyleSheet('')
         self.waitBuyerPayButton.setStyleSheet('')
         self.allOrdersButton.setStyleSheet('color: #f50; font: bold')
