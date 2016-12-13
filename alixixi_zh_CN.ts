@@ -318,7 +318,7 @@
         <translation>签收失败</translation>
     </message>
     <message>
-        <location filename="taobaoassistant.py" line="264"/>
+        <location filename="taobaoassistant.py" line="268"/>
         <source>Loading, wait a monent ...</source>
         <translation>正在载入，请稍后 ...</translation>
     </message>
@@ -338,19 +338,24 @@
         <translation type="obsolete">所有订单</translation>
     </message>
     <message>
-        <location filename="taobaoassistant.py" line="246"/>
+        <location filename="taobaoassistant.py" line="247"/>
         <source>Wait Seller Send Goods ({})</source>
         <translation>等待发货 ({})</translation>
     </message>
     <message>
-        <location filename="taobaoassistant.py" line="250"/>
+        <location filename="taobaoassistant.py" line="252"/>
         <source>Wait Buyer Pay ({})</source>
         <translation>等待付款 ({})</translation>
     </message>
     <message>
-        <location filename="taobaoassistant.py" line="254"/>
+        <location filename="taobaoassistant.py" line="257"/>
         <source>All Orders ({})</source>
         <translation>所有订单 ({})</translation>
+    </message>
+    <message>
+        <location filename="orderlist.py" line="296"/>
+        <source>name/phone/area/logistics</source>
+        <translation>收货人 / 联系电话 / 收货地址 / 运单号码</translation>
     </message>
 </context>
 <context>
@@ -361,7 +366,7 @@
         <translation>阿里订单</translation>
     </message>
     <message>
-        <location filename="orderlistreviewdialog.ui" line="122"/>
+        <location filename="orderlistreviewdialog.ui" line="124"/>
         <source>about:blank</source>
         <translation>about:blank</translation>
     </message>
@@ -371,32 +376,32 @@
         <translation type="obsolete">清空</translation>
     </message>
     <message>
-        <location filename="orderlistreviewdialog.ui" line="82"/>
+        <location filename="orderlistreviewdialog.ui" line="22"/>
         <source>Search</source>
-        <translation type="obsolete">查找</translation>
+        <translation>查找</translation>
     </message>
     <message>
-        <location filename="orderlistreviewdialog.ui" line="29"/>
+        <location filename="orderlistreviewdialog.ui" line="91"/>
         <source>Prev Page</source>
         <translation>上一页</translation>
     </message>
     <message>
-        <location filename="orderlistreviewdialog.ui" line="36"/>
+        <location filename="orderlistreviewdialog.ui" line="101"/>
         <source>Next Page</source>
         <translation>下一页</translation>
     </message>
     <message>
-        <location filename="orderlistreviewdialog.ui" line="43"/>
+        <location filename="orderlistreviewdialog.ui" line="111"/>
         <source>Last Page</source>
         <translation>末页</translation>
     </message>
     <message>
-        <location filename="orderlistreviewdialog.ui" line="22"/>
+        <location filename="orderlistreviewdialog.ui" line="81"/>
         <source>First Page</source>
         <translation>首页</translation>
     </message>
     <message>
-        <location filename="orderlistreviewdialog.ui" line="56"/>
+        <location filename="orderlistreviewdialog.ui" line="68"/>
         <source>0 / 0 - (0)</source>
         <translation>0 / 0 - (0)</translation>
     </message>
@@ -467,7 +472,7 @@
     <message>
         <location filename="salesreportingdialog.ui" line="54"/>
         <source>Next</source>
-        <translation type="unfinished">下一个</translation>
+        <translation>下一个</translation>
     </message>
     <message>
         <location filename="salesreportingdialog.ui" line="62"/>
@@ -477,7 +482,7 @@
     <message>
         <location filename="salesreportingdialog.ui" line="70"/>
         <source>Prev</source>
-        <translation type="unfinished">上一个</translation>
+        <translation>上一个</translation>
     </message>
 </context>
 <context>
@@ -642,6 +647,11 @@
         <source>Taobao Order List</source>
         <translation>淘宝订单</translation>
     </message>
+    <message>
+        <location filename="taobaoassistant.py" line="230"/>
+        <source>phone/tid/alipay_no</source>
+        <translation>联系电话 / 订单编号 / 支付宝交易号</translation>
+    </message>
 </context>
 <context>
     <name>TaobaoOrderLogisticsUpdateDialog</name>
@@ -671,12 +681,12 @@
         <translation>没有找到对应的物流信息，请先更新阿里 / 淘宝订单.</translation>
     </message>
     <message>
-        <location filename="taobaoassistant.py" line="569"/>
+        <location filename="taobaoassistant.py" line="580"/>
         <source>Logistics Company</source>
         <translation>物流公司</translation>
     </message>
     <message>
-        <location filename="taobaoassistant.py" line="569"/>
+        <location filename="taobaoassistant.py" line="580"/>
         <source>Logistics Number</source>
         <translation>运单号码</translation>
     </message>
@@ -691,17 +701,17 @@
         <translation type="obsolete">发货时间</translation>
     </message>
     <message>
-        <location filename="taobaoassistant.py" line="569"/>
+        <location filename="taobaoassistant.py" line="580"/>
         <source>Taobao Order ID</source>
         <translation>淘宝订单号</translation>
     </message>
     <message>
-        <location filename="taobaoassistant.py" line="569"/>
+        <location filename="taobaoassistant.py" line="580"/>
         <source>Buyer Name</source>
         <translation>姓名</translation>
     </message>
     <message>
-        <location filename="taobaoassistant.py" line="569"/>
+        <location filename="taobaoassistant.py" line="580"/>
         <source>Buyer Phone</source>
         <translation>电话</translation>
     </message>

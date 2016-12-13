@@ -227,6 +227,7 @@ class TaobaoOrderListReviewDialog(QDialog):
         self.ui.lastPagePushButton.clicked.connect(self.lastPage)
         
         self.ui.searchLineEdit.returnPressed.connect(self.advancedSearch)
+        self.ui.searchLineEdit.setPlaceholderText(_translate('TaobaoOrderListReviewDialog', 'phone/tid/alipay_no'))
         self.ui.clearPushButton.clicked.connect(self.advancedSearchClear)
         
         TaobaoAssistantFdb.instance().fdbConnect()

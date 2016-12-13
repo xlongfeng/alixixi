@@ -291,6 +291,7 @@ class OrderListReviewDialog(QDialog):
         self.ui.lastPagePushButton.clicked.connect(self.lastPage)
         
         self.ui.searchLineEdit.returnPressed.connect(self.advancedSearch)
+        self.ui.searchLineEdit.setPlaceholderText(_translate('OrderListReview', 'name/phone/area/logistics'))
         self.ui.clearPushButton.clicked.connect(self.advancedSearchClear)
         
         self.fuzzySearch = ''

@@ -1,7 +1,7 @@
 <!DOCTYPE RCC><RCC version="1.0">
 <qresource prefix="/">
   <file>images/alixixi.ico</file>
-  <file>images/dustbin.png</file>
+  <file>images/backspace-arrow.png</file>
   <file>js/exporting.js</file>
   <file>js/highcharts.js</file>
   <file>js/jquery.min.js</file>
