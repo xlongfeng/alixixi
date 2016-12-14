@@ -3317,7 +3317,7 @@ a.icon-mb {
                           <li>下单时间：{{ order.gmtCreate }}</li>
                           {% if order.logisticsOrderList %}
                           {% for logisticsOrder in order.logisticsOrderList %}
-                          <li>物流公司：{{ logisticsOrder.companyName }}（<a href="https://www.baidu.com/s?wd={{ logisticsOrder.logisticsBillNo }}">查询</a>）</li>
+                          <li>物流公司：{{ logisticsOrder.companyName }}（<a href="http://www.kuaidi100.com/chaxun?nu={{ logisticsOrder.logisticsBillNo }}">查询</a>）</li>
                           <li>运单号码：<span class="bold stress">{{ logisticsOrder.logisticsBillNo }}</span></li>
                           <li>发货时间：{{ logisticsOrder.gmtSend }}</li>
                           {% endfor %}
