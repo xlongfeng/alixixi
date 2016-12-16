@@ -146,6 +146,7 @@ class Alixixi(QMainWindow):
             self.ui.loginIdLineEdit.setText(self.settings.resource_owner)
         
         self.ui.aliOrderReviewPushButton.released.connect(self.aliOrderListReview)
+        self.ui.aliOrderExportPushButton.released.connect(self.aliOrderListExport)
         
         self.ui.tbAssistantOpenPushButton.released.connect(self.tbAssistantOpen)
         self.ui.tbOrderLogisticsUpdatePushButton.released.connect(self.tbOrderListLogisticsUpdate)
@@ -248,6 +249,11 @@ class Alixixi(QMainWindow):
         dialog = OrderListReviewDialog(self)
         dialog.exec()
     
+    def aliOrderListExport(self):
+        self.aliOrderListAutoUpdate(60 * 60)
+        dialog = OrderListExportDialog(self)
+        dialog.exec()
+            
     def saleReportReview(self):
         dialog = SalesReportingDialog(self)
         dialog.exec()

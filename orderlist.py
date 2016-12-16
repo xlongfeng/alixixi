@@ -40,10 +40,10 @@
 #############################################################################
 
 
-from PyQt5.QtCore import Qt, QCoreApplication, QDate, QDateTime, QTimer
+from PyQt5.QtCore import Qt, QCoreApplication, QDate, QDateTime, QTimer, QDir
 from PyQt5.QtWidgets import (QApplication, QWidget, QComboBox, QDialog,
                              QGridLayout, QLabel, QLineEdit, QMessageBox,
-                             QPushButton, QDialogButtonBox)
+                             QPushButton, QDialogButtonBox, QFileDialog)
 from PyQt5.QtGui import QDesktopServices
 from PyQt5.QtWebKit import QWebSettings
 from PyQt5.QtWebKitWidgets import QWebPage
@@ -55,6 +55,7 @@ from enum import Enum
 from jinja2 import Environment, FileSystemLoader
 from sqlalchemy import desc, or_, func
 from sqlalchemy.orm import exc
+import xlsxwriter
 
 from ui_orderlistgetdialog import Ui_OrderListGetDialog
 from ui_orderlistreviewdialog import Ui_OrderListReviewDialog
@@ -277,7 +278,68 @@ class OrderListGetDialog(QDialog):
             model.logisticsOrderList = json.dumps(logisticsOrderList)
             
         self.orderDetailGetNext()
-        
+
+class OrderListExportDialog(QDialog):
+    def __init__(self, parent=None):
+        super(OrderListExportDialog, self).__init__(parent)
+        self.ui = Ui_OrderListGetDialog()
+        self.ui.setupUi(self)
+        self.ui.createStartTimeDateEdit.setDate(QDate.currentDate().addDays(-6))
+        self.ui.createEndTimeDateEdit.setDate(QDate.currentDate())
+        self.ui.progressBar.setRange(0, 100)
+        self.ui.progressBar.setValue(0)
+        self.ui.buttonBox.setStandardButtons(QDialogButtonBox.Save | QDialogButtonBox.Cancel)
+        self.ui.buttonBox.accepted.connect(self.export)
+    
+    def export(self):
+        directory = QFileDialog.getExistingDirectory(self, _translate('OrderListExport', 'Ali Order Export'), QDir.home().path())
+        if directory != '':
+            self.ui.buttonBox.setStandardButtons(QDialogButtonBox.Cancel)
+            date = self.ui.createStartTimeDateEdit.date()
+            startDateTime = datetime(date.year(), date.month(), date.day())
+            date = self.ui.createEndTimeDateEdit.date()
+            endDateTime = datetime(date.year(), date.month(), date.day(), 23, 59, 59)
+            query = session.query(func.count(AliOrderModel.id)) \
+                .filter(AliOrderModel.gmtCreate >= startDateTime) \
+                .filter(AliOrderModel.gmtCreate <= endDateTime)
+            count = query.scalar()
+            xlsx = directory + '/aliorder' + datetime.now().strftime('%Y%m%d-%H%M%S') + '.xlsx'
+            self.ui.quantityLineEdit.setText(str(count))
+            self.ui.progressBar.setMaximum(count)
+            query = session.query(AliOrderModel).filter(AliOrderModel.gmtCreate >= startDateTime) \
+                .filter(AliOrderModel.gmtCreate <= endDateTime)
+            workbook = xlsxwriter.Workbook(xlsx)
+            worksheet = workbook.add_worksheet()
+            datetimeformat = workbook.add_format()
+            datetimeformat.set_num_format('yyyy/mm/dd hh:mm')
+            worksheet.set_column('A:A', 20)
+            worksheet.set_column('B:B', 20)
+            worksheet.set_column('C:C', 20)
+            worksheet.set_column('D:D', 60)
+            worksheet.set_column('G:G', 20)
+            worksheet.set_column('H:H', 20)
+            worksheet.write('A1', _translate('OrderListExport', 'gmtCreate'))
+            worksheet.write('B1', _translate('OrderListExport', 'toFullName'))
+            worksheet.write('C1', _translate('OrderListExport', 'toMobile'))
+            worksheet.write('D1', _translate('OrderListExport', 'toArea'))
+            worksheet.write('E1', _translate('OrderListExport', 'carriage'))
+            worksheet.write('F1', _translate('OrderListExport', 'sumPayment'))
+            worksheet.write('G1', _translate('OrderListExport', 'status'))
+            worksheet.write('H1', _translate('OrderListExport', 'orderId'))
+            row = 2
+            for model in query.order_by(desc(AliOrderModel.gmtCreate)):
+                worksheet.write_datetime('A' + str(row), model.gmtCreate, datetimeformat)
+                worksheet.write('B' + str(row), model.toFullName)
+                worksheet.write('C' + str(row), model.toMobile if model.toMobile else model.toPhone)
+                worksheet.write('D' + str(row), model.toArea)
+                worksheet.write('E' + str(row), model.carriage)
+                worksheet.write('F' + str(row), model.sumPayment)
+                worksheet.write('G' + str(row), model.status)
+                worksheet.write('H' + str(row), model.orderId)
+                row += 1
+            workbook.close()
+            self.accept()
+
 class OrderListReviewDialog(QDialog):
     def __init__(self, parent=None):
         super(OrderListReviewDialog, self).__init__(parent)
